@@ -1,0 +1,169 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Governorates Section -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4>{{ 'location.governorates' | translate | async }}</h4>
+          <button cButton color="primary" (click)="isAddingGovernorate = true" *ngIf="!isAddingGovernorate">
+            <i cIcon name="cilPlus"></i> {{ 'location.addGovernorate' | translate | async }}
+          </button>
+        </div>
+        <div class="card-body">
+          <!-- Loading State -->
+          <div *ngIf="loadingGovernorates" class="text-center py-3">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">{{ 'location.loading' | translate | async }}</span>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div *ngIf="governorateError" class="alert alert-danger" role="alert">
+            {{ governorateError }}
+          </div>
+
+          <!-- Add/Edit Governorate Form -->
+          <form [formGroup]="governorateForm" *ngIf="isAddingGovernorate" class="mb-4">
+            <div class="mb-3">
+              <label class="form-label">{{ 'location.governorateName' | translate | async }} (AR)</label>
+              <input type="text" class="form-control" formControlName="nameAr">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ 'location.governorateName' | translate | async }} (EN)</label>
+              <input type="text" class="form-control" formControlName="nameEn">
+            </div>
+            <div class="d-flex gap-2">
+              <button cButton color="primary" (click)="isEditingGovernorate ? updateGovernorate() : addGovernorate()" [disabled]="!governorateForm.valid">
+                {{ (isEditingGovernorate ? 'location.updateGovernorate' : 'location.addGovernorate') | translate | async }}
+              </button>
+              <button cButton color="secondary" (click)="cancelEdit()">{{ 'common.cancel' | translate | async }}</button>
+            </div>
+          </form>
+
+          <!-- Governorates List -->
+          <div class="list-group" *ngIf="!loadingGovernorates && !governorateError">
+            <div
+              *ngFor="let gov of (governorates$ | async)"
+              class="list-group-item d-flex justify-content-between align-items-center"
+              [class.active]="selectedGovernorateId === gov.id"
+            >
+              <span>{{ currentLang === 'ar' ? gov.nameAr : gov.nameEn }}</span>
+              <div class="d-flex gap-2">
+                <button cButton color="info" (click)="onGovernorateClick(gov.id)">
+                  {{ 'location.cities' | translate | async }}
+                </button>
+                <button cButton color="primary"   (click)="editGovernorate(gov)">
+                  {{ 'common.edit' | translate | async }}
+                </button>
+                <button cButton color="danger" (click)="openDeleteModal('governorate', gov.id)">
+                  {{ 'common.delete' | translate | async }}
+                </button>
+              </div>
+            </div>
+            <div *ngIf="(governorates$ | async)?.length === 0" class="list-group-item text-center text-muted">
+              {{ 'location.noGovernorates' | translate | async }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cities Section -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4>{{ 'location.cities' | translate | async }}</h4>
+          <button cButton color="primary" (click)="isAddingCity = true" *ngIf="!isAddingCity && !isEditingCity">
+            <i cIcon name="cilPlus"></i> {{ 'location.addCity' | translate | async }}
+          </button>
+        </div>
+        <div class="card-body">
+          <!-- Add/Edit City Form -->
+          <form [formGroup]="cityForm" *ngIf="isAddingCity" class="mb-4">
+            <div class="mb-4">
+              <label for="governorate" class="form-label">{{ 'location.selectGovernorate' | translate | async }}</label>
+              <select class="form-select" id="governorate" formControlName="governorateId">
+                <option value="">{{ 'location.selectGovernorate' | translate | async }}</option>
+                <option value="all">{{ 'location.allGovernorates' | translate | async }}</option>
+                <ng-container *ngFor="let gov of (governorates$ | async)">
+                  <option [value]="gov.id">{{ currentLang === 'ar' ? gov.nameAr : gov.nameEn }}</option>
+                </ng-container>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ 'location.cityName' | translate | async }} (AR)</label>
+              <input type="text" class="form-control" formControlName="nameAr">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ 'location.cityName' | translate | async }} (EN)</label>
+              <input type="text" class="form-control" formControlName="nameEn">
+            </div>
+            <div class="d-flex gap-2">
+              <button cButton color="primary" (click)="isEditingCity ? updateCity() : addCity()" [disabled]="!cityForm.valid">
+                {{ (isEditingCity ? 'location.updateCity' : 'location.addCity') | translate | async }}
+              </button>
+              <button cButton color="secondary" (click)="cancelEdit()">{{ 'common.cancel' | translate | async }}</button>
+            </div>
+          </form>
+
+          <!-- Loading State -->
+          <div *ngIf="loadingCities" class="text-center py-3">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">{{ 'location.loading' | translate | async }}</span>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div *ngIf="cityError" class="alert alert-danger" role="alert">
+            {{ cityError }}
+          </div>
+
+          <!-- Cities List -->
+          <div class="list-group" *ngIf="selectedGovernorateId && !loadingCities && !cityError">
+            <div *ngFor="let city of (cities$ | async)" class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ currentLang === 'ar' ? city.nameAr : city.nameEn }}</span>
+              <div class="d-flex gap-2">
+                <button cButton color="primary" variant="ghost" (click)="editCity(city)">
+                  {{ 'common.edit' | translate | async }}
+                </button>
+                <button cButton color="danger" (click)="openDeleteModal('city', city.id)">
+                  {{ 'common.delete' | translate | async }}
+                </button>
+              </div>
+            </div>
+            <div *ngIf="(cities$ | async)?.length === 0" class="list-group-item text-center text-muted">
+              {{ 'location.noCities' | translate | async }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade show" tabindex="-1" [ngStyle]="{display: showDeleteModal ? 'block' : 'none', background: 'rgba(0,0,0,0.5)'}" *ngIf="showDeleteModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ 'common.delete' | translate | async }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          {{ deleteType === 'governorate'
+            ? ('deleteGovernorateConfirm' | translate | async)
+            : ('deleteCityConfirm' | translate | async) }}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button cButton color="secondary" (click)="closeDeleteModal()">
+          {{ 'common.cancel' | translate | async }}
+        </button>
+        <button cButton color="danger" (click)="confirmDelete()">
+          {{ 'common.delete' | translate | async }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

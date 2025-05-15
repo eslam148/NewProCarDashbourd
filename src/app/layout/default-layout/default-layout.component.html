@@ -1,0 +1,76 @@
+<!--sidebar-->
+<c-sidebar
+  #sidebar1="cSidebar"
+  class="d-print-none sidebar sidebar-fixed border-end"
+  colorScheme="dark"
+  id="sidebar1"
+  visible
+>
+  <c-sidebar-header class="border-bottom">
+    <c-sidebar-brand [routerLink]="[]">
+      <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="CoreUI Logo"></svg>
+      <svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="CoreUI Logo"></svg>
+    </c-sidebar-brand>
+  </c-sidebar-header>
+
+  <ng-scrollbar pointerEventsMethod="scrollbar" visibility="hover">
+    <ul class="sidebar-nav">
+      <ng-container *ngFor="let item of navItems">
+        <!-- Section Title -->
+        <li *ngIf="item.title" class="sidebar-title text-uppercase fw-bold small text-secondary px-3 mt-3 mb-1">
+          {{ item.name! | translate | async }}
+        </li>
+
+        <!-- Nav Item (no children) -->
+        <li *ngIf="!item.title && !item.children">
+          <a [routerLink]="item.url" class="sidebar-link d-flex align-items-center px-3 py-2">
+            <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name" class="me-2"></svg>
+            <span>{{ item.name! | translate | async }}</span>
+            <span *ngIf="item.badge" class="badge bg-info ms-auto">{{ item.badge.text }}</span>
+          </a>
+        </li>
+
+        <!-- Nav Item with Children -->
+        <li *ngIf="!item.title && item.children">
+          <div class="sidebar-link d-flex align-items-center px-3 py-2">
+            <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name" class="me-2"></svg>
+            <span>{{ item.name! | translate | async }}</span>
+          </div>
+          <ul class="sidebar-subnav ps-4">
+            <li *ngFor="let child of item.children">
+              <a [routerLink]="child.url" class="sidebar-link d-flex align-items-center py-1">
+                <span>{{ child.name! | translate | async }}</span>
+                <span *ngIf="child.badge" class="badge bg-info ms-auto">{{ child.badge.text }}</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+  </ng-scrollbar>
+
+  @if (!sidebar1.narrow) {
+    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
+      <button cSidebarToggler aria-label="Toggle sidebar fold"></button>
+    </c-sidebar-footer>
+  }
+</c-sidebar>
+
+<!--main-->
+<div class="wrapper d-flex flex-column min-vh-100">
+  <!--app-header-->
+  <app-default-header
+    [cShadowOnScroll]="'sm'"
+    class="mb-4 d-print-none header header-sticky p-0 shadow-sm"
+    position="sticky"
+    sidebarId="sidebar1"
+  />
+  <!--app-body-->
+  <div class="body flex-grow-1">
+    <c-container breakpoint="lg" class="h-auto px-4">
+      <router-outlet />
+    </c-container>
+  </div>
+  <!--app footer-->
+  <app-default-footer />
+</div>

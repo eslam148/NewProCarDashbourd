@@ -1,0 +1,78 @@
+<div class="request-container">
+  <form [formGroup]="filterForm" (ngSubmit)="onFilter()" class="filter-form">
+    <label>
+      {{ 'requests.from' | translate | async }}:
+      <input type="date" formControlName="fromDate">
+    </label>
+    <label>
+      {{ 'requests.to' | translate | async }}:
+      <input type="date" formControlName="toDate">
+    </label>
+    <button type="submit">{{ 'requests.filter' | translate | async }}</button>
+    <button type="button" (click)="toggleRequestType(false)" [disabled]="!showPrevious">{{ 'requests.current' | translate | async }}</button>
+    <button type="button" (click)="toggleRequestType(true)" [disabled]="showPrevious">{{ 'requests.previous' | translate | async }}</button>
+  </form>
+
+  <div *ngIf="loading" class="loading">{{ 'requests.loading' | translate | async }}</div>
+  <div *ngIf="!loading">
+    <div>{{ 'requests.total' | translate | async }}: {{ totalCount }}</div>
+    <table class="requests-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>{{ 'requests.nurse' | translate | async }}</th>
+          <th>{{ 'requests.phone' | translate | async }}</th>
+          <th>{{ 'requests.status' | translate | async }}</th>
+          <th>{{ 'requests.speciality' | translate | async }}</th>
+          <th>{{ 'requests.totalPrice' | translate | async }}</th>
+          <th>{{ 'requests.date' | translate | async }}</th>
+          <th>{{ 'requests.details' | translate | async }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let req of requests; let i = index">
+          <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+          <td>
+            <img *ngIf="req.nursePicture" [src]="req.nursePicture" alt="Nurse" width="32" height="32" style="border-radius:50%;margin-right:8px;">
+            {{ req.nurseName }}
+          </td>
+          <td>{{ req.phoneNumber }}</td>
+          <td>{{ req.status }}</td>
+          <td>{{ req.speciality }}</td>
+          <td>{{ req.totalPrice | number:'1.2-2' }}</td>
+          <td>{{ req.createdAt | date:'short' }}</td>
+          <td>
+            <button type="button" class="details-btn" (click)="showDetails(req)">{{ 'requests.details' | translate }}</button>
+          </td>
+        </tr>
+        <tr *ngIf="requests.length === 0">
+          <td colspan="8">{{ 'requests.noRequests' | translate | async }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button (click)="onPageChange(pageNumber - 1)" [disabled]="pageNumber === 1">{{ 'requests.prev' | translate | async }}</button>
+      <span>{{ 'requests.page' | translate | async }} {{ pageNumber }}</span>
+      <button (click)="onPageChange(pageNumber + 1)" [disabled]="(pageNumber * pageSize) >= totalCount">{{ 'requests.next' | translate | async }}</button>
+    </div>
+  </div>
+
+  <!-- Details Modal -->
+  <div class="details-modal" *ngIf="selectedRequest">
+    <div class="details-content">
+      <button class="close-btn" (click)="closeDetails()">&times;</button>
+      <h3>{{ 'requests.detailsTitle' | translate | async }}</h3>
+      <div class="details-row"><strong>{{ 'requests.nurse' | translate | async }}:</strong> {{ selectedRequest.nurseName }}</div>
+      <div class="details-row"><strong>{{ 'requests.phone' | translate | async }}:</strong> {{ selectedRequest.phoneNumber }}</div>
+      <div class="details-row"><strong>{{ 'requests.status' | translate | async }}:</strong> {{ selectedRequest.status }}</div>
+      <div class="details-row"><strong>{{ 'requests.speciality' | translate | async }}:</strong> {{ selectedRequest.speciality }}</div>
+      <div class="details-row"><strong>{{ 'requests.totalPrice' | translate | async }}:</strong> {{ selectedRequest.totalPrice | number:'1.2-2' }}</div>
+      <div class="details-row"><strong>{{ 'requests.date' | translate | async }}:</strong> {{ selectedRequest.createdAt | date:'full' }}</div>
+      <div class="details-row"><strong>{{ 'requests.latitude' | translate | async }}:</strong> {{ selectedRequest.latitude }}</div>
+      <div class="details-row"><strong>{{ 'requests.longitude' | translate | async }}:</strong> {{ selectedRequest.longitude }}</div>
+      <div class="details-row"><strong>{{ 'requests.nurseLatitude' | translate | async }}:</strong> {{ selectedRequest.nurseLatitude }}</div>
+      <div class="details-row"><strong>{{ 'requests.nurseLongitude' | translate | async }}:</strong> {{ selectedRequest.nurseLongitude }}</div>
+      <div class="details-row"><img *ngIf="selectedRequest.nursePicture" [src]="selectedRequest.nursePicture" alt="Nurse" width="64" height="64" style="border-radius:50%;margin-top:8px;"></div>
+    </div>
+  </div>
+</div>

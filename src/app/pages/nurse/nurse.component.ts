@@ -1,0 +1,159 @@
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { NurseService } from '../../services/nurse.service';
+import { NurseDto } from '../../Models/DTOs/NurseDto';
+import { TranslatePipe } from '../../pipes/translate.pipe';
+import { TranslationService } from '../../services/translation.service';
+import { CommonModule } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
+
+@Component({
+  selector: 'app-nurse',
+  standalone: true,
+  templateUrl: './nurse.component.html',
+  styleUrls: ['./nurse.component.scss'],
+  imports: [TranslatePipe, CommonModule, ReactiveFormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class NurseComponent implements OnInit {
+  nurses: NurseDto[] = [];
+  form: FormGroup;
+  showForm = false;
+  isEditMode = false;
+  successMessage = '';
+  errorMessage = '';
+  isDeleteModalOpen = false;
+  nurseIdToDelete: string | null = null;
+  selectedImageFile: File | null = null;
+
+  constructor(
+    private fb: FormBuilder,
+    private nurseService: NurseService,
+    private translate: TranslateService
+  ) {
+    this.form = this.fb.group({
+      id: [''],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      phoneNumber: ['', Validators.required],
+      specialization: ['', Validators.required],
+      governorate: ['', Validators.required],
+      city: ['', Validators.required],
+      licenseNumber: ['', Validators.required],
+      rate: [null],
+      imageUrl: [''],
+      cityId: [''],
+      governorateId: [''],
+      specialtyId: [''],
+      latitude: [''],
+      longitude: [''],
+      medicalLicense: ['']
+    });
+  }
+
+  ngOnInit() {
+    this.loadNurses();
+  }
+
+  loadNurses() {
+    this.nurseService.getAllNurses({ pageNumber: 1, pageSize: 10, searchKey: '', cityId: 0 }).subscribe({
+      next: (res) => {
+        this.nurses = res.data.items;
+      },
+      error: (error) => {
+        this.errorMessage = 'nurse.loadError';
+        console.error('Error loading nurses:', error);
+      }
+    });
+  }
+
+  showAddForm() {
+    this.isEditMode = false;
+    this.form.reset();
+    this.showForm = true;
+  }
+
+  editNurse(nurse: NurseDto) {
+    this.isEditMode = true;
+    this.form.patchValue({
+      ...nurse,
+      id: nurse.id
+    });
+    this.showForm = true;
+  }
+
+  onImageSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedImageFile = event.target.files[0];
+    }
+  }
+
+  submit() {
+    if (this.form.valid) {
+      const formValue = this.form.value;
+      const formData = new FormData();
+
+      if (formValue.id) formData.append('Id', formValue.id);
+      if (formValue.firstName) formData.append('FirstName', formValue.firstName);
+      if (formValue.lastName) formData.append('LastName', formValue.lastName);
+      if (this.selectedImageFile) {
+        formData.append('Image', this.selectedImageFile);
+      }
+      if (formValue.cityId) formData.append('CityId', formValue.cityId.toString());
+      if (formValue.governorateId) formData.append('GovernorateId', formValue.governorateId.toString());
+      if (formValue.latitude) formData.append('Latitude', formValue.latitude);
+      if (formValue.longitude) formData.append('Longitude', formValue.longitude);
+      if (formValue.medicalLicense || formValue.licenseNumber) formData.append('MedicalLicense', formValue.medicalLicense || formValue.licenseNumber);
+      if (formValue.specialtyId) formData.append('SpecialtyId', formValue.specialtyId.toString());
+
+      if (this.isEditMode) {
+        this.nurseService.updateNurse(formData).subscribe({
+          next: () => {
+            this.successMessage = 'nurse.updateSuccess';
+            this.loadNurses();
+            this.cancel();
+          },
+          error: (error) => {
+            this.errorMessage = 'nurse.updateError';
+            console.error('Error updating nurse:', error);
+          }
+        });
+      } else {
+        // Add nurse logic (similar, using FormData)
+      }
+    }
+  }
+
+  cancel() {
+    this.showForm = false;
+    this.form.reset();
+    this.isEditMode = false;
+  }
+
+  openDeleteModal(id: string) {
+    this.nurseIdToDelete = id;
+    this.isDeleteModalOpen = true;
+  }
+
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+    this.nurseIdToDelete = null;
+  }
+
+  confirmDelete() {
+    if (this.nurseIdToDelete) {
+      this.nurseService.deleteNurse(this.nurseIdToDelete).subscribe({
+        next: () => {
+          this.successMessage = 'nurse.deleteSuccess';
+          this.loadNurses();
+          this.closeDeleteModal();
+        },
+        error: (error) => {
+          this.errorMessage = 'nurse.deleteError';
+          console.error('Error deleting nurse:', error);
+          this.closeDeleteModal();
+        }
+      });
+    }
+  }
+}

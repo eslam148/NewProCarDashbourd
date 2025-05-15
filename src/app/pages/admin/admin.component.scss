@@ -1,0 +1,176 @@
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border: none;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+  }
+}
+
+.table {
+  margin-bottom: 0;
+
+  th {
+    font-weight: 600;
+    border-bottom-width: 1px;
+    padding: 1rem;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 1rem;
+    vertical-align: middle;
+  }
+}
+
+.btn {
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &.btn-sm {
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+.btn-group {
+  gap: 0.5rem;
+}
+
+.pagination {
+  margin-bottom: 0;
+
+  .page-link {
+    padding: 0.5rem 0.75rem;
+    color: var(--cui-primary);
+    border: 1px solid var(--cui-border-color);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--cui-light);
+      border-color: var(--cui-border-color);
+    }
+  }
+
+  .page-item.active .page-link {
+    background-color: var(--cui-primary);
+    border-color: var(--cui-primary);
+  }
+
+  .page-item.disabled .page-link {
+    color: var(--cui-gray-500);
+    pointer-events: none;
+  }
+}
+
+.input-group {
+  .input-group-text {
+    background-color: transparent;
+    border-right: none;
+  }
+
+  .form-control {
+    border-left: none;
+    padding-left: 0;
+
+    &:focus {
+      box-shadow: none;
+      border-color: var(--cui-border-color);
+    }
+  }
+}
+
+.img-thumbnail {
+  transition: transform 0.2s ease-in-out;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+// Loading spinner animation
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.25rem;
+}
+
+// Empty state styling
+.text-center {
+  i.cil-people {
+    opacity: 0.5;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .card-header {
+    padding: 1rem;
+  }
+
+  .table {
+    th, td {
+      padding: 0.75rem;
+    }
+  }
+
+  .btn-group {
+    flex-direction: column;
+    width: 100%;
+
+    .btn {
+      width: 100%;
+      margin: 0.25rem 0;
+    }
+  }
+
+  .btn-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+
+    i {
+      font-size: 0.875rem;
+    }
+  }
+
+  .avatar {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+// Animation for table rows
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.table tbody tr {
+  animation: fadeIn 0.3s ease-out;
+  animation-fill-mode: both;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}

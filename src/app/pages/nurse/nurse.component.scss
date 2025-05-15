@@ -1,0 +1,18 @@
+::ng-deep .c-modal.fade-in {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1050 !important;
+  background: rgba(0,0,0,0.4) !important;
+}
+
+::ng-deep .c-modal-dialog {
+  margin: auto !important;
+  max-width: 400px;
+  width: 100%;
+}

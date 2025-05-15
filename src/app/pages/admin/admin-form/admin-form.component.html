@@ -1,0 +1,110 @@
+<div class="card">
+  <div class="card-header">
+    <h4>{{ isEditMode ? 'Edit Admin' : 'Create Admin' }}</h4>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="adminForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="firstName" class="form-label">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            formControlName="firstName"
+            [ngClass]="{'is-invalid': adminForm.get('firstName')?.invalid && adminForm.get('firstName')?.touched}"
+          >
+          <div class="invalid-feedback" *ngIf="adminForm.get('firstName')?.errors?.['required']">
+            First name is required
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            formControlName="lastName"
+            [ngClass]="{'is-invalid': adminForm.get('lastName')?.invalid && adminForm.get('lastName')?.touched}"
+          >
+          <div class="invalid-feedback" *ngIf="adminForm.get('lastName')?.errors?.['required']">
+            Last name is required
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="phoneNumber" class="form-label">Phone Number</label>
+          <input
+            type="tel"
+            class="form-control"
+            id="phoneNumber"
+            formControlName="phoneNumber"
+            [ngClass]="{'is-invalid': adminForm.get('phoneNumber')?.invalid && adminForm.get('phoneNumber')?.touched}"
+          >
+          <div class="invalid-feedback" *ngIf="adminForm.get('phoneNumber')?.errors?.['required']">
+            Phone number is required
+          </div>
+          <div class="invalid-feedback" *ngIf="adminForm.get('phoneNumber')?.errors?.['pattern']">
+            Please enter a valid 12-digit phone number
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="image" class="form-label">Profile Image</label>
+          <input
+            type="file"
+            class="form-control"
+            id="image"
+            accept="image/*"
+            (change)="onImageSelected($event)"
+          >
+          <div class="mt-2" *ngIf="imagePreview">
+            <img [src]="imagePreview" alt="Profile preview" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3" *ngIf="!isEditMode">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            formControlName="password"
+            [ngClass]="{'is-invalid': adminForm.get('password')?.invalid && adminForm.get('password')?.touched}"
+          >
+          <div class="invalid-feedback" *ngIf="adminForm.get('password')?.errors?.['required']">
+            Password is required
+          </div>
+          <div class="invalid-feedback" *ngIf="adminForm.get('password')?.errors?.['minlength']">
+            Password must be at least 6 characters
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3" *ngIf="!isEditMode">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            [ngClass]="{'is-invalid': adminForm.get('confirmPassword')?.invalid && adminForm.get('confirmPassword')?.touched}"
+          >
+          <div class="invalid-feedback" *ngIf="adminForm.get('confirmPassword')?.errors?.['required']">
+            Please confirm your password
+          </div>
+          <div class="invalid-feedback" *ngIf="adminForm.get('confirmPassword')?.errors?.['passwordMismatch']">
+            Passwords do not match
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="adminForm.invalid">
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

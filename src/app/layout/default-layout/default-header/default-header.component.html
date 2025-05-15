@@ -1,0 +1,148 @@
+<!--<c-header class="mb-4 d-print-none" position="sticky">-->
+<ng-container>
+  <c-container [fluid]="true" class="border-bottom px-4">
+    <button
+      [cSidebarToggle]="sidebarId()"
+      cHeaderToggler
+      class="btn"
+      toggle="visible"
+      style="margin-inline-start: -14px;"
+      [attr.aria-label]="'common.toggleSidebar' | translate | async"
+    >
+      <svg cIcon name="cilMenu" size="lg"></svg>
+    </button>
+    <c-header-nav class="d-none d-md-flex">
+      <c-nav-item>
+        <a cNavLink routerLink="/dashboard" routerLinkActive="active">{{ 'common.dashboard' | translate | async }}</a>
+      </c-nav-item>
+      <c-nav-item>
+        <a cNavLink routerLink="/users" routerLinkActive="active">{{ 'users.title' | translate | async }}</a>
+      </c-nav-item>
+      <c-nav-item>
+        <a cNavLink routerLink="/settings" routerLinkActive="active">{{ 'common.settings' | translate | async }}</a>
+      </c-nav-item>
+    </c-header-nav>
+
+    <c-header-nav class="d-none d-md-flex ms-auto">
+      <a cNavLink>
+        <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
+      </a>
+      <a cNavLink>
+        <svg cIcon class="my-1" name="cilList" size="lg"></svg>
+      </a>
+      <a cNavLink>
+        <svg cIcon class="my-1" name="cilEnvelopeOpen" size="lg"></svg>
+      </a>
+    </c-header-nav>
+
+    <c-header-nav class="ms-auto ms-md-0">
+      <div class="nav-item py-1">
+        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+      </div>
+      <app-language-switcher></app-language-switcher>
+      <div class="nav-item py-1">
+        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+      </div>
+      <ng-container *ngTemplateOutlet="themeDropdown" />
+      <div class="nav-item py-1">
+        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+      </div>
+    </c-header-nav>
+
+    <c-header-nav class="mx-0">
+      <ng-container *ngTemplateOutlet="userDropdown" />
+    </c-header-nav>
+
+  </c-container>
+  <c-container [fluid]="true" class="px-4">
+    <c-breadcrumb-router />
+  </c-container>
+</ng-container>
+<!--</c-header>-->
+
+<ng-template #userDropdown>
+  <c-dropdown [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
+    <button
+      [caret]="false"
+      cDropdownToggle
+      class="py-0 pe-0"
+      [attr.aria-label]="'common.openUserMenu' | translate | async"
+    >
+      <c-avatar
+        shape="rounded-1"
+        [size]="'md'"
+        src="./assets/images/avatars/8.jpg"
+        status="success"
+        textColor="primary"
+        [attr.alt]="'common.userAvatar' | translate | async"
+      />
+    </button>
+    <ul cDropdownMenu class="pt-0 w-auto">
+      <li>
+        <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2 rounded-top">
+          {{ 'common.account' | translate | async }}
+        </h6>
+      </li>
+      @for (message of newMessages; track message.id) {
+        <li>
+          <a cDropdownItem [routerLink]="message.link">
+            <svg cIcon class="me-2" name="cilBell"></svg>
+            {{ message.title | translate | async }}
+            <c-badge class="ms-2 float-end" [color]="message.status">{{ message.time | translate | async }}</c-badge>
+          </a>
+        </li>
+      }
+      <li>
+        <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2">
+          {{ 'common.settings' | translate | async }}
+        </h6>
+      </li>
+      <li>
+        <a cDropdownItem routerLink="/profile">
+          <svg cIcon class="me-2" name="cilUser"></svg>
+          {{ 'common.profile' | translate | async }}
+        </a>
+      </li>
+      <li>
+        <a cDropdownItem routerLink="/settings">
+          <svg cIcon class="me-2" name="cilSettings"></svg>
+          {{ 'common.settings' | translate | async }}
+        </a>
+      </li>
+      <li>
+        <hr cDropdownDivider />
+      </li>
+      <li>
+        <a cDropdownItem (click)="onLogout()">
+          <svg cIcon class="me-2" name="cilAccountLogout"></svg>
+          {{ 'common.logout' | translate | async }}
+        </a>
+      </li>
+    </ul>
+  </c-dropdown>
+</ng-template>
+
+<ng-template #themeDropdown>
+  <c-dropdown alignment="end" variant="nav-item">
+    <button
+      [caret]="false"
+      cDropdownToggle
+      [attr.aria-label]="'common.openThemePicker' | translate | async"
+    >
+      <svg cIcon [name]="icons()" size="lg"></svg>
+    </button>
+    <div cDropdownMenu>
+      @for (mode of colorModes; track mode.name) {
+        <button
+          (click)="colorMode.set(mode.name)"
+          [active]="colorMode() === mode.name"
+          cDropdownItem
+          class="d-flex align-items-center"
+        >
+          <svg cIcon class="me-2" [name]="mode.icon" size="lg"></svg>
+          {{ 'theme.' + mode.name | translate | async }}
+        </button>
+      }
+    </div>
+  </c-dropdown>
+</ng-template>

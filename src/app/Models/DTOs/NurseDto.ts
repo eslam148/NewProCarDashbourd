@@ -1,0 +1,17 @@
+export interface NurseDto {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  rate: number | null;
+  specialization: string;
+  specializationId: number;
+  imageUrl: string;
+  governorate: string;
+  governorateId: number;
+  city: string;
+  cityId: number;
+  latitude: string;
+  longitude: string;
+  licenseNumber: string;
+}

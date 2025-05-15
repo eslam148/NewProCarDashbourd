@@ -1,0 +1,38 @@
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  margin-bottom: 1rem;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.list-group-item {
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f8f9fa;
+  }
+}
+
+.form-control, .form-select {
+  &:focus {
+    border-color: #321fdb;
+    box-shadow: 0 0 0 0.2rem rgba(50, 31, 219, 0.25);
+  }
+}
+
+.invalid-feedback {
+  display: block;
+}
+
+button[cButton] {
+  i {
+    margin-right: 0.5rem;
+  }
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}

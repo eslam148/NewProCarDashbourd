@@ -1,0 +1,69 @@
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { routes } from './app.routes';
+import { provideClientHydration } from '@angular/platform-browser';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { serviceCategoryReducer } from './store/service-category/service-category.reducer';
+import { subCategoryReducer } from './store/sub-category/sub-category.reducer';
+import { serviceCatalogReducer } from './store/service-catalog/service-catalog.reducer';
+import { ServiceCategoryEffects } from './store/service-category/service-category.effects';
+import { SubCategoryEffects } from './store/sub-category/sub-category.effects';
+import { ServiceCatalogEffects } from './store/service-catalog/service-catalog.effects';
+import { authReducer } from './store/auth/auth.reducer';
+import { AuthEffects } from './store/auth/auth.effects';
+import { translationReducer } from './store/translation/translation.reducer';
+import { TranslationEffects } from './store/translation/translation.effects';
+import { governorateReducer } from './store/governorate/governorate.reducer';
+import { GovernorateEffects } from './store/governorate/governorate.effects';
+import { IconModule, IconSetService } from '@coreui/icons-angular';
+import { SidebarNavHelper } from '@coreui/angular';
+import { TranslationService } from './services/translation.service';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(routes),
+    provideClientHydration(),
+    provideStore({
+      serviceCategory: serviceCategoryReducer,
+      subCategory: subCategoryReducer,
+      serviceCatalog: serviceCatalogReducer,
+      auth: authReducer,
+      translation: translationReducer,
+      governorate: governorateReducer
+    }),
+    provideEffects(
+      ServiceCategoryEffects,
+      SubCategoryEffects,
+      ServiceCatalogEffects,
+      AuthEffects,
+      TranslationEffects,
+      GovernorateEffects
+    ),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimations(),
+    importProvidersFrom(
+      TranslateModule.forRoot({
+        defaultLanguage: 'en',
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+        }
+      }),
+      IconModule
+    ),
+    IconSetService,
+    SidebarNavHelper,
+    TranslationService
+  ]
+};

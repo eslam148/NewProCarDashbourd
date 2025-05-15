@@ -1,0 +1,121 @@
+<div class="container mt-4">
+  <h2 class="mb-4">{{ 'specialty.title' | translate | async }}</h2>
+
+  <!-- Add Specialty Button -->
+  <div class="mb-3" *ngIf="!showForm && !isEditMode">
+    <button class="btn btn-success rounded-pill px-4" (click)="showAddForm()">
+      <i class="bi bi-plus"></i> {{ 'specialty.add' | translate | async }}
+    </button>
+  </div>
+
+  <!-- Feedback Messages -->
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage | translate | async }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage | translate | async }}</div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="d-flex justify-content-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">{{ 'common.loading' | translate | async }}</span>
+    </div>
+  </div>
+
+  <!-- Specialty Form -->
+  <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="submit()" class="mb-4 card p-3 shadow-sm">
+    <div class="row g-3 align-items-center">
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'specialty.nameAr' | translate | async }}</label>
+        <input formControlName="nameAr" [placeholder]="('specialty.nameAr' | translate | async)" class="form-control rounded-pill" [ngClass]="{'is-invalid': form.get('nameAr')?.invalid && form.get('nameAr')?.touched}" />
+        <div class="invalid-feedback" *ngIf="form.get('nameAr')?.invalid && form.get('nameAr')?.touched">
+          {{ 'specialty.nameArRequired' | translate | async }}
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'specialty.nameEn' | translate | async }}</label>
+        <input formControlName="nameEn" [placeholder]="('specialty.nameEn' | translate | async)" class="form-control rounded-pill" [ngClass]="{'is-invalid': form.get('nameEn')?.invalid && form.get('nameEn')?.touched}" />
+        <div class="invalid-feedback" *ngIf="form.get('nameEn')?.invalid && form.get('nameEn')?.touched">
+          {{ 'specialty.nameEnRequired' | translate | async }}
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'specialty.descriptionAr' | translate | async }}</label>
+        <input formControlName="descriptionAr" [placeholder]="('specialty.descriptionAr' | translate | async)" class="form-control rounded-pill" />
+      </div>
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'specialty.descriptionEn' | translate | async }}</label>
+        <input formControlName="descriptionEn" [placeholder]="('specialty.descriptionEn' | translate | async)" class="form-control rounded-pill" />
+      </div>
+    </div>
+    <div class="mt-3 d-flex flex-column flex-md-row gap-2">
+      <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="form.invalid || isLoading">
+        <i class="bi" [ngClass]="isEditMode ? 'bi-pencil' : 'bi-plus'" aria-hidden="true"></i>
+        <span class="d-none d-md-inline">{{ isEditMode ? ('specialty.edit' | translate | async) : ('specialty.add' | translate | async) }}</span>
+      </button>
+      <button type="button" class="btn btn-secondary rounded-pill px-4" (click)="cancel()" *ngIf="isEditMode || showForm">
+        <i class="bi bi-x"></i>
+        <span class="d-none d-md-inline">{{ 'common.cancel' | translate | async }}</span>
+      </button>
+    </div>
+  </form>
+
+  <!-- Specialties Table -->
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>{{ 'specialty.nameAr' | translate | async }}</th>
+              <th>{{ 'specialty.nameEn' | translate | async }}</th>
+              <th>{{ 'specialty.descriptionAr' | translate | async }}</th>
+              <th>{{ 'specialty.descriptionEn' | translate | async }}</th>
+              <th class="text-center">{{ 'specialty.actions' | translate | async }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let specialty of specialties">
+              <td>{{ specialty.nameAr }}</td>
+              <td>{{ specialty.nameEn }}</td>
+              <td>{{ specialty.descriptionAr }}</td>
+              <td>{{ specialty.descriptionEn }}</td>
+              <td class="text-center">
+                <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch justify-content-center">
+                  <button class="btn btn-sm btn-info rounded-pill w-100 w-md-auto mb-1 mb-md-0 px-2 px-md-3" (click)="edit(specialty)">
+                    {{ 'specialty.edit' | translate | async }}
+                  </button>
+                  <button class="btn btn-sm btn-danger rounded-pill w-100 w-md-auto px-2 px-md-3" (click)="delete(specialty.id!)">
+                    {{ 'specialty.delete' | translate | async }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="specialties.length === 0">
+              <td colspan="5" class="text-center text-muted">{{ 'specialty.noData' | translate | async }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <c-modal [visible]="isDeleteModalOpen" (visibleChange)="!$event && closeDeleteModal()" class="fade-in">
+    <c-modal-header class="bg-light">
+      <div class="d-flex align-items-center">
+        <i class="cil-trash me-2 text-danger"></i>
+        <h5 cModalTitle>{{ 'specialty.delete' | translate | async }}</h5>
+      </div>
+      <button cButtonClose (click)="closeDeleteModal()"></button>
+    </c-modal-header>
+    <c-modal-body>
+      <p>{{ 'specialty.confirmDelete' | translate | async }}</p>
+    </c-modal-body>
+    <c-modal-footer>
+      <button type="button" class="btn btn-sm btn-info rounded-pill px-3 me-2" (click)="closeDeleteModal()">
+        {{ 'common.cancel' | translate | async }}
+      </button>
+      <button type="button" class="btn btn-sm btn-danger rounded-pill px-3" (click)="confirmDelete()">
+        {{ 'specialty.delete' | translate | async }}
+      </button>
+    </c-modal-footer>
+  </c-modal>
+</div>
