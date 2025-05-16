@@ -1,4 +1,5 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
@@ -28,10 +29,28 @@ export class AppComponent implements OnInit {
   readonly #colorModeService = inject(ColorModeService);
   readonly #iconSetService = inject(IconSetService);
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {
     this.#titleService.setTitle(this.title);
-    // iconSet singleton - ensure all icon sets are loaded
-    this.#iconSetService.icons = { ...freeSet, ...brandSet, ...flagSet, ...iconSubset };
+
+    // Enhanced icon registration to ensure all icons are properly loaded
+    if (isPlatformBrowser(this.platformId)) {
+      // Register all icon sets
+      this.#iconSetService.icons = {
+        ...freeSet,
+        ...brandSet,
+        ...flagSet,
+        ...iconSubset
+      };
+
+      // Force icon set update
+      setTimeout(() => {
+        // This timeout ensures the icons are properly registered after the DOM is ready
+        this.#iconSetService.icons = {
+          ...this.#iconSetService.icons
+        };
+      }, 100);
+    }
+
     this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
   }

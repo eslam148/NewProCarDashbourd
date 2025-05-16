@@ -1,0 +1,75 @@
+// Button icon styling
+.btn {
+  position: relative;
+  overflow: hidden;
+
+  &.d-flex {
+    padding: 0.4rem;
+  }
+
+  svg {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+}
+
+// Force icon visibility in buttons
+button {
+  c-icon, svg {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 100 !important;
+    position: relative !important;
+  }
+}
+
+// Dropdown styling improvements
+.dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+
+  svg, c-icon {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    margin-right: 0.5rem !important;
+  }
+}
+
+// Nav links with icons
+a[cNavLink] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  svg {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+// Ensure consistent icon display across the app
+:host ::ng-deep {
+  c-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+
+    svg {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      min-width: 16px !important;
+      min-height: 16px !important;
+    }
+  }
+}

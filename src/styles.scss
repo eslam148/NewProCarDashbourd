@@ -14,3 +14,42 @@
 // ));
 
 // Include any additional global Angular styles here
+
+// Global icon fixes - CRITICAL FIX FOR ICON VISIBILITY
+svg[cIcon] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+}
+
+// Force all c-icon elements to be visible and properly rendered
+c-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 5 !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+
+  &::before, &::after {
+    display: none !important;
+  }
+}
+
+// Fix CoreUI icon implementation issues
+:root {
+  --cui-icon-size-sm: 16px !important;
+  --cui-icon-size-md: 20px !important;
+  --cui-icon-size-lg: 24px !important;
+  --cui-icon-size-xl: 32px !important;
+}
+
+// Add your other global styles below

@@ -38,14 +38,14 @@ import { LanguageSwitcherComponent } from '../../../components/language-switcher
       ContainerComponent,
       HeaderTogglerDirective,
       SidebarToggleDirective,
-      IconDirective,
+ 
       HeaderNavComponent,
       NavItemComponent,
       NavLinkDirective,
       RouterLink,
       RouterLinkActive,
       NgTemplateOutlet,
-      BreadcrumbRouterComponent,
+
       DropdownComponent,
       DropdownToggleDirective,
       AvatarComponent,
