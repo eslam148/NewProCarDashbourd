@@ -21,6 +21,187 @@
 
 [npm-coreui-download]: https://img.shields.io/npm/dm/@coreui/coreui.svg?style=flat-square
 
+# Healthcare Management System
+
+A comprehensive healthcare management system built with Angular 19 and CoreUI 5.4.5, featuring a modern and responsive admin interface. This system is designed to streamline healthcare operations and provide an intuitive user experience across all devices.
+
+## 🚀 Features
+
+### Core Features
+- **Dashboard**: Central overview of system metrics and key information
+- **Authentication System**
+  - Secure login system
+  - User registration
+  - Protected routes with AuthGuard
+  - Role-based access control
+
+### Healthcare Management
+- **Admin Management**
+  - Admin user management interface
+  - User role and permissions control
+  - Activity monitoring
+
+- **Location Management**
+  - Manage healthcare facility locations
+  - Location-based service organization
+  - Geographic service distribution
+
+- **Service Category Management**
+  - Organize and categorize healthcare services
+  - Service hierarchy management
+  - Service availability tracking
+
+- **Request Management**
+  - Handle and process healthcare service requests
+  - Request tracking and status updates
+  - Priority-based request handling
+
+- **Nurse Management**
+  - Nurse profiles and credentials
+  - Assignment and scheduling
+  - Performance tracking
+  - Availability management
+
+- **Specialty Management**
+  - Medical specialties organization
+  - Specialty-based service categorization
+  - Expert resource allocation
+
+### UI Components and Features
+- **Theme Customization**
+  - Multiple theme options (Default, Light, Modern, Bright)
+  - Customizable color schemes
+  - Responsive design for all devices
+  - Dark/Light mode support
+
+- **Base Components**
+  - Reusable UI components
+  - Consistent design patterns
+  - Accessibility features
+
+- **Form Components**
+  - Advanced form controls
+  - Form validation
+  - Dynamic form generation
+  - Real-time validation
+
+- **Data Visualization**
+  - Interactive charts
+  - Data analytics dashboard
+  - Statistical reporting
+  - Custom chart configurations
+
+- **Notification System**
+  - Real-time notifications
+  - Alert management
+  - Status updates
+  - Priority-based notifications
+
+- **Widget System**
+  - Customizable dashboard widgets
+  - Quick access components
+  - Information cards
+  - Drag-and-drop interface
+
+### Technical Features
+- **Internationalization**
+  - Multi-language support
+  - Translation management
+  - Localization features
+  - RTL support
+
+- **State Management**
+  - NgRx integration
+  - Centralized state management
+  - Reactive programming
+  - Action-based state updates
+
+- **Routing**
+  - Lazy loading
+  - Route guards
+  - Dynamic routing
+  - Breadcrumb navigation
+
+## 🛠️ Technology Stack
+
+- **Frontend Framework**: Angular 19
+- **UI Framework**: CoreUI 5.4.5
+- **State Management**: NgRx
+- **Charts**: Chart.js
+- **Icons**: CoreUI Icons
+- **Internationalization**: ngx-translate
+- **Additional Libraries**:
+  - ngx-scrollbar
+  - lodash-es
+  - Angular CDK
+  - Angular Material
+
+## 📋 Prerequisites
+
+- Node.js (v18.19.1 or v20.11.1 or v22.0.0)
+- npm (version 9 or higher)
+- Angular CLI (latest version)
+
+## 🚀 Getting Started
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/healthcare-management-system.git
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+4. Build for production:
+   ```bash
+   npm run build
+   ```
+
+## 🔧 Development
+
+- Run tests:
+  ```bash
+  npm test
+  ```
+
+- Watch mode:
+  ```bash
+  npm run watch
+  ```
+
+- Code scaffolding:
+  ```bash
+  ng generate component component-name
+  ```
+
+## 📚 Documentation
+
+- [CoreUI Documentation](https://coreui.io/angular/docs/)
+- [Angular Documentation](https://angular.io/docs)
+- [NgRx Documentation](https://ngrx.io/docs)
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👥 Authors
+
+- The CoreUI Team
+- Contributors
+
+## 🔗 Links
+
+- [CoreUI Documentation](https://coreui.io/angular/docs/)
+- [GitHub Repository](https://github.com/coreui/coreui-free-angular-admin-template)
+- [Angular Documentation](https://angular.io/docs)
+
 # CoreUI Free Admin Dashboard Template for Angular 19
 
 CoreUI is meant to be the UX game changer. Pure & transparent code is devoid of redundant components, so the app is light enough to offer ultimate user
@@ -251,5 +432,5 @@ Thanks to all the backers and sponsors! Support this project by [becoming a back
 copyright 2025 creativeLabs Łukasz Holeczek.
 
 Code released under [the MIT license](https://github.com/coreui/coreui-free-react-admin-template/blob/master/LICENSE).
-There is only one limitation you can't re-distribute the CoreUI as stock. You can’t do this if you modify the CoreUI. In the past, we faced some problems with
+There is only one limitation you can't re-distribute the CoreUI as stock. You can't do this if you modify the CoreUI. In the past, we faced some problems with
 persons who tried to sell CoreUI based templates.
