@@ -6,13 +6,14 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
 import { CommonModule } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { PaginationModule } from '@coreui/angular';
 
 @Component({
   selector: 'app-nurse',
   standalone: true,
   templateUrl: './nurse.component.html',
   styleUrls: ['./nurse.component.scss'],
-  imports: [TranslatePipe, CommonModule, ReactiveFormsModule],
+  imports: [TranslatePipe, CommonModule, ReactiveFormsModule, PaginationModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NurseComponent implements OnInit {
@@ -25,6 +26,10 @@ export class NurseComponent implements OnInit {
   isDeleteModalOpen = false;
   nurseIdToDelete: string | null = null;
   selectedImageFile: File | null = null;
+  pageNumber = 1;
+  pageSize = 10;
+  totalCount = 0;
+  imagePreview: string | ArrayBuffer | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -56,15 +61,27 @@ export class NurseComponent implements OnInit {
   }
 
   loadNurses() {
-    this.nurseService.getAllNurses({ pageNumber: 1, pageSize: 10, searchKey: '', cityId: 0 }).subscribe({
+    this.nurseService.getAllNurses({ pageNumber: this.pageNumber, pageSize: this.pageSize, searchKey: '', cityId: 0 }).subscribe({
       next: (res) => {
         this.nurses = res.data.items;
+        this.totalCount = res.data.totalCount;
       },
       error: (error) => {
         this.errorMessage = 'nurse.loadError';
         console.error('Error loading nurses:', error);
       }
     });
+  }
+
+  onPageChange(page: number) {
+    if (page < 1 || (page - 1) * this.pageSize >= this.totalCount) return;
+    this.pageNumber = page;
+    this.loadNurses();
+  }
+
+  getPagesCount(): number {
+    if (!this.totalCount || this.totalCount <= 0) return 1;
+    return Math.ceil(this.totalCount / this.pageSize);
   }
 
   showAddForm() {
@@ -85,6 +102,13 @@ export class NurseComponent implements OnInit {
   onImageSelected(event: any) {
     if (event.target.files && event.target.files.length > 0) {
       this.selectedImageFile = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagePreview = e.target && 'result' in e.target ? e.target.result : null;
+      };
+      if (this.selectedImageFile) {
+        reader.readAsDataURL(this.selectedImageFile);
+      }
     }
   }
 

@@ -21,6 +21,10 @@ import { translationReducer } from './store/translation/translation.reducer';
 import { TranslationEffects } from './store/translation/translation.effects';
 import { governorateReducer } from './store/governorate/governorate.reducer';
 import { GovernorateEffects } from './store/governorate/governorate.effects';
+import { adminReducer } from './store/admin/admin.reducer';
+import { AdminEffects } from './store/admin/admin.effects';
+import { cityReducer } from './store/city/city.reducer';
+import { CityEffects } from './store/city/city.effects';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { SidebarNavHelper } from '@coreui/angular';
 import { TranslationService } from './services/translation.service';
@@ -39,7 +43,9 @@ export const appConfig: ApplicationConfig = {
       serviceCatalog: serviceCatalogReducer,
       auth: authReducer,
       translation: translationReducer,
-      governorate: governorateReducer
+      governorate: governorateReducer,
+      admin: adminReducer,
+      city: cityReducer
     }),
     provideEffects(
       ServiceCategoryEffects,
@@ -47,7 +53,9 @@ export const appConfig: ApplicationConfig = {
       ServiceCatalogEffects,
       AuthEffects,
       TranslationEffects,
-      GovernorateEffects
+      GovernorateEffects,
+      AdminEffects,
+      CityEffects
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations(),

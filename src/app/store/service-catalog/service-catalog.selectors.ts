@@ -22,3 +22,8 @@ export const selectSelectedService = createSelector(
   selectServiceCatalogState,
   (state: ServiceCatalogState) => state.selectedService
 );
+
+export const selectServiceCatalogTotalCount = createSelector(
+  selectServiceCatalogState,
+  (state: ServiceCatalogState) => state.totalCount
+);

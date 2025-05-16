@@ -27,4 +27,8 @@ export class RequestService {
       searchDto
     );
   }
+
+  getRequestById(id: string): Observable<GenericResponse<GetMobileRequestDto>> {
+    return this.http.get<GenericResponse<GetMobileRequestDto>>(`${this.apiUrl}/api/Request/Admin/GetById/${id}`);
+  }
 }

@@ -7,13 +7,15 @@ export interface ServiceCatalogState {
   selectedService: ServiceCatalogDto | null;
   loading: boolean;
   error: any;
+  totalCount: number;
 }
 
 export const initialState: ServiceCatalogState = {
   services: [],
   selectedService: null,
   loading: false,
-  error: null
+  error: null,
+  totalCount: 0
 };
 
 export const serviceCatalogReducer = createReducer(
@@ -37,10 +39,11 @@ export const serviceCatalogReducer = createReducer(
     loading: false,
     services: state.services.map(s => s.id === service.id ? service : s)
   })),
-  on(ServiceCatalogActions.loadAllServicesSuccess, (state, { services }) => ({
+  on(ServiceCatalogActions.loadAllServicesSuccess, (state, { services, totalCount }) => ({
     ...state,
     loading: false,
-    services
+    services,
+    totalCount
   })),
   on(ServiceCatalogActions.deleteServiceSuccess, (state, { id }) => ({
     ...state,

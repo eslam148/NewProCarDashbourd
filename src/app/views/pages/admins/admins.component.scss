@@ -1,0 +1,68 @@
+.admin-container {
+  padding: 20px;
+
+  [dir="rtl"] & {
+    .table {
+      th, td {
+        text-align: right;
+      }
+    }
+
+    .btn {
+      margin-left: 0;
+      margin-right: 0.5rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .me-2 {
+      margin-right: 0 !important;
+      margin-left: 0.5rem !important;
+    }
+  }
+
+  [dir="ltr"] & {
+    .table {
+      th, td {
+        text-align: left;
+      }
+    }
+
+    .btn {
+      margin-right: 0.5rem;
+      margin-left: 0;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .table {
+    th {
+      font-weight: 600;
+      background-color: #f8f9fa;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  c-pagination {
+    ::ng-deep {
+      .pagination {
+        margin-bottom: 0;
+      }
+
+      [dir="rtl"] & {
+        .page-link {
+          margin-left: 0;
+          margin-right: -1px;
+        }
+      }
+    }
+  }
+}

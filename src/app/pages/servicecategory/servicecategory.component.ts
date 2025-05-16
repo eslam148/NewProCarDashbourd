@@ -22,7 +22,7 @@ import { ServiceCatalogDto } from '../../Models/DTOs/ServiceCatalogDto';
 import { SubCategoryDto } from '../../Models/DTOs/SubCategoryDto';
 import { selectAllCategories, selectServiceCategoryLoading, selectServiceCategoryError } from '../../store/service-category/service-category.selectors';
 import * as ServiceCategoryActions from '../../store/service-category/service-category.actions';
-import { selectAllServices, selectServiceCatalogLoading, selectServiceCatalogError } from '../../store/service-catalog/service-catalog.selectors';
+import { selectAllServices, selectServiceCatalogLoading, selectServiceCatalogError, selectServiceCatalogTotalCount } from '../../store/service-catalog/service-catalog.selectors';
 import * as ServiceCatalogActions from '../../store/service-catalog/service-catalog.actions';
 import { selectAllSubCategories, selectSubCategoryLoading, selectSubCategoryError } from '../../store/sub-category/sub-category.selectors';
 import * as SubCategoryActions from '../../store/sub-category/sub-category.actions';
@@ -94,6 +94,15 @@ export class ServicecategoryComponent implements OnInit {
   isDeleteSubCategoryModalOpen = false;
   selectedSubCategoryId: number | null = null;
 
+  // Pagination for services
+  currentPage = 1;
+  pageSize = 2;
+  totalItems = 0;
+
+  searchKey = '';
+
+  totalItems$ = this.store.select(selectServiceCatalogTotalCount);
+
   constructor(
     private store: Store,
     private fb: FormBuilder,
@@ -134,12 +143,35 @@ export class ServicecategoryComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
+    this.serviceCatalogs$.subscribe(data => {
+      console.log('Service Catalogs:', data);
+    });
+    this.totalItems$.subscribe(count => {
+      console.log('Total Items:', count);
+    });
   }
 
   loadData(): void {
+    this.loadServices();
     this.store.dispatch(ServiceCategoryActions.loadAllCategories());
-    this.store.dispatch(ServiceCatalogActions.loadAllServices());
     this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+  }
+
+  loadServices() {
+    this.store.dispatch(ServiceCatalogActions.loadAllServices({
+      page: this.currentPage,
+      pageSize: this.pageSize,
+      searchKey: this.searchKey
+    }));
+  }
+
+  onPageChange(page: number | Event) {
+    if (typeof page === 'number') {
+      this.currentPage = page;
+    } else if (page && typeof (page as any).target?.value !== 'undefined') {
+      this.currentPage = +(page as any).target.value;
+    }
+    this.loadServices();
   }
 
   openAddModal() {
@@ -468,5 +500,15 @@ export class ServicecategoryComponent implements OnInit {
       this.store.dispatch(SubCategoryActions.deleteSubCategory({ id: this.selectedSubCategoryId }));
       this.closeDeleteSubCategoryModal();
     }
+  }
+
+  onSearch() {
+    this.currentPage = 1;
+    this.loadServices();
+  }
+
+  getPagesCount(total: number | null | undefined): number {
+    if (!total || total <= 0) return 1;
+    return Math.ceil(total / this.pageSize);
   }
 }

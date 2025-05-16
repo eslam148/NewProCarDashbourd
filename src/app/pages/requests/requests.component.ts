@@ -23,11 +23,14 @@ export class RequestsComponent implements OnInit {
   loading = false;
   showPrevious = false;
   selectedRequest: GetMobileRequestDto | null = null;
+  loadingDetails = false;
+  showDetailsModal = false;
 
   constructor(private requestService: RequestService, private fb: FormBuilder) {
+    const today = new Date().toISOString().substring(0, 10);
     this.filterForm = this.fb.group({
-      fromDate: [''],
-      toDate: [''],
+      fromDate: [today],
+      toDate: [today],
       status: ['']
     });
   }
@@ -77,11 +80,22 @@ export class RequestsComponent implements OnInit {
     this.loadRequests();
   }
 
-  showDetails(req: GetMobileRequestDto) {
-    this.selectedRequest = req;
+  showDetails(id: string) {
+    this.loadingDetails = true;
+    this.requestService.getRequestById(id).subscribe({
+      next: (res) => {
+        this.selectedRequest = res.data;
+        this.loadingDetails = false;
+        this.showDetailsModal = true;
+      },
+      error: () => {
+        this.loadingDetails = false;
+      }
+    });
   }
 
   closeDetails() {
     this.selectedRequest = null;
+    this.showDetailsModal = false;
   }
 }

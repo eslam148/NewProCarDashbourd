@@ -27,11 +27,8 @@ export class ServiceCatalogService {
     return this.http.put(`${this.apiUrl}/UpdateService`, service);
   }
 
-  getAllServices(search: AdminsSearchDto={ SearchKey: '', PageNumber: 1, PageSize: 10 }): Observable<ServiceCatalogDto[]> {
-    return this.http.post<any>(`${this.apiUrl}/GetAllServices`, search)
-      .pipe(
-        map(response => response.items)
-      );
+  getAllServices(search: AdminsSearchDto={ SearchKey: '', PageNumber: 1, PageSize: 10 }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/GetAllServices`, search);
   }
 
   deleteService(id: number): Observable<any> {

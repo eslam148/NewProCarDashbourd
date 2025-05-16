@@ -34,9 +34,9 @@ export class ServiceCatalogEffects {
   loadAllServices$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ServiceCatalogActions.loadAllServices),
-      mergeMap(() =>
-        this.service.getAllServices().pipe(
-          map(services => ServiceCatalogActions.loadAllServicesSuccess({ services })),
+      mergeMap(({ page, pageSize, searchKey }) =>
+        this.service.getAllServices({ SearchKey: searchKey || '', PageNumber: page, PageSize: pageSize }).pipe(
+          map(response => ServiceCatalogActions.loadAllServicesSuccess({ services: response.items, totalCount: response.totalCount })),
           catchError(error => of(ServiceCatalogActions.loadAllServicesFailure({ error })))
         )
       )

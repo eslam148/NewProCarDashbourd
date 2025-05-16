@@ -9,8 +9,14 @@ export const updateService = createAction('[ServiceCatalog] Update Service', pro
 export const updateServiceSuccess = createAction('[ServiceCatalog] Update Service Success', props<{ service: ServiceCatalogDto }>());
 export const updateServiceFailure = createAction('[ServiceCatalog] Update Service Failure', props<{ error: any }>());
 
-export const loadAllServices = createAction('[ServiceCatalog] Load All Services');
-export const loadAllServicesSuccess = createAction('[ServiceCatalog] Load All Services Success', props<{ services: ServiceCatalogDto[] }>());
+export const loadAllServices = createAction(
+  '[ServiceCatalog] Load All Services',
+  props<{ page: number, pageSize: number, searchKey?: string }>()
+);
+export const loadAllServicesSuccess = createAction(
+  '[ServiceCatalog] Load All Services Success',
+  props<{ services: ServiceCatalogDto[], totalCount: number }>()
+);
 export const loadAllServicesFailure = createAction('[ServiceCatalog] Load All Services Failure', props<{ error: any }>());
 
 export const deleteService = createAction('[ServiceCatalog] Delete Service', props<{ id: number }>());

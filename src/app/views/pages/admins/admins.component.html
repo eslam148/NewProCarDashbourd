@@ -1,1 +1,66 @@
-<p>admins works!</p>
+<div class="admin-container" [dir]="direction">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Admins</h2>
+    <button class="btn btn-primary" (click)="toggleDirection()">
+      {{ direction === 'ltr' ? 'RTL' : 'LTR' }}
+    </button>
+  </div>
+
+  <!-- Page size selector with RTL/LTR support -->
+  <div class="d-flex align-items-center mb-3" [dir]="direction">
+    <label class="me-2" *ngIf="direction === 'ltr'">Show</label>
+    <label class="ms-2" *ngIf="direction === 'rtl'">إظهار</label>
+    <select
+      class="form-select mx-2"
+      style="width: 80px; text-align: center;"
+      [value]="pageSize"
+      (change)="onPageSizeChange($event.target.value)">
+      <option [value]="5">5</option>
+      <option [value]="10">10</option>
+      <option [value]="25">25</option>
+      <option [value]="50">50</option>
+    </select>
+    <span *ngIf="direction === 'ltr'">entries</span>
+    <span *ngIf="direction === 'rtl'">مدخلات</span>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="admins$ | async as admins">
+          <tr *ngFor="let admin of admins?.items">
+            <td>{{ admin.id }}</td>
+            <td>{{ admin.name }}</td>
+            <td>{{ admin.email }}</td>
+            <td>
+              <button class="btn btn-sm btn-primary me-2">Edit</button>
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-center mt-4">
+    <c-pagination
+      [align]="direction === 'rtl' ? 'end' : 'start'"
+      [activePage]="currentPage"
+      [pages]="totalItems"
+      [visiblePages]="5"
+      (activePageChange)="onPageChange($event)"
+    >
+      <c-pagination-item *cPaginationPages="let page">
+        {{ page }}
+      </c-pagination-item>
+    </c-pagination>
+  </div>
+</div>
