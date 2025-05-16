@@ -117,9 +117,11 @@
               [visiblePages]="5"
               (activePageChange)="onPageChange($event)"
               class="pagination-custom">
-              <c-pagination-item *cPaginationPages="let page">
-                {{ page }}
-              </c-pagination-item>
+              <ng-container *ngFor="let page of [].constructor(getPagesCount(totalItems$ | async) || 0); let i = index">
+                <c-pagination-item [active]="currentPage === i + 1" (click)="onPageChange(i + 1)">
+                  {{ i + 1 }}
+                </c-pagination-item>
+              </ng-container>
               <c-pagination-item ariaLabel="Previous" [disabled]="currentPage === 1">
                 <span aria-hidden="true">&laquo;</span>
               </c-pagination-item>

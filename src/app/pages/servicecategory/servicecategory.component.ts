@@ -107,7 +107,8 @@ export class ServicecategoryComponent implements OnInit {
 
   searchKey = '';
 
-  totalItems$ = this.store.select(selectServiceCatalogTotalCount);
+  // Declare the property without initializing it
+  totalItems$: Observable<number>;
 
   constructor(
     private store: Store,
@@ -116,6 +117,9 @@ export class ServicecategoryComponent implements OnInit {
     private subCategoryService: SubCategoryService,
     private iconSetService: IconSetService
   ) {
+    // Initialize the property here
+    this.totalItems$ = this.store.select(selectServiceCatalogTotalCount);
+
     // Register Icons
     iconSetService.icons = {
       cilPlus, cilPencil, cilTrash, cilList, cilSearch, cilFolder,
