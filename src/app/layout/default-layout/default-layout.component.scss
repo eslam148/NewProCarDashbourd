@@ -117,6 +117,10 @@
     color: rgba(255, 255, 255, 0.6);
     transition: all 0.3s ease;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+    width: 16px !important;
+    height: 16px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
 
@@ -489,5 +493,29 @@ c-sidebar-footer {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// Ensure icons are properly rendered
+.sidebar {
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  // Fix for icon visibility in sidebar
+  c-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      display: block;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
   }
 }

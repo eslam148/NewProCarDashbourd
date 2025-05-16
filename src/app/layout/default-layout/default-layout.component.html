@@ -31,7 +31,7 @@
             class="sidebar-link d-flex align-items-center"
           >
             <div [ngClass]="getIconClass(item)" class="sidebar-icon-wrapper">
-              <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name"></svg>
+              <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name" width="16" height="16"></svg>
             </div>
             <span class="sidebar-text">{{ item.name! | translate | async }}</span>
             <span *ngIf="item.badge" class="badge ms-auto">{{ item.badge.text }}</span>
@@ -42,10 +42,10 @@
         <li *ngIf="!item.title && item.children" class="sidebar-item has-submenu">
           <div class="sidebar-link d-flex align-items-center" (click)="toggleSubmenu($event)">
             <div [ngClass]="getIconClass(item)" class="sidebar-icon-wrapper">
-              <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name"></svg>
+              <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name" width="16" height="16"></svg>
             </div>
             <span class="sidebar-text">{{ item.name! | translate | async }}</span>
-            <svg cIcon class="submenu-arrow ms-auto" name="cilChevronRight"></svg>
+            <svg cIcon class="submenu-arrow ms-auto" name="cilChevronRight" width="16" height="16"></svg>
           </div>
           <ul class="sidebar-subnav">
             <li *ngFor="let child of item.children" class="sidebar-subitem">
@@ -67,7 +67,7 @@
   <ng-container *ngIf="!sidebar1.narrow">
     <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
       <button cSidebarToggler aria-label="Toggle sidebar fold" class="d-flex align-items-center justify-content-center w-100">
-        <svg cIcon name="cilChevronLeft" class="me-1"></svg>
+        <svg cIcon name="cilChevronLeft" class="me-1" width="16" height="16"></svg>
         <span class="small">Collapse</span>
       </button>
     </c-sidebar-footer>
@@ -75,7 +75,7 @@
   <ng-container *ngIf="sidebar1.narrow">
     <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
       <button cSidebarToggler aria-label="Toggle sidebar expand" class="d-flex align-items-center justify-content-center w-100">
-        <svg cIcon name="cilChevronRight"></svg>
+        <svg cIcon name="cilChevronRight" width="16" height="16"></svg>
       </button>
     </c-sidebar-footer>
   </ng-container>

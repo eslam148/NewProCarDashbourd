@@ -9,6 +9,7 @@ import { checkAuth } from './store/auth/auth.actions';
 import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
+import { brandSet, flagSet, freeSet } from '@coreui/icons';
 
 @Component({
     selector: 'app-root',
@@ -29,8 +30,8 @@ export class AppComponent implements OnInit {
 
   constructor() {
     this.#titleService.setTitle(this.title);
-    // iconSet singleton
-    this.#iconSetService.icons = { ...iconSubset };
+    // iconSet singleton - ensure all icon sets are loaded
+    this.#iconSetService.icons = { ...freeSet, ...brandSet, ...flagSet, ...iconSubset };
     this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
   }
