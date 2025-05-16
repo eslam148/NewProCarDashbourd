@@ -1,0 +1,252 @@
+/* Global UI/UX Styles for NewProCarDashboard */
+
+// Common Colors and Variables
+:root {
+    // Gradient variables
+    --primary-gradient: linear-gradient(135deg, #321fdb 0%, #1f1498 100%);
+    --success-gradient: linear-gradient(135deg, #2eb85c 0%, #1b9e3e 100%);
+    --info-gradient: linear-gradient(135deg, #39f 0%, #0e7fc1 100%);
+    --warning-gradient: linear-gradient(135deg, #f9b115 0%, #e49113 100%);
+    --danger-gradient: linear-gradient(135deg, #e55353 0%, #d93737 100%);
+    --light-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    --dark-gradient: linear-gradient(135deg, #343a40 0%, #1d2124 100%);
+
+    // Shadow and other variables
+    --card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+    --card-hover-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12);
+    --btn-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+}
+
+// Custom SASS variables for Angular components
+$primary-gradient: var(--primary-gradient);
+$success-gradient: var(--success-gradient);
+$info-gradient: var(--info-gradient);
+$warning-gradient: var(--warning-gradient);
+$danger-gradient: var(--danger-gradient);
+$light-gradient: var(--light-gradient);
+$dark-gradient: var(--dark-gradient);
+
+// Common Card Styles
+.custom-card {
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-speed) ease;
+    overflow: hidden;
+
+    &:hover {
+        box-shadow: var(--card-hover-shadow);
+    }
+
+    .card-header {
+        padding: 1rem 1.25rem;
+        font-weight: 600;
+
+        &.gradient-primary { background: var(--primary-gradient); color: white; }
+        &.gradient-success { background: var(--success-gradient); color: white; }
+        &.gradient-info { background: var(--info-gradient); color: white; }
+        &.gradient-warning { background: var(--warning-gradient); color: white; }
+        &.gradient-danger { background: var(--danger-gradient); color: white; }
+        &.gradient-light { background: var(--light-gradient); color: #343a40; }
+        &.gradient-dark { background: var(--dark-gradient); color: white; }
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .card-footer {
+        padding: 0.75rem 1.25rem;
+        background-color: rgba(0, 0, 0, 0.03);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+}
+
+// Button Enhancements
+.btn {
+    border-radius: 50rem;
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    border: none;
+
+    &:active {
+        transform: translateY(1px);
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--btn-shadow);
+    }
+
+    svg, i {
+        margin-right: 0.375rem;
+    }
+
+    &.btn-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        svg, i {
+            margin-right: 0;
+        }
+    }
+}
+
+// Form Control Styles
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+
+    &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.05);
+        border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    &.rounded-pill {
+        border-radius: 50rem;
+    }
+}
+
+// Table Styles
+.custom-table {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+
+    thead th {
+        background: var(--light-gradient);
+        color: #495057;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        letter-spacing: 0.5px;
+        padding: 1rem 1.25rem;
+        border-bottom: 2px solid #e9ecef;
+        white-space: nowrap;
+    }
+
+    tbody {
+        tr {
+            background-color: white;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.02);
+            }
+
+            &:last-child td {
+                border-bottom: none;
+            }
+        }
+
+        td {
+            padding: 1rem 1.25rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f8f9fa;
+        }
+    }
+}
+
+// Hover Effects
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+}
+
+// Icon Containers
+.icon-container {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #0056b3;
+
+    &.info {
+        background-color: #e6f7ff;
+        color: #0c7cd5;
+    }
+
+    &.success {
+        background-color: #e8f5e9;
+        color: #28a745;
+    }
+
+    &.warning {
+        background-color: #fff3e0;
+        color: #fd7e14;
+    }
+
+    &.danger {
+        background-color: #ffebee;
+        color: #dc3545;
+    }
+}
+
+// Animations
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Responsive Utilities
+@media (max-width: 768px) {
+    .custom-card {
+        border-radius: 0.5rem;
+
+        .card-header {
+            padding: 0.875rem 1rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+    }
+
+    .btn {
+        padding: 0.375rem 1rem;
+    }
+
+    .custom-table {
+        thead th {
+            padding: 0.75rem 1rem;
+        }
+
+        tbody td {
+            padding: 0.75rem 1rem;
+        }
+    }
+
+    .icon-container {
+        width: 36px;
+        height: 36px;
+    }
+}

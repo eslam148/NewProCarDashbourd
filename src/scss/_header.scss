@@ -1,0 +1,134 @@
+/* Professional Styles for Header and Toolbar */
+
+.header {
+  background: white;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.06);
+
+  .header-brand {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  // Enhance header toggler button
+  .header-toggler {
+    background: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(var(--cui-primary-rgb), 0.08);
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // Enhance dropdown nav items
+  .header-nav {
+    .nav-link {
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(var(--cui-primary-rgb), 0.08);
+      }
+
+      &.active {
+        background: rgba(var(--cui-primary-rgb), 0.12);
+        color: var(--cui-primary);
+      }
+
+      .badge {
+        transition: all 0.3s ease;
+      }
+
+      &:hover .badge {
+        transform: scale(1.1);
+      }
+    }
+
+    // Style dropdown
+    .dropdown-menu {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+
+      // Dropdown items
+      .dropdown-item {
+        border-radius: 6px;
+        margin: 2px 4px;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.3s ease;
+
+        &:hover, &:focus {
+          background: rgba(var(--cui-primary-rgb), 0.08);
+          transform: translateX(2px);
+        }
+
+        &.active {
+          background: rgba(var(--cui-primary-rgb), 0.12);
+          color: var(--cui-primary);
+          font-weight: 500;
+        }
+      }
+
+      // Dropdown headers
+      .dropdown-header {
+        color: var(--cui-primary);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      // Dropdown dividers
+      .dropdown-divider {
+        opacity: 0.08;
+      }
+    }
+  }
+
+  // User dropdown with avatar
+  .avatar-dropdown {
+    .avatar {
+      border: 2px solid rgba(var(--cui-primary-rgb), 0.2);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: var(--cui-primary);
+      }
+    }
+  }
+
+  // Search input
+  .header-search {
+    .form-control {
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 0.5rem 1rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+
+      &:focus {
+        border-color: var(--cui-primary);
+        box-shadow: 0 0 0 3px rgba(var(--cui-primary-rgb), 0.15);
+      }
+    }
+
+    .btn {
+      border-radius: 8px;
+      padding: 0.375rem 0.75rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateX(2px);
+      }
+    }
+  }
+}

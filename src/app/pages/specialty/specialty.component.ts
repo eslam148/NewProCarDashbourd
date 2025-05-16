@@ -5,14 +5,44 @@ import { SpecialtyService } from '../../services/specialty.service';
 import { SpecialtyDto } from '../../Models/DTOs/SpecialtyDto';
 import { TranslationService } from '../../services/translation.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
-import { ModalModule } from '@coreui/angular';
+import {
+  ButtonModule,
+  ModalModule,
+  CardModule,
+  FormModule,
+  GridModule,
+  TableModule
+} from '@coreui/angular';
+import { IconModule, IconSetService } from '@coreui/icons-angular';
+import {
+  cilPlus,
+  cilPencil,
+  cilTrash,
+  cilX,
+  cilCheckAlt,
+  cilBan,
+  cilWarning,
+  cilMedicalCross
+} from '@coreui/icons';
 
 @Component({
   selector: 'app-specialty',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, TranslatePipe, ModalModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    TranslatePipe,
+    ModalModule,
+    ButtonModule,
+    CardModule,
+    FormModule,
+    GridModule,
+    TableModule,
+    IconModule
+  ],
   templateUrl: './specialty.component.html',
   styleUrls: ['./specialty.component.scss'],
+  providers: [IconSetService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SpecialtyComponent implements OnInit {
@@ -30,8 +60,21 @@ export class SpecialtyComponent implements OnInit {
   constructor(
     private specialtyService: SpecialtyService,
     private fb: FormBuilder,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    private iconSetService: IconSetService
   ) {
+    // Register icons
+    this.iconSetService.icons = {
+      cilPlus,
+      cilPencil,
+      cilTrash,
+      cilX,
+      cilCheckAlt,
+      cilBan,
+      cilWarning,
+      cilMedicalCross
+    };
+
     this.form = this.fb.group({
       nameAr: ['', Validators.required],
       nameEn: ['', Validators.required],

@@ -9,15 +9,71 @@
 @use "@coreui/chartjs/scss/coreui-chartjs";
 
 // Custom styles for this theme
-@use "theme";
+@use "./theme.scss";
 
 // Some temp fixes
 //@use "fixes";
 
 // If you want to add custom CSS you can put it here.
-@use "custom";
+@use "./custom.scss";
+
+// Professional Button Styles
+@use "./buttons.scss";
+
+// Professional Sidebar Styles
+@use "./sidebar.scss";
+
+// Professional Header Styles
+@use "./header.scss";
+
+// Professional Pagination Styles
+@use "./pagination.scss";
+
+// Professional Table Styles
+@use "./_tables.scss" as tables;
+
+// Custom Leaflet styling
+@use "./leaflet.scss";
 
 // Examples
 // We use those styles to show code examples, you should remove them in your application.
-@use "examples";
+@use "./examples.scss";
+
+// Global UI/UX Styles
+@use "./global-styles.scss";
+
+// Import Custom Scrollbar
+@use "./_scrollbar.scss" as scrollbar;
+
+// Empty state styles
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #6c757d;
+
+  svg, i {
+    color: #adb5bd;
+    margin-bottom: 1rem;
+  }
+}
+
+// Custom table responsive styles
+.table-container {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+
+  @media (max-width: 768px) {
+    .custom-table {
+      min-width: 800px;
+    }
+
+    .table-responsive {
+      margin-bottom: 0;
+    }
+  }
+}
 

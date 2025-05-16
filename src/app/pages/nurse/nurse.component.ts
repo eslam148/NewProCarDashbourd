@@ -7,13 +7,14 @@ import { TranslationService } from '../../services/translation.service';
 import { CommonModule } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { PaginationModule } from '@coreui/angular';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-nurse',
   standalone: true,
   templateUrl: './nurse.component.html',
   styleUrls: ['./nurse.component.scss'],
-  imports: [TranslatePipe, CommonModule, ReactiveFormsModule, PaginationModule],
+  imports: [TranslatePipe, CommonModule, ReactiveFormsModule, PaginationModule, PaginationComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class NurseComponent implements OnInit {

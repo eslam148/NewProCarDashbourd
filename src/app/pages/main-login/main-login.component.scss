@@ -1,0 +1,115 @@
+:host {
+  display: block;
+}
+
+.bg-gradient-light {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+// Login container
+.c-card-group {
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07) !important;
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: 0 18px 35px rgba(50, 50, 93, 0.15), 0 8px 15px rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+// Form styling
+form {
+  .icon-container {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(var(--cui-primary-rgb), 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  h1 {
+    color: #495057;
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Input group styling
+.input-group {
+  transition: all 0.3s ease;
+
+  &:focus-within {
+    transform: translateY(-2px);
+  }
+
+  input.form-control {
+    height: 50px;
+    font-size: 1rem;
+
+    &::placeholder {
+      color: #adb5bd;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+// Button styling enhancements
+button[type="submit"] {
+  height: 48px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(var(--cui-primary-rgb), 0.25);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(var(--cui-primary-rgb), 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+  }
+}
+
+// Right side card styling
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--cui-primary) 0%, #0056b3 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    bottom: -50%;
+    left: -50%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    transform: rotateZ(-45deg) translate(-15%, 0);
+    pointer-events: none;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .c-card-group {
+    flex-direction: column;
+  }
+
+  .icon-container {
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  .input-group input.form-control {
+    height: 45px;
+  }
+
+  button[type="submit"] {
+    height: 45px;
+    font-size: 0.95rem;
+  }
+}

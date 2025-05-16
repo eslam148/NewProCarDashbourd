@@ -6,11 +6,12 @@ import { selectAdmins, selectAdminLoading } from '../../../store/admin/admin.sel
 import { loadAdmins } from '../../../store/admin/admin.actions';
 import { AdminsDto } from '../../../Models/DTOs/AdminsDto';
 import { PaginationModule } from '@coreui/angular';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-admins',
   standalone: true,
-  imports: [CommonModule, PaginationModule],
+  imports: [CommonModule, PaginationModule, PaginationComponent],
   templateUrl: './admins.component.html',
   styleUrl: './admins.component.scss'
 })
@@ -45,10 +46,13 @@ export class AdminsComponent implements OnInit {
     this.loadAdmins();
   }
 
-  onPageSizeChange(newSize: string) {
-    this.pageSize = +newSize;
-    this.currentPage = 1;
-    this.loadAdmins();
+  onPageSizeChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    if (target) {
+      this.pageSize = +target.value;
+      this.currentPage = 1;
+      this.loadAdmins();
+    }
   }
 
   toggleDirection() {

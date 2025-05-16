@@ -8,6 +8,7 @@ import { IconModule } from '@coreui/icons-angular';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 import { AdminsDto } from '../../Models/DTOs/AdminsDto';
 import { RegisterDto } from '../../Models/DTOs/RegisterDto';
@@ -41,7 +42,8 @@ interface PaginatedResponse<T> {
     IconModule,
     TooltipModule,
     AdminFormComponent,
-    TranslatePipe
+    TranslatePipe,
+    PaginationComponent
   ]
 })
 export class AdminComponent implements OnInit, OnDestroy {

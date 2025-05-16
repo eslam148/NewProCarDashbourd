@@ -190,7 +190,15 @@
     "loading": "Loading...",
     "error": "Error loading data",
     "deleteGovernorateConfirm": "Are you sure you want to delete this governorate?",
-    "deleteCityConfirm": "Are you sure you want to delete this city?"
+    "deleteCityConfirm": "Are you sure you want to delete this city?",
+    "deleteGovernorateSuccess": "Governorate deleted successfully",
+    "deleteCitySuccess": "City deleted successfully",
+    "deleteGovernorateError": "Error deleting governorate",
+    "deleteCityError": "Error deleting city",
+    "selectGovernorateFirst": "Please select a governorate first",
+    "addCityToStart": "Add New City",
+    "selectGovernorateInstruction": "Select a governorate to add a city",
+    "allGovernorates": "All Governorates"
   },
   "serviceCategory": {
     "title": "Service Categories Management",
@@ -338,6 +346,13 @@
     "noRequests": "No requests found.",
     "prev": "Prev",
     "next": "Next",
-    "page": "Page"
+    "page": "Page",
+    "locationDetails": "Location Details",
+    "distance": "Distance",
+    "distanceKm": "Distance in Kilometers",
+    "distanceBetween": "Distance between {0} and {1}",
+    "distanceToNurse": "Distance to Nurse",
+    "distanceToUser": "Distance to User",
+    "loadingDetails": "Loading details..."
   }
 }

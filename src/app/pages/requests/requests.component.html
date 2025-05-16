@@ -16,44 +16,60 @@
   <div *ngIf="loading" class="loading">{{ 'requests.loading' | translate | async }}</div>
   <div *ngIf="!loading">
     <div>{{ 'requests.total' | translate | async }}: {{ totalCount }}</div>
-    <table class="requests-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>{{ 'requests.nurse' | translate | async }}</th>
-          <th>{{ 'requests.phone' | translate | async }}</th>
-          <th>{{ 'requests.status' | translate | async }}</th>
-          <th>{{ 'requests.speciality' | translate | async }}</th>
-          <th>{{ 'requests.totalPrice' | translate | async }}</th>
-          <th>{{ 'requests.date' | translate | async }}</th>
-          <th>{{ 'requests.details' | translate | async }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let req of requests; let i = index">
-          <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
-          <td>
-            <img *ngIf="req.nursePicture" [src]="req.nursePicture" alt="Nurse" width="32" height="32" style="border-radius:50%;margin-right:8px;">
-            {{ req.nurseName }}
-          </td>
-          <td>{{ req.phoneNumber }}</td>
-          <td>{{ req.status }}</td>
-          <td>{{ req.speciality }}</td>
-          <td>{{ req.totalPrice | number:'1.2-2' }}</td>
-          <td>{{ req.createdAt | date:'short' }}</td>
-          <td>
-            <button type="button" class="details-btn" (click)="showDetails(req.id)">{{ 'requests.details' | translate | async }}</button>
-          </td>
-        </tr>
-        <tr *ngIf="requests.length === 0">
-          <td colspan="8">{{ 'requests.noRequests' | translate | async }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="pagination">
-      <button (click)="onPageChange(pageNumber - 1)" [disabled]="pageNumber === 1">{{ 'requests.prev' | translate | async }}</button>
-      <span>{{ 'requests.page' | translate | async }} {{ pageNumber }}</span>
-      <button (click)="onPageChange(pageNumber + 1)" [disabled]="(pageNumber * pageSize) >= totalCount">{{ 'requests.next' | translate | async }}</button>
+
+    <div class="table-container">
+      <div class="table-header">
+        <h3>{{ 'requests.title' | translate | async }}</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>{{ 'requests.nurse' | translate | async }}</th>
+              <th>{{ 'requests.phone' | translate | async }}</th>
+              <th>{{ 'requests.status' | translate | async }}</th>
+              <th>{{ 'requests.speciality' | translate | async }}</th>
+              <th>{{ 'requests.totalPrice' | translate | async }}</th>
+              <th>{{ 'requests.date' | translate | async }}</th>
+              <th class="actions-cell">{{ 'requests.details' | translate | async }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let req of requests; let i = index">
+              <td>{{ (pageNumber - 1) * pageSize + i + 1 }}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <img *ngIf="req.nursePicture" [src]="req.nursePicture" alt="Nurse" class="avatar">
+                  <span class="ms-2">{{ req.nurseName }}</span>
+                </div>
+              </td>
+              <td>{{ req.phoneNumber }}</td>
+              <td>{{ req.status }}</td>
+              <td>{{ req.speciality }}</td>
+              <td>{{ req.totalPrice | number:'1.2-2' }}</td>
+              <td>{{ req.createdAt | date:'short' }}</td>
+              <td class="actions-cell">
+                <button type="button" class="btn btn-sm btn-primary rounded-pill px-3" (click)="showDetails(req.id)">
+                  {{ 'requests.details' | translate | async }}
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="requests.length === 0" class="empty-row">
+              <td colspan="8">{{ 'requests.noRequests' | translate | async }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="pagination-container">
+      <app-pagination
+        [currentPage]="pageNumber"
+        [totalItems]="totalCount"
+        [pageSize]="pageSize"
+        (pageChange)="onPageChange($event)"
+      ></app-pagination>
     </div>
   </div>
 
@@ -61,35 +77,52 @@
   <div class="modal fade show"
        tabindex="-1"
        [ngStyle]="{display: showDetailsModal ? 'block' : 'none', background: 'rgba(0,0,0,0.4)'}"
-       style="z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;"
+       style="z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; backdrop-filter: blur(4px);"
        *ngIf="showDetailsModal">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header bg-light">
-          <h5 class="modal-title">تفاصيل الطلب</h5>
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'requests.requestDetails' | translate | async }}</h5>
           <button type="button" class="btn-close" (click)="closeDetails()"></button>
         </div>
         <div class="modal-body">
           <div *ngIf="loadingDetails" class="text-center my-3">
-            <span class="spinner-border"></span> جاري تحميل التفاصيل...
+            <span class="spinner-border"></span> {{ 'requests.loadingDetails' | translate | async }}
           </div>
-          <div *ngIf="selectedRequest && !loadingDetails">
-            <div>رقم الطلب: {{ selectedRequest.id }}</div>
-            <div class="details-row"><strong>{{ 'requests.nurse' | translate | async }}:</strong> {{ selectedRequest.nurseName }}</div>
-            <div class="details-row"><strong>{{ 'requests.phone' | translate | async }}:</strong> {{ selectedRequest.phoneNumber }}</div>
-            <div class="details-row"><strong>{{ 'requests.status' | translate | async }}:</strong> {{ selectedRequest.status }}</div>
-            <div class="details-row"><strong>{{ 'requests.speciality' | translate | async }}:</strong> {{ selectedRequest.speciality }}</div>
-            <div class="details-row"><strong>{{ 'requests.totalPrice' | translate | async }}:</strong> {{ selectedRequest.totalPrice | number:'1.2-2' }}</div>
-            <div class="details-row"><strong>{{ 'requests.date' | translate | async }}:</strong> {{ selectedRequest.createdAt | date:'full' }}</div>
-            <div class="details-row"><strong>{{ 'requests.latitude' | translate | async }}:</strong> {{ selectedRequest.latitude }}</div>
-            <div class="details-row"><strong>{{ 'requests.longitude' | translate | async }}:</strong> {{ selectedRequest.longitude }}</div>
-            <div class="details-row"><strong>{{ 'requests.nurseLatitude' | translate | async }}:</strong> {{ selectedRequest.nurseLatitude }}</div>
-            <div class="details-row"><strong>{{ 'requests.nurseLongitude' | translate | async }}:</strong> {{ selectedRequest.nurseLongitude }}</div>
-            <div class="details-row"><img *ngIf="selectedRequest.nursePicture" [src]="selectedRequest.nursePicture" alt="Nurse" width="64" height="64" style="border-radius:50%;margin-top:8px;"></div>
+          <div *ngIf="selectedRequest && !loadingDetails" class="details-container">
+
+            <div class="nurse-info" *ngIf="selectedRequest.nursePicture">
+              <img [src]="selectedRequest.nursePicture" alt="Nurse" class="nurse-avatar">
+              <div class="nurse-details">
+                <div class="nurse-name">{{ selectedRequest.nurseName }}</div>
+                <div class="nurse-specialty">{{ selectedRequest.speciality }}</div>
+              </div>
+            </div>
+
+            <!-- Two column layout for details and map -->
+            <div class="details-map-container">
+              <!-- Left column: details -->
+              <div class="details-column">
+                <div class="details-section">
+                  <div class="details-row"><strong>{{ 'requests.nurse' | translate | async }}:</strong> {{ selectedRequest.nurseName }}</div>
+                  <div class="details-row"><strong>{{ 'requests.phone' | translate | async }}:</strong> {{ selectedRequest.phoneNumber }}</div>
+                  <div class="details-row"><strong>{{ 'requests.status' | translate | async }}:</strong> <span class="status-badge">{{ selectedRequest.status }}</span></div>
+                  <div class="details-row"><strong>{{ 'requests.speciality' | translate | async }}:</strong> {{ selectedRequest.speciality }}</div>
+                  <div class="details-row"><strong>{{ 'requests.totalPrice' | translate | async }}:</strong> <span class="price">{{ selectedRequest.totalPrice | number:'1.2-2' }}</span></div>
+                  <div class="details-row"><strong>{{ 'requests.date' | translate | async }}:</strong> {{ selectedRequest.createdAt | date:'full' }}</div>
+                </div>
+              </div>
+
+              <!-- Right column: map -->
+              <div class="map-column">
+                <h6>{{ 'requests.locationDetails' | translate | async }}</h6>
+                <div id="location-map" class="map-container"></div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeDetails()">إغلاق</button>
+          <button type="button" class="btn btn-primary" (click)="closeDetails()">{{ 'common.close' | translate | async }}</button>
         </div>
       </div>
     </div>

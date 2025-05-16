@@ -1,0 +1,16 @@
+/* You can add global styles to this file, and also import other style files */
+@forward 'scss/styles.scss';
+
+/* Additional Angular Material styles if needed */
+@use '@angular/material' as mat;
+
+// Add any additional Angular Material theming if needed
+// $custom-theme: mat.define-light-theme((
+//   color: (
+//     primary: $custom-primary,
+//     accent: $custom-accent,
+//     warn: $custom-warn,
+//   )
+// ));
+
+// Include any additional global Angular styles here

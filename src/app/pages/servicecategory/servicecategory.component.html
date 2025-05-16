@@ -1,87 +1,130 @@
-<div class="container-fluid py-4 bg-light min-vh-100">
-  <div class="row g-3">
+<div class="container-fluid py-4 bg-gradient-light min-vh-100">
+  <div class="row g-4">
     <!-- Categories Section -->
     <div class="col-12 col-md-6 mb-4">
-      <div class="card shadow rounded h-100">
-        <div class="card-header bg-primary text-white rounded-top d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-          <h4 class="mb-2 mb-md-0">{{ 'serviceCategory.title' | translate | async }}</h4>
-          <button cButton color="light" (click)="showCategoryForm = true" *ngIf="!showCategoryForm" class="mt-2 mt-md-0 rounded-pill px-2 py-0 fs-6" aria-label="Add New Category">
-            <i cIcon name="cilPlus"></i> {{ 'serviceCategory.add' | translate | async }}
+      <div class="card shadow-lg rounded-4 h-100 border-0 custom-table-card">
+        <div class="card-header bg-gradient-primary text-white rounded-top-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center p-3">
+          <h4 class="mb-2 mb-md-0 fw-bold">{{ 'serviceCategory.title' | translate | async }}</h4>
+          <button cButton color="light" (click)="showCategoryForm = true" *ngIf="!showCategoryForm" class="mt-2 mt-md-0 rounded-pill px-3 py-1 fs-6 fw-semibold btn-hover-effect" aria-label="Add New Category">
+            <i cIcon name="cilPlus" class="me-1"></i> {{ 'serviceCategory.add' | translate | async }}
           </button>
         </div>
         <div class="card-body p-4">
           <!-- Add/Edit Category Form -->
-          <form [formGroup]="form" *ngIf="showCategoryForm" (ngSubmit)="submit()" class="mb-4">
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.nameAr' | translate | async }}</label>
-              <input type="text" class="form-control rounded-pill" formControlName="nameAr">
+          <form [formGroup]="form" *ngIf="showCategoryForm" (ngSubmit)="submit()" class="mb-4 animated fadeIn">
+            <div class="row g-3">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.nameAr' | translate | async }}</label>
+                <input type="text" class="form-control rounded-pill" formControlName="nameAr">
+                <div *ngIf="form.get('nameAr')?.invalid && form.get('nameAr')?.touched" class="text-danger mt-1 small">
+                  {{ 'common.fieldRequired' | translate | async }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.nameEn' | translate | async }}</label>
+                <input type="text" class="form-control rounded-pill" formControlName="nameEn">
+                <div *ngIf="form.get('nameEn')?.invalid && form.get('nameEn')?.touched" class="text-danger mt-1 small">
+                  {{ 'common.fieldRequired' | translate | async }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.descriptionAr' | translate | async }}</label>
+                <textarea class="form-control rounded-3" formControlName="descriptionAr" rows="3"></textarea>
+                <div *ngIf="form.get('descriptionAr')?.invalid && form.get('descriptionAr')?.touched" class="text-danger mt-1 small">
+                  {{ 'common.fieldRequired' | translate | async }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.descriptionEn' | translate | async }}</label>
+                <textarea class="form-control rounded-3" formControlName="descriptionEn" rows="3"></textarea>
+                <div *ngIf="form.get('descriptionEn')?.invalid && form.get('descriptionEn')?.touched" class="text-danger mt-1 small">
+                  {{ 'common.fieldRequired' | translate | async }}
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.nameEn' | translate | async }}</label>
-              <input type="text" class="form-control rounded-pill" formControlName="nameEn">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.descriptionAr' | translate | async }}</label>
-              <textarea class="form-control rounded" formControlName="descriptionAr"></textarea>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.descriptionEn' | translate | async }}</label>
-              <textarea class="form-control rounded" formControlName="descriptionEn"></textarea>
-            </div>
-            <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch">
-              <button cButton color="primary" type="submit" [disabled]="form.invalid" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2">
+            <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch mt-3">
+              <button cButton color="primary" type="submit" [disabled]="form.invalid" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2 btn-hover-effect">
+                <i class="me-2" [ngClass]="isEditMode ? 'cil-pencil' : 'cil-plus'"></i>
                 {{ isEditMode ? ('common.update' | translate | async) : ('common.add' | translate | async) }}
               </button>
-              <button cButton color="secondary" type="button" (click)="cancelCategoryForm()" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2">{{ 'common.cancel' | translate | async }}</button>
+              <button cButton color="secondary" type="button" (click)="cancelCategoryForm()" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2 btn-hover-effect">
+                <i cIcon name="cilX" class="me-2"></i>
+                {{ 'common.cancel' | translate | async }}
+              </button>
             </div>
           </form>
 
-          <!-- Categories List -->
-          <div class="input-group mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="ابحث عن خدمة..."
-              [(ngModel)]="searchKey"
-              (keyup.enter)="onSearch()"
-            >
-            <button class="btn btn-primary" (click)="onSearch()">بحث</button>
-          </div>
-          <div class="list-group list-group-flush">
-            <div *ngFor="let category of (categories$ | async)"
-                 class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-white rounded mb-2 shadow-sm border-0 category-item-hover">
-              <span *ngIf="category.id != null"
-                    (click)="selectCategory(category.id)"
-                    [class.selected]="selectedCategoryId === category.id"
-                    style="cursor:pointer; font-weight: 500; font-size: 1.1rem;">
-                {{ category.nameEn }}
+          <!-- Search Bar -->
+          <div class="search-container mb-4" *ngIf="!showCategoryForm">
+            <div class="input-group">
+              <span class="input-group-text bg-transparent border-end-0">
+                <i cIcon name="cilSearch"></i>
               </span>
-              <div class="d-flex flex-row gap-2 align-items-center justify-content-end mt-2 mt-md-0">
-                <button cButton color="info" *ngIf="category.id != null" (click)="selectCategory(category.id)" class="rounded-pill px-2 py-0 fs-6" aria-label="View Subcategories">
-                  <i cIcon name="cilList"></i> {{ 'serviceCategory.viewSubCategories' | translate | async }}
-                </button>
-                <button cButton color="primary" (click)="editCategory(category)" class="rounded-pill px-2 py-0 fs-6" aria-label="Edit Category">
-                  <i cIcon name="cilPencil"></i> {{ 'common.edit' | translate | async }}
-                </button>
-                <button cButton color="danger" *ngIf="category.id != null" (click)="openDeleteModal(category.id)" class="rounded-pill px-2 py-0 fs-6" aria-label="Delete Category">
-                  <i cIcon name="cilTrash"></i> {{ 'common.delete' | translate | async }}
-                </button>
-              </div>
-            </div>
-            <div *ngIf="(categories$ | async)?.length === 0" class="list-group-item text-center text-muted bg-white rounded shadow-sm border-0">
-              {{ 'serviceCategory.empty' | translate | async }}
+              <input
+                type="text"
+                class="form-control border-start-0 ps-0"
+                [placeholder]="'serviceCategory.searchPlaceholder' | translate | async"
+                [(ngModel)]="searchKey"
+                (keyup.enter)="onSearch()"
+              >
+              <button class="btn btn-primary rounded-end" (click)="onSearch()">
+                {{ 'common.search' | translate | async }}
+              </button>
             </div>
           </div>
 
-          <!-- ضع هذا الكود أسفل جدول أو قائمة الخدمات مباشرة -->
-          <div class="d-flex justify-content-center mt-4">
+          <!-- Categories List -->
+          <div class="list-group list-group-flush custom-table" *ngIf="!showCategoryForm">
+            <div *ngFor="let category of (categories$ | async)"
+                 class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-white rounded-3 mb-2 shadow-hover border-0 p-3">
+              <div class="d-flex align-items-center"
+                   *ngIf="category.id != null"
+                   (click)="selectCategory(category.id)"
+                   [class.selected-item]="selectedCategoryId === category.id"
+                   style="cursor:pointer;">
+                <div class="category-icon me-3 d-flex align-items-center justify-content-center rounded-circle">
+                  <i cIcon name="cilFolder" size="lg"></i>
+                </div>
+                <div>
+                  <h5 class="mb-0 fw-bold">{{ category.nameEn }}</h5>
+                  <p class="text-muted small mb-0">{{ category.nameAr }}</p>
+                </div>
+              </div>
+              <div class="d-flex flex-row gap-2 align-items-center justify-content-end mt-3 mt-md-0">
+                <button cButton color="info" *ngIf="category.id != null" (click)="selectCategory(category.id)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="View Subcategories">
+                  <i cIcon name="cilList" class="me-1"></i> {{ 'serviceCategory.viewSubCategories' | translate | async }}
+                </button>
+                <button cButton color="primary" (click)="editCategory(category)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="Edit Category">
+                  <i cIcon name="cilPencil" class="me-1"></i> {{ 'common.edit' | translate | async }}
+                </button>
+                <button cButton color="danger" *ngIf="category.id != null" (click)="openDeleteModal(category.id)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="Delete Category">
+                  <i cIcon name="cilTrash" class="me-1"></i> {{ 'common.delete' | translate | async }}
+                </button>
+              </div>
+            </div>
+            <div *ngIf="(categories$ | async)?.length === 0" class="empty-state p-4 text-center text-muted bg-white rounded-3 shadow-sm border-0">
+              <i cIcon name="cilFolder" size="3xl" class="mb-3"></i>
+              <h5>{{ 'serviceCategory.empty' | translate | async }}</h5>
+              <p class="mb-0">{{ 'serviceCategory.emptyDescription' | translate | async }}</p>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="d-flex justify-content-center mt-4" *ngIf="!showCategoryForm">
             <c-pagination
               [activePage]="currentPage"
               [pages]="getPagesCount(totalItems$ | async)"
               [visiblePages]="5"
-              (activePageChange)="onPageChange($event)">
+              (activePageChange)="onPageChange($event)"
+              class="pagination-custom">
               <c-pagination-item *cPaginationPages="let page">
                 {{ page }}
+              </c-pagination-item>
+              <c-pagination-item ariaLabel="Previous" [disabled]="currentPage === 1">
+                <span aria-hidden="true">&laquo;</span>
+              </c-pagination-item>
+              <c-pagination-item ariaLabel="Next" [disabled]="currentPage === getPagesCount(totalItems$ | async)">
+                <span aria-hidden="true">&raquo;</span>
               </c-pagination-item>
             </c-pagination>
           </div>
@@ -91,72 +134,113 @@
 
     <!-- Subcategories Section -->
     <div class="col-12 col-md-6 mb-4" *ngIf="selectedCategoryId !== null">
-      <div class="card shadow rounded h-100">
-        <div class="card-header bg-success text-white rounded-top d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-          <h4 class="mb-2 mb-md-0">{{ 'serviceCategory.subCategories' | translate | async }}</h4>
-          <button cButton color="light" (click)="showSubCategoryForm = true" *ngIf="!showSubCategoryForm" class="mt-2 mt-md-0 rounded-pill px-2 py-0 fs-6" aria-label="Add Subcategory">
-            <i cIcon name="cilPlus"></i> {{ 'serviceCategory.addSubCategory' | translate | async }}
+      <div class="card shadow-lg rounded-4 h-100 border-0 custom-table-card animated fadeIn">
+        <div class="card-header bg-gradient-success text-white rounded-top-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center p-3">
+          <h4 class="mb-2 mb-md-0 fw-bold">{{ 'serviceCategory.subCategories' | translate | async }}</h4>
+          <button cButton color="light" (click)="showSubCategoryForm = true" *ngIf="!showSubCategoryForm" class="mt-2 mt-md-0 rounded-pill px-3 py-1 fs-6 fw-semibold btn-hover-effect" aria-label="Add Subcategory">
+            <i cIcon name="cilPlus" class="me-1"></i> {{ 'serviceCategory.addSubCategory' | translate | async }}
           </button>
         </div>
         <div class="card-body p-4">
           <!-- Add/Edit Subcategory Form -->
-          <form [formGroup]="subCategoryForm" *ngIf="showSubCategoryForm && selectedCategoryId" (ngSubmit)="submitSubCategory()" class="mb-4">
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.nameAr' | translate | async }}</label>
-              <input type="text" class="form-control rounded-pill" formControlName="nameAr">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.nameEn' | translate | async }}</label>
-              <input type="text" class="form-control rounded-pill" formControlName="nameEn">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.descriptionAr' | translate | async }}</label>
-              <textarea class="form-control rounded" formControlName="descriptionAr"></textarea>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.descriptionEn' | translate | async }}</label>
-              <textarea class="form-control rounded" formControlName="descriptionEn"></textarea>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'serviceCategory.icon' | translate | async }}</label>
-              <input type="file" (change)="onSubCategoryFileSelected($event)" accept="image/*" class="form-control">
-              <div *ngIf="subCategoryIconPreview" class="mt-2 preview-container">
-                <img [src]="subCategoryIconPreview" alt="Preview" class="img-thumbnail" style="max-width: 120px;">
-                <button cButton color="danger" size="sm" class="mt-2 rounded-pill fw-bold px-3 py-1" (click)="removeSubCategoryIcon()">
-                  <i class="cil-trash me-1"></i>
-                  {{ 'serviceCategory.iconRemove' | translate | async }}
-                </button>
+          <form [formGroup]="subCategoryForm" *ngIf="showSubCategoryForm && selectedCategoryId" (ngSubmit)="submitSubCategory()" class="mb-4 animated fadeIn">
+            <div class="row g-3">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.nameAr' | translate | async }}</label>
+                <input type="text" class="form-control rounded-pill" formControlName="nameAr">
+                <div *ngIf="subCategoryForm.get('nameAr')?.invalid && subCategoryForm.get('nameAr')?.touched" class="text-danger mt-1 small">
+                  {{ 'common.fieldRequired' | translate | async }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.nameEn' | translate | async }}</label>
+                <input type="text" class="form-control rounded-pill" formControlName="nameEn">
+                <div *ngIf="subCategoryForm.get('nameEn')?.invalid && subCategoryForm.get('nameEn')?.touched" class="text-danger mt-1 small">
+                  {{ 'common.fieldRequired' | translate | async }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.descriptionAr' | translate | async }}</label>
+                <textarea class="form-control rounded-3" formControlName="descriptionAr" rows="3"></textarea>
+                <div *ngIf="subCategoryForm.get('descriptionAr')?.invalid && subCategoryForm.get('descriptionAr')?.touched" class="text-danger mt-1 small">
+                  {{ 'common.fieldRequired' | translate | async }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.descriptionEn' | translate | async }}</label>
+                <textarea class="form-control rounded-3" formControlName="descriptionEn" rows="3"></textarea>
+                <div *ngIf="subCategoryForm.get('descriptionEn')?.invalid && subCategoryForm.get('descriptionEn')?.touched" class="text-danger mt-1 small">
+                  {{ 'common.fieldRequired' | translate | async }}
+                </div>
+              </div>
+              <div class="col-12 mb-3">
+                <label class="form-label fw-semibold">{{ 'serviceCategory.icon' | translate | async }}</label>
+                <div class="input-group">
+                  <input type="file" class="form-control" (change)="onSubCategoryFileSelected($event)" accept="image/*" id="subCategoryIcon">
+                  <label class="input-group-text" for="subCategoryIcon">
+                    <i cIcon name="cilCloudUpload"></i>
+                  </label>
+                </div>
+                <div *ngIf="subCategoryIconPreview" class="mt-3 preview-container d-flex flex-column align-items-center">
+                  <div class="preview-image-container rounded-4 mb-2 border p-2">
+                    <img [src]="subCategoryIconPreview" alt="Preview" class="preview-image">
+                  </div>
+                  <button cButton color="danger" size="sm" class="rounded-pill fw-bold px-3 py-1 btn-hover-effect" (click)="removeSubCategoryIcon()">
+                    <i cIcon name="cilTrash" class="me-1"></i>
+                    {{ 'serviceCategory.iconRemove' | translate | async }}
+                  </button>
+                </div>
+              </div>
+              <div class="col-12 mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="fromCallCenter" formControlName="fromCallCenter">
+                  <label class="form-check-label fw-semibold" for="fromCallCenter">
+                    {{ 'serviceCategory.fromCallCenter' | translate | async }}
+                  </label>
+                </div>
               </div>
             </div>
-            <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" id="fromCallCenter" formControlName="fromCallCenter">
-              <label class="form-check-label" for="fromCallCenter">
-                {{ 'serviceCategory.fromCallCenter' | translate | async }}
-              </label>
-            </div>
-            <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch">
-              <button cButton color="success" type="submit" [disabled]="subCategoryForm.invalid" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2">
+            <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch mt-3">
+              <button cButton color="success" type="submit" [disabled]="subCategoryForm.invalid" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2 btn-hover-effect">
+                <i class="me-2" [ngClass]="isEditSubMode ? 'cil-pencil' : 'cil-plus'"></i>
                 {{ isEditSubMode ? ('common.update' | translate | async) : ('common.add' | translate | async) }}
               </button>
-              <button cButton color="secondary" type="button" (click)="cancelSubCategoryForm()" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2">{{ 'common.cancel' | translate | async }}</button>
+              <button cButton color="secondary" type="button" (click)="cancelSubCategoryForm()" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2 btn-hover-effect">
+                <i cIcon name="cilX" class="me-2"></i>
+                {{ 'common.cancel' | translate | async }}
+              </button>
             </div>
           </form>
 
           <!-- Subcategories List -->
-          <div class="list-group list-group-flush">
-            <div *ngFor="let sub of (getSubCategories(selectedCategoryId) | async)" class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-white rounded mb-2 shadow-sm border-0 subcategory-item-hover">
-              <span class="fw-semibold" style="font-size: 1.1rem;">{{ sub.nameEn }}</span>
-              <div class="d-flex flex-row gap-2 align-items-center justify-content-end mt-2 mt-md-0">
-                <button cButton color="primary" (click)="editSubCategory(sub)" class="rounded-pill px-2 py-0 fs-6" aria-label="Edit Subcategory">
-                  <i cIcon name="cilPencil"></i> {{ 'common.edit' | translate | async }}
+          <div class="list-group list-group-flush custom-table" *ngIf="!showSubCategoryForm">
+            <div *ngFor="let sub of (getSubCategories(selectedCategoryId) | async)" class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center bg-white rounded-3 mb-2 shadow-hover border-0 p-3">
+              <div class="d-flex align-items-center">
+                <div class="subcategory-icon me-3 d-flex align-items-center justify-content-center rounded-circle">
+                  <img *ngIf="sub.icon" [src]="getIconUrl(sub.icon)" alt="Icon" class="subcategory-icon-img">
+                  <i *ngIf="!sub.icon" cIcon name="cilLayers" size="lg"></i>
+                </div>
+                <div>
+                  <h5 class="mb-0 fw-bold">{{ sub.nameEn }}</h5>
+                  <p class="text-muted small mb-0">{{ sub.nameAr }}</p>
+                  <span *ngIf="sub.fromCallCenter" class="badge bg-info rounded-pill mt-1">
+                    <i cIcon name="cilPhone" class="me-1"></i> Call Center
+                  </span>
+                </div>
+              </div>
+              <div class="d-flex flex-row gap-2 align-items-center justify-content-end mt-3 mt-md-0">
+                <button cButton color="primary" (click)="editSubCategory(sub)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="Edit Subcategory">
+                  <i cIcon name="cilPencil" class="me-1"></i> {{ 'common.edit' | translate | async }}
                 </button>
-                <button cButton color="danger" *ngIf="sub.id != null" (click)="openDeleteSubCategoryModal(sub.id)" class="rounded-pill px-2 py-0 fs-6" aria-label="Delete Subcategory">
-                  <i cIcon name="cilTrash"></i> {{ 'common.delete' | translate | async }}
+                <button cButton color="danger" *ngIf="sub.id != null" (click)="openDeleteSubCategoryModal(sub.id)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="Delete Subcategory">
+                  <i cIcon name="cilTrash" class="me-1"></i> {{ 'common.delete' | translate | async }}
                 </button>
               </div>
             </div>
-            <div *ngIf="(getSubCategories(selectedCategoryId) | async)?.length === 0" class="list-group-item text-center text-muted bg-white rounded shadow-sm border-0">
-              {{ 'serviceCategory.noSubCategories' | translate | async }}
+            <div *ngIf="(getSubCategories(selectedCategoryId) | async)?.length === 0" class="empty-state p-4 text-center text-muted bg-white rounded-3 shadow-sm border-0">
+              <i cIcon name="cilLayers" size="3xl" class="mb-3"></i>
+              <h5>{{ 'serviceCategory.noSubCategories' | translate | async }}</h5>
+              <p class="mb-0">{{ 'serviceCategory.noSubCategoriesDescription' | translate | async }}</p>
             </div>
           </div>
         </div>
@@ -164,44 +248,59 @@
     </div>
   </div>
 
-  <!-- Delete Confirmation Modal (keep as modal) -->
+  <!-- Delete Confirmation Modal -->
   <c-modal [visible]="isDeleteModalOpen" (visibleChange)="!$event && closeDeleteModal()" class="fade-in">
-    <c-modal-header class="bg-light">
+    <c-modal-header class="bg-light rounded-top">
       <div class="d-flex align-items-center">
-        <i class="cil-trash me-2 text-danger"></i>
-        <h5 cModalTitle>{{ 'serviceCategory.deleteTitle' | translate | async }}</h5>
+        <div class="modal-icon-container bg-danger-subtle rounded-circle p-2 me-2">
+          <i cIcon name="cilTrash" class="text-danger"></i>
+        </div>
+        <h5 cModalTitle class="mb-0 fw-bold">{{ 'serviceCategory.deleteTitle' | translate | async }}</h5>
       </div>
       <button cButtonClose (click)="closeDeleteModal()"></button>
     </c-modal-header>
-    <c-modal-body>
-      <p>{{ 'serviceCategory.deleteConfirmation' | translate | async }}</p>
+    <c-modal-body class="p-4">
+      <div class="alert alert-warning">
+        <i cIcon name="cilWarning" class="me-2"></i>
+        <span>{{ 'serviceCategory.deleteConfirmation' | translate | async }}</span>
+      </div>
     </c-modal-body>
-    <c-modal-footer>
-      <button cButton color="secondary" (click)="closeDeleteModal()">
+    <c-modal-footer class="border-top-0">
+      <button cButton color="secondary" (click)="closeDeleteModal()" class="rounded-pill px-4 py-2">
+        <i cIcon name="cilX" class="me-1"></i>
         {{ 'common.cancel' | translate | async }}
       </button>
-      <button cButton color="danger" (click)="confirmDelete()">
+      <button cButton color="danger" (click)="confirmDelete()" class="rounded-pill px-4 py-2">
+        <i cIcon name="cilTrash" class="me-1"></i>
         {{ 'common.delete' | translate | async }}
       </button>
     </c-modal-footer>
   </c-modal>
 
+  <!-- Delete Subcategory Confirmation Modal -->
   <c-modal [visible]="isDeleteSubCategoryModalOpen" (visibleChange)="!$event && closeDeleteSubCategoryModal()" class="fade-in">
-    <c-modal-header class="bg-light">
+    <c-modal-header class="bg-light rounded-top">
       <div class="d-flex align-items-center">
-        <i class="cil-trash me-2 text-danger"></i>
-        <h5 cModalTitle>{{ 'serviceCategory.deleteTitle' | translate | async }}</h5>
+        <div class="modal-icon-container bg-danger-subtle rounded-circle p-2 me-2">
+          <i cIcon name="cilTrash" class="text-danger"></i>
+        </div>
+        <h5 cModalTitle class="mb-0 fw-bold">{{ 'serviceCategory.deleteSubCategoryTitle' | translate | async }}</h5>
       </div>
       <button cButtonClose (click)="closeDeleteSubCategoryModal()"></button>
     </c-modal-header>
-    <c-modal-body>
-      <p>{{ 'serviceCategory.deleteConfirmation' | translate | async }}</p>
+    <c-modal-body class="p-4">
+      <div class="alert alert-warning">
+        <i cIcon name="cilWarning" class="me-2"></i>
+        <span>{{ 'serviceCategory.deleteConfirmation' | translate | async }}</span>
+      </div>
     </c-modal-body>
-    <c-modal-footer>
-      <button cButton color="secondary" (click)="closeDeleteSubCategoryModal()">
+    <c-modal-footer class="border-top-0">
+      <button cButton color="secondary" (click)="closeDeleteSubCategoryModal()" class="rounded-pill px-4 py-2">
+        <i cIcon name="cilX" class="me-1"></i>
         {{ 'common.cancel' | translate | async }}
       </button>
-      <button cButton color="danger" (click)="confirmDeleteSubCategory()">
+      <button cButton color="danger" (click)="confirmDeleteSubCategory()" class="rounded-pill px-4 py-2">
+        <i cIcon name="cilTrash" class="me-1"></i>
         {{ 'common.delete' | translate | async }}
       </button>
     </c-modal-footer>

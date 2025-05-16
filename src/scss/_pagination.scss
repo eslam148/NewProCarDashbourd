@@ -1,0 +1,199 @@
+/* Professional Pagination Styles for the entire application */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 1.5rem auto;
+  padding: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .page-item {
+    list-style: none;
+    margin: 0 2px;
+
+    .page-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+      padding: 0.375rem 0.75rem;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      color: #334155;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+      &:hover {
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        color: var(--cui-primary);
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(var(--cui-primary-rgb), 0.15);
+        outline: none;
+      }
+    }
+
+    &.active .page-link {
+      background: linear-gradient(135deg, var(--cui-primary), var(--cui-primary-dark, #0954a5));
+      color: white;
+      border-color: var(--cui-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(var(--cui-primary-rgb), 0.3);
+
+      &:hover {
+        transform: none;
+      }
+    }
+
+    &.disabled .page-link {
+      background: #f8fafc;
+      color: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.6;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  /* Next/Prev buttons */
+  .page-item.prev, .page-item.next {
+    .page-link {
+      font-weight: 600;
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+    }
+  }
+
+  .page-item.prev .page-link:hover {
+    transform: translateX(-2px);
+  }
+
+  .page-item.next .page-link:hover {
+    transform: translateX(2px);
+  }
+}
+
+/* Custom pagination classes */
+.pagination-sm {
+  .page-item .page-link {
+    min-width: 30px;
+    height: 30px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 6px;
+  }
+}
+
+.pagination-lg {
+  .page-item .page-link {
+    min-width: 44px;
+    height: 44px;
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+  }
+}
+
+/* Custom simple pagination (like we have in the requests component) */
+.simple-pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+  margin: 1.5rem 0;
+
+  .page-info {
+    font-weight: 500;
+    color: #334155;
+    padding: 0.375rem 0;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+    color: #334155;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 100px;
+    justify-content: center;
+
+    i, svg {
+      transition: transform 0.3s ease;
+    }
+
+    &:hover:not([disabled]) {
+      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      color: var(--cui-primary);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(var(--cui-primary-rgb), 0.15);
+    }
+
+    &[disabled] {
+      background: #f8fafc;
+      color: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.7;
+    }
+  }
+
+  .btn-prev:hover:not([disabled]) i,
+  .btn-prev:hover:not([disabled]) svg {
+    transform: translateX(-3px);
+  }
+
+  .btn-next:hover:not([disabled]) i,
+  .btn-next:hover:not([disabled]) svg {
+    transform: translateX(3px);
+  }
+}
+
+/* RTL support */
+[dir="rtl"] {
+  .pagination {
+    .page-item.prev .page-link:hover {
+      transform: translateX(2px);
+    }
+
+    .page-item.next .page-link:hover {
+      transform: translateX(-2px);
+    }
+  }
+
+  .simple-pagination {
+    .btn-prev:hover:not([disabled]) i,
+    .btn-prev:hover:not([disabled]) svg {
+      transform: translateX(3px);
+    }
+
+    .btn-next:hover:not([disabled]) i,
+    .btn-next:hover:not([disabled]) svg {
+      transform: translateX(-3px);
+    }
+  }
+}

@@ -186,7 +186,15 @@
     "loading": "جاري التحميل...",
     "error": "خطأ في تحميل البيانات",
     "deleteGovernorateConfirm": "هل أنت متأكد أنك تريد حذف هذه المحافظة؟",
-    "deleteCityConfirm": "هل أنت متأكد أنك تريد حذف هذه المدينة؟"
+    "deleteCityConfirm": "هل أنت متأكد أنك تريد حذف هذه المدينة؟",
+    "deleteGovernorateSuccess": "تم حذف المحافظة بنجاح",
+    "deleteCitySuccess": "تم حذف المدينة بنجاح",
+    "deleteGovernorateError": "حدث خطأ أثناء حذف المحافظة",
+    "deleteCityError": "حدث خطأ أثناء حذف المدينة",
+    "selectGovernorateFirst": "يرجى اختيار المحافظة أولا",
+    "addCityToStart": "إضافة مدينة جديدة",
+    "selectGovernorateInstruction": "اختر المحافظة لإضافة مدينة",
+    "allGovernorates": "كل المحافظات"
   },
   "serviceCategory": {
     "title": "إدارة فئات الخدمات",
@@ -334,6 +342,13 @@
     "noRequests": "لا توجد طلبات.",
     "prev": "السابق",
     "next": "التالي",
-    "page": "صفحة"
+    "page": "صفحة",
+    "locationDetails": "تفاصيل الموقع",
+    "distance": "المسافة",
+    "distanceKm": "المسافة بالكيلومتر",
+    "distanceBetween": "المسافة بين {0} و {1}",
+    "distanceToNurse": "المسافة إلى الممرضة",
+    "distanceToUser": "المسافة إلى المستخدم",
+    "loadingDetails": "جاري تحميل التفاصيل..."
   }
 }

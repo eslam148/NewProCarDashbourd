@@ -93,94 +93,61 @@
           <tr>
             <th>{{ 'admin.name' | translate | async }}</th>
             <th>{{ 'admin.phone' | translate | async }}</th>
-            <th>{{ 'admin.actions' | translate | async }}</th>
+            <th class="actions-cell">{{ 'admin.actions' | translate | async }}</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let admin of (admins$ | async) ?? []">
             <td>
               <div class="d-flex align-items-center">
-                <div class="avatar me-3">
-                  <img [src]="admin.imageUrl || 'assets/img/avatars/default.png'" [alt]="admin.firstName" width="40" height="40" style="object-fit: cover;">
-                </div>
-                <div>
+                <img [src]="admin.imageUrl || 'assets/img/avatars/default.png'" [alt]="admin.firstName" class="avatar">
+                <div class="ms-3">
                   <div class="fw-semibold">{{ admin.firstName }} {{ admin.lastName }}</div>
                 </div>
               </div>
             </td>
             <td>{{ admin.phoneNumber }}</td>
-            <td>
-              <div class="btn-group">
-                <button
-                  cButton
-                  color="primary"
-                  variant="ghost"
-                  size="sm"
-                  cTooltip="{{ 'admin.editTooltip' | translate | async }}"
-                  (click)="onEditAdmin(admin)"
-                >
-                  {{ 'common.edit' | translate | async }}
-                </button>
-                <button
-                  cButton
-                  color="danger"
-                  variant="ghost"
-                  size="sm"
-                  cTooltip="{{ 'admin.deleteTooltip' | translate | async }}"
-                  (click)="onDeleteAdmin(admin.id)"
-                >
-                  {{ 'common.delete' | translate | async }}
-                </button>
-              </div>
+            <td class="actions-cell">
+              <button
+                cButton
+                color="primary"
+                variant="ghost"
+                size="sm"
+                cTooltip="{{ 'admin.editTooltip' | translate | async }}"
+                (click)="onEditAdmin(admin)"
+                class="btn btn-sm btn-primary rounded-pill px-3 me-2"
+              >
+                {{ 'common.edit' | translate | async }}
+              </button>
+              <button
+                cButton
+                color="danger"
+                variant="ghost"
+                size="sm"
+                cTooltip="{{ 'admin.deleteTooltip' | translate | async }}"
+                (click)="onDeleteAdmin(admin.id)"
+                class="btn btn-sm btn-danger rounded-pill px-3"
+              >
+                {{ 'common.delete' | translate | async }}
+              </button>
             </td>
+          </tr>
+          <tr *ngIf="((admins$ | async)?.length ?? 0) === 0" class="empty-row">
+            <td colspan="3">{{ 'admin.noResults' | translate | async }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <!-- Pagination -->
-    <div *ngIf="!(loading$ | async) && ((admins$ | async)?.length ?? 0) > 0" class="d-flex justify-content-between align-items-center mt-4">
-      <div class="d-flex align-items-center">
-        <span class="me-2">{{ 'common.show' | translate | async }}</span>
-        <select class="form-select form-select-sm" style="width: auto" (change)="onPageSizeChange($event)">
-          <option [value]="5">5</option>
-          <option [value]="10" selected>10</option>
-          <option [value]="20">20</option>
-          <option [value]="50">50</option>
-        </select>
-        <span class="ms-2">{{ 'common.entries' | translate | async }}</span>
-      </div>
-
-      <div class="d-flex align-items-center">
-        <span class="me-3">{{ 'common.showing' | translate | async }} {{ (currentPage - 1) * pageSize + 1 }} {{ 'common.to' | translate | async }} {{ Math.min(currentPage * pageSize, totalItems) }} {{ 'common.of' | translate | async }} {{ totalItems }} {{ 'common.entries' | translate | async }}</span>
-        <nav>
-          <ul class="pagination mb-0">
-            <li class="page-item" [class.disabled]="currentPage === 1">
-              <button class="page-link" (click)="onPageChange(1)" cTooltip="{{ 'common.firstPage' | translate | async }}">
-                {{ 'common.first' | translate | async }}
-              </button>
-            </li>
-            <li class="page-item" [class.disabled]="currentPage === 1">
-              <button class="page-link" (click)="onPageChange(currentPage - 1)" cTooltip="{{ 'common.previousPage' | translate | async }}">
-                {{ 'common.previous' | translate | async }}
-              </button>
-            </li>
-            <li class="page-item" *ngFor="let page of getPageRange()" [class.active]="currentPage === page" >
-              <button class="page-link" [class.text-white]="currentPage === page" (click)="onPageChange(page)">{{ page }}</button>
-            </li>
-            <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <button class="page-link" (click)="onPageChange(currentPage + 1)" cTooltip="{{ 'common.nextPage' | translate | async }}">
-                {{ 'common.next' | translate | async }}
-              </button>
-            </li>
-            <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <button class="page-link" (click)="onPageChange(totalPages)" cTooltip="{{ 'common.lastPage' | translate | async }}">
-                {{ 'common.last' | translate | async }}
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+    <div *ngIf="!(loading$ | async) && ((admins$ | async)?.length ?? 0) > 0" class="d-flex justify-content-center mt-4">
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        (pageChange)="onPageChange($event)"
+        size="sm"
+      ></app-pagination>
     </div>
   </div>
 </div>

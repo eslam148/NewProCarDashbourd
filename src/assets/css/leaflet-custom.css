@@ -1,0 +1,65 @@
+/* Leaflet Map Custom Styles - Fallback CSS file */
+
+/* Make sure Leaflet container takes the full dimensions of its parent */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1;
+}
+
+/* Fix marker z-index */
+.leaflet-marker-pane {
+  z-index: 600 !important;
+}
+
+.leaflet-tooltip-pane {
+  z-index: 650 !important;
+}
+
+.leaflet-popup-pane {
+  z-index: 700 !important;
+}
+
+/* Style for the distance tooltip */
+.distance-tooltip {
+  background: white;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  padding: 5px 12px !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  color: #0c4a6e !important;
+  white-space: nowrap;
+  font-size: 12px !important;
+  z-index: 1000 !important;
+}
+
+.distance-tooltip::before {
+  display: none !important;
+}
+
+/* Map container in the requests component */
+#location-map {
+  width: 100% !important;
+  height: 300px !important;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 2px solid rgba(14, 165, 233, 0.2);
+  display: block !important;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  #location-map {
+    height: 250px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #location-map {
+    height: 200px !important;
+  }
+}

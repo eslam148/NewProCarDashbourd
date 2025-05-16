@@ -1,0 +1,104 @@
+/* Professional Styles for Sidebar Navigation */
+
+// Enhance sidebar navigation buttons and links
+.sidebar {
+  .nav-link {
+    border-radius: 8px;
+    margin: 0 8px 4px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(var(--cui-primary-rgb), 0.1);
+      transform: translateX(2px);
+    }
+
+    &.active {
+      background: linear-gradient(90deg, rgba(var(--cui-primary-rgb), 0.12), rgba(var(--cui-primary-rgb), 0.05));
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      border-left: 3px solid var(--cui-primary);
+
+      .nav-icon {
+        color: var(--cui-primary);
+      }
+    }
+
+    .nav-icon {
+      transition: all 0.3s ease;
+    }
+  }
+
+  // Style for sidebar header
+  .sidebar-header {
+    padding: 1.25rem 1rem;
+
+    .sidebar-brand {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  // Enhanced sidebar toggler button
+  .sidebar-toggler {
+    background: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(var(--cui-primary-rgb), 0.1);
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // Enhance dropdown indicators
+  .nav-group {
+    &.show {
+      .nav-group-toggle {
+        background: rgba(var(--cui-primary-rgb), 0.08);
+        font-weight: 500;
+
+        &::after {
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    .nav-group-toggle {
+      border-radius: 8px;
+      margin: 0 8px 4px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(var(--cui-primary-rgb), 0.1);
+      }
+
+      &::after {
+        transition: transform 0.3s ease;
+        color: var(--cui-primary);
+        opacity: 0.7;
+      }
+    }
+
+    .nav-group-items {
+      margin-left: 12px;
+      padding-left: 8px;
+      border-left: 1px dashed rgba(var(--cui-body-color-rgb), 0.2);
+
+      .nav-link {
+        margin-left: 0;
+        padding-left: 1rem;
+
+        &.active {
+          border-left: 2px solid var(--cui-primary);
+        }
+      }
+    }
+  }
+}

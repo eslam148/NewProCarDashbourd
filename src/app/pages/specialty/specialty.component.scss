@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+// Custom animation
+.animated {
+  animation-duration: 0.4s;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fadeIn {
+  animation-name: fadeIn;
+}
+
+// Table customizations
+.custom-table {
+  th {
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .empty-state {
+    padding: 2rem;
+
+    svg {
+      color: var(--cui-gray-400);
+    }
+
+    h5 {
+      color: var(--cui-gray-700);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: var(--cui-gray-600);
+    }
+  }
+}
+
+// Form improvements
+.form-control, .form-select {
+  height: 42px;
+  transition: all 0.2s ease;
+
+  &:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--cui-primary-rgb), 0.25);
+    border-color: rgba(var(--cui-primary-rgb), 0.4);
+    transform: translateY(-1px);
+  }
+}
+
+// Button enhancements
+.btn-hover-effect {
+  transition: all 0.25s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// Modal improvements
+.modal-icon-container {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 767px) {
+  .form-control, .form-select {
+    height: 38px;
+  }
+
+  .custom-table {
+    font-size: 0.875rem;
+
+    th {
+      font-size: 0.75rem;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { GovernorateDto } from '../../Models/DTOs/GovernorateDto';
@@ -10,9 +10,25 @@ import * as GovernorateActions from '../../store/governorate/governorate.actions
 import * as CityActions from '../../store/city/city.actions';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule } from '@coreui/angular';
+import {
+  ButtonModule,
+  CardModule,
+  ModalModule,
+  ButtonDirective,
+  ModalComponent
+} from '@coreui/angular';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { cilPlus, cilPencil } from '@coreui/icons';
+import {
+  cilPlus,
+  cilPencil,
+  cilTrash,
+  cilMap,
+  cilX,
+  cilLocationPin,
+  cilWarning,
+  cilBan,
+  cilUser
+} from '@coreui/icons';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
 
@@ -21,8 +37,18 @@ import { TranslationService } from '../../services/translation.service';
   templateUrl: './location.component.html',
   styleUrl: './location.component.scss',
   standalone: true,
-  imports: [AsyncPipe, CommonModule, ReactiveFormsModule, ButtonModule, IconModule, TranslatePipe],
-  providers: [IconSetService]
+  imports: [
+    AsyncPipe,
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    IconModule,
+    TranslatePipe,
+    CardModule,
+    ModalModule
+  ],
+  providers: [IconSetService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LocationComponent implements OnInit {
   governorates$: Observable<GovernorateDto[]>;
@@ -42,7 +68,6 @@ export class LocationComponent implements OnInit {
   governorateError: string | null = null;
   cityError: string | null = null;
 
-  icons = { cilPlus, cilPencil };
   currentLang: string = 'en';
 
   showDeleteModal = false;
@@ -59,7 +84,17 @@ export class LocationComponent implements OnInit {
     this.cities$ = this.store.select(selectAllCities);
 
     // Register icons
-    this.iconSetService.icons = { cilPlus, cilPencil };
+    this.iconSetService.icons = {
+      cilPlus,
+      cilPencil,
+      cilTrash,
+      cilMap,
+      cilX,
+      cilLocationPin,
+      cilWarning,
+      cilBan,
+      cilUser
+    };
 
     this.governorateForm = this.fb.group({
       id: [null],

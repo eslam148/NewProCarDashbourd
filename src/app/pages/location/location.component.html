@@ -1,67 +1,88 @@
-<div class="container-fluid">
-  <div class="row">
+<div class="container-fluid py-4">
+  <div class="row g-4">
     <!-- Governorates Section -->
     <div class="col-md-6">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h4>{{ 'location.governorates' | translate | async }}</h4>
-          <button cButton color="primary" (click)="isAddingGovernorate = true" *ngIf="!isAddingGovernorate">
-            <i cIcon name="cilPlus"></i> {{ 'location.addGovernorate' | translate | async }}
+      <div class="card custom-card shadow">
+        <div class="card-header gradient-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+          <h4 class="mb-0 fw-bold">{{ 'location.governorates' | translate | async }}</h4>
+          <button cButton color="light" class="rounded-pill px-3 py-1 fw-semibold btn-hover-effect" (click)="isAddingGovernorate = true" *ngIf="!isAddingGovernorate">
+            <svg cIcon name="cilPlus" class="me-1"></svg> {{ 'location.addGovernorate' | translate | async }}
           </button>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
           <!-- Loading State -->
-          <div *ngIf="loadingGovernorates" class="text-center py-3">
+          <div *ngIf="loadingGovernorates" class="text-center py-4">
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">{{ 'location.loading' | translate | async }}</span>
             </div>
+            <p class="text-muted mt-2">{{ 'location.loading' | translate | async }}</p>
           </div>
 
           <!-- Error State -->
-          <div *ngIf="governorateError" class="alert alert-danger" role="alert">
-            {{ governorateError }}
+          <div *ngIf="governorateError" class="alert alert-danger rounded-3 d-flex align-items-center" role="alert">
+            <svg cIcon name="cilBan" class="me-2 flex-shrink-0"></svg>
+            <div>{{ governorateError }}</div>
           </div>
 
           <!-- Add/Edit Governorate Form -->
-          <form [formGroup]="governorateForm" *ngIf="isAddingGovernorate" class="mb-4">
-            <div class="mb-3">
-              <label class="form-label">{{ 'location.governorateName' | translate | async }} (AR)</label>
-              <input type="text" class="form-control" formControlName="nameAr">
+          <form [formGroup]="governorateForm" *ngIf="isAddingGovernorate" class="mb-4 animated fadeIn">
+            <div class="row g-3">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'location.governorateName' | translate | async }} (AR)</label>
+                <input type="text" class="form-control rounded-pill" formControlName="nameAr">
+                <div *ngIf="governorateForm.get('nameAr')?.invalid && governorateForm.get('nameAr')?.touched" class="text-danger mt-1 small">
+                  {{ 'validation.required' | translate | async }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'location.governorateName' | translate | async }} (EN)</label>
+                <input type="text" class="form-control rounded-pill" formControlName="nameEn">
+                <div *ngIf="governorateForm.get('nameEn')?.invalid && governorateForm.get('nameEn')?.touched" class="text-danger mt-1 small">
+                  {{ 'validation.required' | translate | async }}
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'location.governorateName' | translate | async }} (EN)</label>
-              <input type="text" class="form-control" formControlName="nameEn">
-            </div>
-            <div class="d-flex gap-2">
-              <button cButton color="primary" (click)="isEditingGovernorate ? updateGovernorate() : addGovernorate()" [disabled]="!governorateForm.valid">
+            <div class="d-flex gap-2 mt-3">
+              <button cButton color="primary" class="rounded-pill px-4 py-2 fw-semibold btn-hover-effect" (click)="isEditingGovernorate ? updateGovernorate() : addGovernorate()" [disabled]="!governorateForm.valid">
+                <svg cIcon [name]="isEditingGovernorate ? 'cilPencil' : 'cilPlus'" class="me-1"></svg>
                 {{ (isEditingGovernorate ? 'location.updateGovernorate' : 'location.addGovernorate') | translate | async }}
               </button>
-              <button cButton color="secondary" (click)="cancelEdit()">{{ 'common.cancel' | translate | async }}</button>
+              <button cButton color="secondary" class="rounded-pill px-4 py-2 btn-hover-effect" (click)="cancelEdit()">
+                <svg cIcon name="cilX" class="me-1"></svg>
+                {{ 'common.cancel' | translate | async }}
+              </button>
             </div>
           </form>
 
           <!-- Governorates List -->
-          <div class="list-group" *ngIf="!loadingGovernorates && !governorateError">
+          <div class="list-group custom-table" *ngIf="!loadingGovernorates && !governorateError && !isAddingGovernorate">
             <div
               *ngFor="let gov of (governorates$ | async)"
-              class="list-group-item d-flex justify-content-between align-items-center"
-              [class.active]="selectedGovernorateId === gov.id"
+              class="list-group-item d-flex justify-content-between align-items-center rounded-3 mb-2 p-3 shadow-hover border-0"
+              [class.selected-item]="selectedGovernorateId === gov.id"
             >
-              <span>{{ currentLang === 'ar' ? gov.nameAr : gov.nameEn }}</span>
+              <div class="d-flex align-items-center">
+                <div class="icon-container me-3">
+                  <svg cIcon name="cilLocationPin"></svg>
+                </div>
+                <span class="fw-semibold">{{ currentLang === 'ar' ? gov.nameAr : gov.nameEn }}</span>
+              </div>
               <div class="d-flex gap-2">
-                <button cButton color="info" (click)="onGovernorateClick(gov.id)">
-                  {{ 'location.cities' | translate | async }}
+                <button cButton color="info" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="onGovernorateClick(gov.id)">
+                  <svg cIcon name="cilMap" class="me-1"></svg> {{ 'location.cities' | translate | async }}
                 </button>
-                <button cButton color="primary"   (click)="editGovernorate(gov)">
-                  {{ 'common.edit' | translate | async }}
+                <button cButton color="primary" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="editGovernorate(gov)">
+                  <svg cIcon name="cilPencil" class="me-1"></svg> {{ 'common.edit' | translate | async }}
                 </button>
-                <button cButton color="danger" (click)="openDeleteModal('governorate', gov.id)">
-                  {{ 'common.delete' | translate | async }}
+                <button cButton color="danger" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="openDeleteModal('governorate', gov.id)">
+                  <svg cIcon name="cilTrash" class="me-1"></svg> {{ 'common.delete' | translate | async }}
                 </button>
               </div>
             </div>
-            <div *ngIf="(governorates$ | async)?.length === 0" class="list-group-item text-center text-muted">
-              {{ 'location.noGovernorates' | translate | async }}
+            <div *ngIf="(governorates$ | async)?.length === 0" class="empty-state p-4 text-center text-muted bg-white rounded-3 shadow-sm border-0">
+              <svg cIcon name="cilLocationPin" size="3xl" class="mb-3"></svg>
+              <h5>{{ 'location.noGovernorates' | translate | async }}</h5>
+              <p class="mb-0">{{ 'location.addOneToStart' | translate | async }}</p>
             </div>
           </div>
         </div>
@@ -70,70 +91,100 @@
 
     <!-- Cities Section -->
     <div class="col-md-6">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h4>{{ 'location.cities' | translate | async }}</h4>
-          <button cButton color="primary" (click)="isAddingCity = true" *ngIf="!isAddingCity && !isEditingCity">
-            <i cIcon name="cilPlus"></i> {{ 'location.addCity' | translate | async }}
+      <div class="card custom-card shadow">
+        <div class="card-header gradient-info text-white rounded-top-4 d-flex justify-content-between align-items-center">
+          <h4 class="mb-0 fw-bold">{{ 'location.cities' | translate | async }}</h4>
+          <button cButton color="light" class="rounded-pill px-3 py-1 fw-semibold btn-hover-effect" (click)="isAddingCity = true" *ngIf="!isAddingCity && !isEditingCity">
+            <svg cIcon name="cilPlus" class="me-1"></svg> {{ 'location.addCity' | translate | async }}
           </button>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
           <!-- Add/Edit City Form -->
-          <form [formGroup]="cityForm" *ngIf="isAddingCity" class="mb-4">
+          <form [formGroup]="cityForm" *ngIf="isAddingCity" class="mb-4 animated fadeIn">
             <div class="mb-4">
-              <label for="governorate" class="form-label">{{ 'location.selectGovernorate' | translate | async }}</label>
-              <select class="form-select" id="governorate" formControlName="governorateId">
+              <label for="governorate" class="form-label fw-semibold">{{ 'location.selectGovernorate' | translate | async }}</label>
+              <select class="form-select rounded-pill" id="governorate" formControlName="governorateId">
                 <option value="">{{ 'location.selectGovernorate' | translate | async }}</option>
                 <option value="all">{{ 'location.allGovernorates' | translate | async }}</option>
                 <ng-container *ngFor="let gov of (governorates$ | async)">
                   <option [value]="gov.id">{{ currentLang === 'ar' ? gov.nameAr : gov.nameEn }}</option>
                 </ng-container>
               </select>
+              <div *ngIf="cityForm.get('governorateId')?.invalid && cityForm.get('governorateId')?.touched" class="text-danger mt-1 small">
+                {{ 'validation.required' | translate | async }}
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'location.cityName' | translate | async }} (AR)</label>
-              <input type="text" class="form-control" formControlName="nameAr">
+            <div class="row g-3">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'location.cityName' | translate | async }} (AR)</label>
+                <input type="text" class="form-control rounded-pill" formControlName="nameAr">
+                <div *ngIf="cityForm.get('nameAr')?.invalid && cityForm.get('nameAr')?.touched" class="text-danger mt-1 small">
+                  {{ 'validation.required' | translate | async }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-semibold">{{ 'location.cityName' | translate | async }} (EN)</label>
+                <input type="text" class="form-control rounded-pill" formControlName="nameEn">
+                <div *ngIf="cityForm.get('nameEn')?.invalid && cityForm.get('nameEn')?.touched" class="text-danger mt-1 small">
+                  {{ 'validation.required' | translate | async }}
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">{{ 'location.cityName' | translate | async }} (EN)</label>
-              <input type="text" class="form-control" formControlName="nameEn">
-            </div>
-            <div class="d-flex gap-2">
-              <button cButton color="primary" (click)="isEditingCity ? updateCity() : addCity()" [disabled]="!cityForm.valid">
+            <div class="d-flex gap-2 mt-3">
+              <button cButton color="info" class="rounded-pill px-4 py-2 fw-semibold btn-hover-effect" (click)="isEditingCity ? updateCity() : addCity()" [disabled]="!cityForm.valid">
+                <svg cIcon [name]="isEditingCity ? 'cilPencil' : 'cilPlus'" class="me-1"></svg>
                 {{ (isEditingCity ? 'location.updateCity' : 'location.addCity') | translate | async }}
               </button>
-              <button cButton color="secondary" (click)="cancelEdit()">{{ 'common.cancel' | translate | async }}</button>
+              <button cButton color="secondary" class="rounded-pill px-4 py-2 btn-hover-effect" (click)="cancelEdit()">
+                <svg cIcon name="cilX" class="me-1"></svg>
+                {{ 'common.cancel' | translate | async }}
+              </button>
             </div>
           </form>
 
           <!-- Loading State -->
-          <div *ngIf="loadingCities" class="text-center py-3">
-            <div class="spinner-border text-primary" role="status">
+          <div *ngIf="loadingCities" class="text-center py-4">
+            <div class="spinner-border text-info" role="status">
               <span class="visually-hidden">{{ 'location.loading' | translate | async }}</span>
             </div>
+            <p class="text-muted mt-2">{{ 'location.loading' | translate | async }}</p>
           </div>
 
           <!-- Error State -->
-          <div *ngIf="cityError" class="alert alert-danger" role="alert">
-            {{ cityError }}
+          <div *ngIf="cityError" class="alert alert-danger rounded-3 d-flex align-items-center" role="alert">
+            <svg cIcon name="cilBan" class="me-2 flex-shrink-0"></svg>
+            <div>{{ cityError }}</div>
           </div>
 
           <!-- Cities List -->
-          <div class="list-group" *ngIf="selectedGovernorateId && !loadingCities && !cityError">
-            <div *ngFor="let city of (cities$ | async)" class="list-group-item d-flex justify-content-between align-items-center">
-              <span>{{ currentLang === 'ar' ? city.nameAr : city.nameEn }}</span>
+          <div class="list-group custom-table" *ngIf="selectedGovernorateId && !loadingCities && !cityError && !isAddingCity">
+            <div *ngFor="let city of (cities$ | async)" class="list-group-item d-flex justify-content-between align-items-center rounded-3 mb-2 p-3 shadow-hover border-0">
+              <div class="d-flex align-items-center">
+                <div class="icon-container info me-3">
+                  <svg cIcon name="cilMap"></svg>
+                </div>
+                <span class="fw-semibold">{{ currentLang === 'ar' ? city.nameAr : city.nameEn }}</span>
+              </div>
               <div class="d-flex gap-2">
-                <button cButton color="primary" variant="ghost" (click)="editCity(city)">
-                  {{ 'common.edit' | translate | async }}
+                <button cButton color="primary" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="editCity(city)">
+                  <svg cIcon name="cilPencil" class="me-1"></svg> {{ 'common.edit' | translate | async }}
                 </button>
-                <button cButton color="danger" (click)="openDeleteModal('city', city.id)">
-                  {{ 'common.delete' | translate | async }}
+                <button cButton color="danger" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="openDeleteModal('city', city.id)">
+                  <svg cIcon name="cilTrash" class="me-1"></svg> {{ 'common.delete' | translate | async }}
                 </button>
               </div>
             </div>
-            <div *ngIf="(cities$ | async)?.length === 0" class="list-group-item text-center text-muted">
-              {{ 'location.noCities' | translate | async }}
+            <div *ngIf="(cities$ | async)?.length === 0" class="empty-state p-4 text-center text-muted bg-white rounded-3 shadow-sm border-0">
+              <svg cIcon name="cilMap" size="3xl" class="mb-3"></svg>
+              <h5>{{ 'location.noCities' | translate | async }}</h5>
+              <p class="mb-0">{{ 'location.addCityToStart' | translate | async }}</p>
             </div>
+          </div>
+
+          <div *ngIf="!selectedGovernorateId && !isAddingCity" class="empty-state p-4 text-center text-muted bg-white rounded-3 shadow-sm border-0">
+            <svg cIcon name="cilLocationPin" size="3xl" class="mb-3"></svg>
+            <h5>{{ 'location.selectGovernorateFirst' | translate | async }}</h5>
+            <p class="mb-0">{{ 'location.selectGovernorateInstruction' | translate | async }}</p>
           </div>
         </div>
       </div>
@@ -142,28 +193,34 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade show" tabindex="-1" [ngStyle]="{display: showDeleteModal ? 'block' : 'none', background: 'rgba(0,0,0,0.5)'}" *ngIf="showDeleteModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ 'common.delete' | translate | async }}</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeDeleteModal()"></button>
+<c-modal [visible]="showDeleteModal" (visibleChange)="!$event && closeDeleteModal()" class="fade-in">
+  <c-modal-header class="bg-light rounded-top">
+    <div class="d-flex align-items-center">
+      <div class="modal-icon-container bg-danger-subtle rounded-circle p-2 me-2">
+        <svg cIcon name="cilTrash" class="text-danger"></svg>
       </div>
-      <div class="modal-body">
-        <p>
-          {{ deleteType === 'governorate'
-            ? ('deleteGovernorateConfirm' | translate | async)
-            : ('deleteCityConfirm' | translate | async) }}
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button cButton color="secondary" (click)="closeDeleteModal()">
-          {{ 'common.cancel' | translate | async }}
-        </button>
-        <button cButton color="danger" (click)="confirmDelete()">
-          {{ 'common.delete' | translate | async }}
-        </button>
-      </div>
+      <h5 cModalTitle class="mb-0 fw-bold">{{ 'common.delete' | translate | async }}</h5>
     </div>
-  </div>
-</div>
+    <button cButtonClose (click)="closeDeleteModal()"></button>
+  </c-modal-header>
+  <c-modal-body class="p-4">
+    <div class="alert alert-warning">
+      <svg cIcon name="cilWarning" class="me-2"></svg>
+      <span>
+        {{ deleteType === 'governorate'
+          ? ('deleteGovernorateConfirm' | translate | async)
+          : ('deleteCityConfirm' | translate | async) }}
+      </span>
+    </div>
+  </c-modal-body>
+  <c-modal-footer class="border-top-0">
+    <button cButton color="secondary" (click)="closeDeleteModal()" class="rounded-pill px-4 py-2">
+      <svg cIcon name="cilX" class="me-1"></svg>
+      {{ 'common.cancel' | translate | async }}
+    </button>
+    <button cButton color="danger" (click)="confirmDelete()" class="rounded-pill px-4 py-2">
+      <svg cIcon name="cilTrash" class="me-1"></svg>
+      {{ 'common.delete' | translate | async }}
+    </button>
+  </c-modal-footer>
+</c-modal>

@@ -1,0 +1,224 @@
+/* Professional Button Styles for the entire application */
+
+/* Base Button Styles */
+.btn {
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  border: none;
+  position: relative;
+  overflow: hidden;
+  text-transform: none;
+  letter-spacing: 0.02em;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(var(--cui-primary-rgb), 0.25);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+/* Primary Button */
+.btn-primary {
+  background: linear-gradient(135deg, var(--cui-primary), var(--cui-primary-dark, #0954a5));
+  color: white;
+  border: none;
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, var(--cui-primary-dark, #0954a5), var(--cui-primary-darker, #064383));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    background: var(--cui-primary-dark, #0954a5);
+  }
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: linear-gradient(135deg, var(--cui-secondary), var(--cui-secondary-dark, #5c636a));
+  color: white;
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, var(--cui-secondary-dark, #5c636a), var(--cui-secondary-darker, #4d545a));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    background: var(--cui-secondary-dark, #5c636a);
+  }
+}
+
+/* Success Button */
+.btn-success {
+  background: linear-gradient(135deg, var(--cui-success), var(--cui-success-dark, #1a7d4b));
+  color: white;
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, var(--cui-success-dark, #1a7d4b), var(--cui-success-darker, #146c40));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    background: var(--cui-success-dark, #1a7d4b);
+  }
+}
+
+/* Danger Button */
+.btn-danger {
+  background: linear-gradient(135deg, var(--cui-danger), var(--cui-danger-dark, #b82b34));
+  color: white;
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, var(--cui-danger-dark, #b82b34), var(--cui-danger-darker, #9e252d));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    background: var(--cui-danger-dark, #b82b34);
+  }
+}
+
+/* Warning Button */
+.btn-warning {
+  background: linear-gradient(135deg, var(--cui-warning), var(--cui-warning-dark, #cc9e00));
+  color: var(--cui-body-color);
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, var(--cui-warning-dark, #cc9e00), var(--cui-warning-darker, #b38b00));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    background: var(--cui-warning-dark, #cc9e00);
+  }
+}
+
+/* Info Button */
+.btn-info {
+  background: linear-gradient(135deg, var(--cui-info), var(--cui-info-dark, #0c85bb));
+  color: white;
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, var(--cui-info-dark, #0c85bb), var(--cui-info-darker, #0a719f));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    background: var(--cui-info-dark, #0c85bb);
+  }
+}
+
+/* Light Button */
+.btn-light {
+  background: linear-gradient(135deg, var(--cui-light), var(--cui-light-dark, #ebebeb));
+  color: var(--cui-body-color);
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, var(--cui-light-dark, #ebebeb), var(--cui-light-darker, #dadada));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  &:active {
+    background: var(--cui-light-dark, #ebebeb);
+  }
+}
+
+/* Dark Button */
+.btn-dark {
+  background: linear-gradient(135deg, var(--cui-dark), var(--cui-dark-dark, #141619));
+  color: white;
+
+  &:hover, &:focus {
+    background: linear-gradient(135deg, var(--cui-dark-dark, #141619), var(--cui-dark-darker, #0a0c0d));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    background: var(--cui-dark-dark, #141619);
+  }
+}
+
+/* Outline Buttons */
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-success,
+.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-info,
+.btn-outline-light,
+.btn-outline-dark {
+  background: transparent;
+  box-shadow: none;
+
+  &:hover, &:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+}
+
+/* Button Sizes */
+.btn-sm {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+  border-radius: 10px;
+}
+
+/* Button Group Styling */
+.btn-group {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+
+  .btn {
+    box-shadow: none;
+  }
+}
+
+/* Button with Icon */
+.btn-icon-text {
+  display: inline-flex;
+  align-items: center;
+
+  i, svg {
+    margin-right: 0.5rem;
+  }
+}
+
+/* Icon-only Buttons */
+.btn-icon {
+  padding: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &.btn-sm {
+    padding: 0.25rem;
+  }
+
+  &.btn-lg {
+    padding: 0.75rem;
+  }
+}

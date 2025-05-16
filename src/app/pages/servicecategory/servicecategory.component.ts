@@ -1,4 +1,4 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -12,10 +12,12 @@ import {
   GridModule,
   SpinnerModule,
   TooltipModule,
-  BadgeModule
+  BadgeModule,
+  PaginationModule
 } from '@coreui/angular';
-import { IconModule } from '@coreui/icons-angular';
+import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { map, mergeMap } from 'rxjs/operators';
+import { cilPlus, cilPencil, cilTrash, cilList, cilSearch, cilFolder, cilLayers, cilPhone, cilX, cilWarning, cilCloudUpload } from '@coreui/icons';
 
 import { ServiceCategoryDto } from '../../Models/DTOs/ServiceCategoryDto';
 import { ServiceCatalogDto } from '../../Models/DTOs/ServiceCatalogDto';
@@ -35,8 +37,11 @@ import { SubCategoryService } from '../../services/sub-category.service';
   selector: 'app-servicecategory',
   standalone: true,
   templateUrl: './servicecategory.component.html',
-  styleUrls: ['./servicecategory.component.scss'],
+  styleUrls: [
+    './servicecategory.component.scss'
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  encapsulation: ViewEncapsulation.None,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -51,6 +56,7 @@ import { SubCategoryService } from '../../services/sub-category.service';
     TooltipModule,
     IconModule,
     BadgeModule,
+    PaginationModule,
     TranslatePipe
   ],
 })
@@ -107,8 +113,15 @@ export class ServicecategoryComponent implements OnInit {
     private store: Store,
     private fb: FormBuilder,
     private categoryService: ServiceCategoryService,
-    private subCategoryService: SubCategoryService
+    private subCategoryService: SubCategoryService,
+    private iconSetService: IconSetService
   ) {
+    // Register Icons
+    iconSetService.icons = {
+      cilPlus, cilPencil, cilTrash, cilList, cilSearch, cilFolder,
+      cilLayers, cilPhone, cilX, cilWarning, cilCloudUpload
+    };
+
     // Service Category
     this.categories$ = this.store.select(selectAllCategories);
     this.loading$ = this.store.select(selectServiceCategoryLoading);
@@ -245,27 +258,67 @@ export class ServicecategoryComponent implements OnInit {
     this.previewIconUrl = null;
   }
 
+  // Helper method to show success toast
+  showSuccess(message: string): void {
+    // You can implement your preferred toast notification system here
+    console.log('Success:', message);
+    // Example using browser alert (replace with your toast system)
+    alert('Success: ' + message);
+  }
+
+  // Helper method to show error toast
+  showError(message: string): void {
+    // You can implement your preferred toast notification system here
+    console.error('Error:', message);
+    // Example using browser alert (replace with your toast system)
+    alert('Error: ' + message);
+  }
+
   submit() {
     if (this.form.valid) {
       console.log(this.selectedCategoryId);
+
+      // Create category data object
       const categoryData: ServiceCategoryDto = {
-        id: this.selectedCategoryId ?? undefined,
-        nameAr: this.form.get('nameAr')?.value,
-        nameEn: this.form.get('nameEn')?.value,
-        descriptionAr: this.form.get('descriptionAr')?.value,
-        descriptionEn: this.form.get('descriptionEn')?.value,
+        nameAr: this.form.value.nameAr,
+        nameEn: this.form.value.nameEn,
+        descriptionAr: this.form.value.descriptionAr,
+        descriptionEn: this.form.value.descriptionEn,
         icon: this.selectedFile
       };
 
-      if (this.isEditMode && this.selectedCategoryId) {
-        this.store.dispatch(ServiceCategoryActions.updateCategory({
-          category: { ...categoryData, id: this.selectedCategoryId }
-        }));
+      if (this.isEditMode && this.selectedCategoryId !== null) {
+        // Use the existing updateCategory method
+        categoryData.id = this.selectedCategoryId;
+        this.categoryService.updateCategory(categoryData).subscribe({
+          next: (response: GenericResponse<ServiceCategoryDto>) => {
+            console.log('Category updated successfully:', response);
+            this.store.dispatch(ServiceCategoryActions.loadAllCategories());
+            this.showCategoryForm = false;
+            this.form.reset();
+            this.showSuccess('Category updated successfully');
+          },
+          error: (error: any) => {
+            console.error('Error updating category:', error);
+            this.showError('Failed to update category');
+          }
+        });
       } else {
-        this.store.dispatch(ServiceCategoryActions.addCategory({ category: categoryData }));
+        // Use the existing addCategory method
+        this.categoryService.addCategory(categoryData).subscribe({
+          next: (response: GenericResponse<ServiceCategoryDto>) => {
+            console.log('Category created successfully:', response);
+            this.store.dispatch(ServiceCategoryActions.loadAllCategories());
+            this.showCategoryForm = false;
+            this.form.reset();
+            this.showSuccess('Category created successfully');
+          },
+          error: (error: any) => {
+            console.error('Error creating category:', error);
+            this.showError('Failed to create category');
+          }
+        });
       }
-
-      this.closeModal();
     }
   }
 
@@ -280,9 +333,25 @@ export class ServicecategoryComponent implements OnInit {
   }
 
   confirmDelete() {
-    if (this.selectedCategoryId) {
-      this.store.dispatch(ServiceCategoryActions.deleteCategory({ id: this.selectedCategoryId }));
-      this.closeDeleteModal();
+    if (this.selectedCategoryId !== null) {
+      this.categoryService.deleteCategory(this.selectedCategoryId).subscribe({
+        next: (response: GenericResponse<any>) => {
+          console.log('Category deleted successfully:', response);
+          this.store.dispatch(ServiceCategoryActions.loadAllCategories());
+          this.closeDeleteModal();
+          this.showSuccess('Category deleted successfully');
+
+          // Clear selected category if the deleted one was selected
+          if (this.selectedCategoryId === this.selectedCategoryId) {
+            this.selectedCategoryId = null;
+          }
+        },
+        error: (error: any) => {
+          console.error('Error deleting category:', error);
+          this.closeDeleteModal();
+          this.showError('Failed to delete category');
+        }
+      });
     }
   }
 
@@ -344,83 +413,106 @@ export class ServicecategoryComponent implements OnInit {
   }
 
   submitSubCategory() {
-    if (this.subCategoryForm.valid) {
-      this.subCategoryForm.patchValue({ serviceCategoryId: this.selectedCategoryId });
-      if (this.isEditSubMode && this.editingSubCategoryId != null) {
+    if (this.subCategoryForm.valid && this.selectedCategoryId !== null) {
+
+      // Create subcategory data object
+      const subCategoryData: SubCategoryDto = {
+        nameAr: this.subCategoryForm.value.nameAr,
+        nameEn: this.subCategoryForm.value.nameEn,
+        descriptionAr: this.subCategoryForm.value.descriptionAr,
+        descriptionEn: this.subCategoryForm.value.descriptionEn,
+        serviceCategoryId: this.selectedCategoryId,
+        fromCallCenter: this.subCategoryForm.value.fromCallCenter,
+        icon: this.subCategoryIconFile
+      };
+
+      if (this.isEditSubMode && this.editingSubCategoryId !== null) {
+        // For update with icon, use updateSubCategoryWithIcon method
         if (this.subCategoryIconFile) {
-          // Edit mode with new icon
           const formData = new FormData();
-          formData.append('id', this.editingSubCategoryId?.toString() || '');
-          formData.append('serviceCategoryId', this.selectedCategoryId?.toString() || '');
-          formData.append('fromCallCenter', this.subCategoryForm.get('fromCallCenter')?.value ?? 'false');
-          formData.append('nameAr', this.subCategoryForm.get('nameAr')?.value);
-          formData.append('nameEn', this.subCategoryForm.get('nameEn')?.value);
-          formData.append('descriptionAr', this.subCategoryForm.get('descriptionAr')?.value);
-          formData.append('descriptionEn', this.subCategoryForm.get('descriptionEn')?.value);
-          if (this.subCategoryIconFile) {
-            formData.append('icon', this.subCategoryIconFile);
-          }
+          formData.append('nameAr', this.subCategoryForm.value.nameAr);
+          formData.append('nameEn', this.subCategoryForm.value.nameEn);
+          formData.append('descriptionAr', this.subCategoryForm.value.descriptionAr);
+          formData.append('descriptionEn', this.subCategoryForm.value.descriptionEn);
+          formData.append('fromCallCenter', String(this.subCategoryForm.value.fromCallCenter));
+          formData.append('serviceCategoryId', this.selectedCategoryId.toString());
+          formData.append('icon', this.subCategoryIconFile);
+
           this.subCategoryService.updateSubCategoryWithIcon(this.editingSubCategoryId, formData).subscribe({
-            next: () => {
-              this.showSubCategoryForm = false;
-              this.isEditSubMode = false;
-              this.editingSubCategoryId = null;
-              this.subCategoryForm.reset();
-              this.subCategoryIconFile = null;
-              this.subCategoryIconPreview = null;
+            next: (response: any) => {
+              console.log('Subcategory updated successfully:', response);
               this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+              this.cancelSubCategoryForm();
+              this.showSuccess('Subcategory updated successfully');
             },
-            error: (error) => {
+            error: (error: any) => {
               console.error('Error updating subcategory:', error);
+              this.showError('Failed to update subcategory');
             }
           });
         } else {
-          // Edit mode without new icon
-          const updatedSubCategory = {
-            ...this.subCategoryForm.value,
-            id: this.editingSubCategoryId
-          };
-          this.store.dispatch(SubCategoryActions.updateSubCategory({ subCategory: updatedSubCategory }));
-          this.showSubCategoryForm = false;
-          this.isEditSubMode = false;
-          this.editingSubCategoryId = null;
-          this.subCategoryForm.reset();
-          this.subCategoryIconFile = null;
-          this.subCategoryIconPreview = null;
+          // For update without icon, use updateSubCategory method
+          subCategoryData.id = this.editingSubCategoryId;
+          this.subCategoryService.updateSubCategory(subCategoryData).subscribe({
+            next: (response: any) => {
+              console.log('Subcategory updated successfully:', response);
+              this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+              this.cancelSubCategoryForm();
+              this.showSuccess('Subcategory updated successfully');
+            },
+            error: (error: any) => {
+              console.error('Error updating subcategory:', error);
+              this.showError('Failed to update subcategory');
+            }
+          });
         }
-      } else if (this.subCategoryIconFile) {
-        // Add mode with icon
-        const formData = new FormData();
-        formData.append('nameAr', this.subCategoryForm.get('nameAr')?.value);
-        formData.append('nameEn', this.subCategoryForm.get('nameEn')?.value);
-        formData.append('descriptionAr', this.subCategoryForm.get('descriptionAr')?.value);
-        formData.append('descriptionEn', this.subCategoryForm.get('descriptionEn')?.value);
-        formData.append('serviceCategoryId', this.selectedCategoryId?.toString() || '');
-        formData.append('icon', this.subCategoryIconFile);
-        this.subCategoryService.addSubCategoryWithIcon(formData).subscribe({
-          next: () => {
-            this.showSubCategoryForm = false;
-            this.isEditSubMode = false;
-            this.editingSubCategoryId = null;
-            this.subCategoryForm.reset();
-            this.subCategoryIconFile = null;
-            this.subCategoryIconPreview = null;
-            this.store.dispatch(SubCategoryActions.loadAllSubCategories());
-          },
-          error: (error) => {
-            console.error('Error creating subcategory:', error);
-          }
-        });
       } else {
-        // Add mode without icon
-        this.store.dispatch(SubCategoryActions.addSubCategory({ subCategory: this.subCategoryForm.value }));
-        this.showSubCategoryForm = false;
-        this.isEditSubMode = false;
-        this.editingSubCategoryId = null;
-        this.subCategoryForm.reset();
-        this.subCategoryIconFile = null;
-        this.subCategoryIconPreview = null;
+        // For create with icon, use addSubCategoryWithIcon method
+        if (this.subCategoryIconFile) {
+          const formData = new FormData();
+          formData.append('nameAr', this.subCategoryForm.value.nameAr);
+          formData.append('nameEn', this.subCategoryForm.value.nameEn);
+          formData.append('descriptionAr', this.subCategoryForm.value.descriptionAr);
+          formData.append('descriptionEn', this.subCategoryForm.value.descriptionEn);
+          formData.append('fromCallCenter', String(this.subCategoryForm.value.fromCallCenter));
+          formData.append('serviceCategoryId', this.selectedCategoryId.toString());
+          formData.append('icon', this.subCategoryIconFile);
+
+          this.subCategoryService.addSubCategoryWithIcon(formData).subscribe({
+            next: (response: any) => {
+              console.log('Subcategory created successfully:', response);
+              this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+              this.cancelSubCategoryForm();
+              this.showSuccess('Subcategory created successfully');
+            },
+            error: (error: any) => {
+              console.error('Error creating subcategory:', error);
+              this.showError('Failed to create subcategory');
+            }
+          });
+        } else {
+          // For create without icon, use addSubCategory method
+          this.subCategoryService.addSubCategory(subCategoryData).subscribe({
+            next: (response: any) => {
+              console.log('Subcategory created successfully:', response);
+              this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+              this.cancelSubCategoryForm();
+              this.showSuccess('Subcategory created successfully');
+            },
+            error: (error: any) => {
+              console.error('Error creating subcategory:', error);
+              this.showError('Failed to create subcategory');
+            }
+          });
+        }
       }
+    } else {
+      // Mark all form controls as touched to trigger validation messages
+      Object.keys(this.subCategoryForm.controls).forEach(key => {
+        const control = this.subCategoryForm.get(key);
+        control?.markAsTouched();
+      });
+      this.showError('Please fill all required fields');
     }
   }
 
@@ -496,9 +588,20 @@ export class ServicecategoryComponent implements OnInit {
   }
 
   confirmDeleteSubCategory() {
-    if (this.selectedSubCategoryId != null) {
-      this.store.dispatch(SubCategoryActions.deleteSubCategory({ id: this.selectedSubCategoryId }));
-      this.closeDeleteSubCategoryModal();
+    if (this.selectedSubCategoryId !== null) {
+      this.subCategoryService.deleteSubCategory(this.selectedSubCategoryId).subscribe({
+        next: (response: any) => {
+          console.log('Subcategory deleted successfully:', response);
+          this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+          this.closeDeleteSubCategoryModal();
+          this.showSuccess('Subcategory deleted successfully');
+        },
+        error: (error: any) => {
+          console.error('Error deleting subcategory:', error);
+          this.closeDeleteSubCategoryModal();
+          this.showError('Failed to delete subcategory');
+        }
+      });
     }
   }
 

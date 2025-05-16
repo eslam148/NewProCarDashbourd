@@ -3,8 +3,8 @@
 // custom .chartjs-tooltip-body-item padding
 @use "charts";
 
-// custom tweaks for scrollbar styling (wip)
-@use "scrollbar";
+// custom scrollbar styling is now imported in styles.scss
+// @use "scrollbar";
 
  // custom calendar today cell color
 .calendar-cell.today {
