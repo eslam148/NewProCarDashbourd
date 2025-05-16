@@ -63,17 +63,125 @@
   }
 }
 
-// Button enhancements
-.btn-hover-effect {
-  transition: all 0.25s ease;
+// Enhanced Button Styles
+button[cButton] {
+  position: relative;
+  border-radius: 50rem;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  overflow: hidden;
 
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  // Standard button sizing
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  height: 40px;
+  line-height: 1.5;
+
+  // Ensure proper vertical alignment
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // Add hover and active effects
+  &:not(:disabled) {
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      filter: brightness(1.05);
+    }
+
+    &:active {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    // Add ripple effect
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    &:focus:not(:active)::after {
+      animation: ripple 0.8s ease-out;
+    }
   }
 
-  &:active:not(:disabled) {
-    transform: translateY(0);
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  // Icon alignment
+  c-icon {
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    width: 16px;
+    height: 16px;
+  }
+
+  // Color-specific styling
+  &[color="primary"] {
+    background: var(--primary-gradient, linear-gradient(135deg, #321fdb 0%, #1f1498 100%));
+    color: white;
+  }
+
+  &[color="secondary"] {
+    background: linear-gradient(135deg, #9da5b1 0%, #6c757d 100%);
+    color: white;
+  }
+
+  &[color="danger"] {
+    background: var(--danger-gradient, linear-gradient(135deg, #e55353 0%, #d93737 100%));
+    color: white;
+  }
+
+  &[color="light"] {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    color: #212529;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      background: white;
+    }
+  }
+
+  // Button size variations
+  &.btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    height: 32px;
+  }
+
+  &.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    height: 48px;
+  }
+}
+
+// Add ripple animation
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(25, 25);
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
   }
 }
 
@@ -91,6 +199,51 @@
   }
 }
 
+// Table action buttons
+.table-container {
+  button[cButton] {
+    min-width: 36px;
+    height: 32px;
+    line-height: 1;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+
+    // Show icon only on mobile, text on desktop
+    @media (max-width: 767px) {
+      min-width: 32px;
+      padding: 0.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      c-icon {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+// Header add button
+.card-header button[cButton] {
+  height: 36px;
+  padding: 0.25rem 1rem;
+  min-width: 100px;
+}
+
+// Form action buttons
+form button[cButton] {
+  min-width: 120px;
+  height: 42px;
+  padding: 0.5rem 1rem;
+}
+
+// Modal footer buttons
+c-modal-footer button[cButton] {
+  min-width: 100px;
+  height: 38px;
+  padding: 0.375rem 1rem;
+}
+
 // Responsive adjustments
 @media (max-width: 767px) {
   .form-control, .form-select {
@@ -103,5 +256,22 @@
     th {
       font-size: 0.75rem;
     }
+  }
+
+  // Adjust button sizes for mobile
+  button[cButton] {
+    padding: 0.375rem 1rem;
+    font-size: 0.85rem;
+    height: 38px;
+  }
+
+  form button[cButton] {
+    min-width: 100px;
+    height: 38px;
+  }
+
+  c-modal-footer button[cButton] {
+    min-width: 90px;
+    height: 36px;
   }
 }

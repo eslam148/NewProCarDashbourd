@@ -1,9 +1,11 @@
-import { DOCUMENT, NgStyle } from '@angular/common';
+import { DOCUMENT, NgStyle, CommonModule, NgClass } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit, Renderer2, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ChartOptions } from 'chart.js';
 import {
   AvatarComponent,
+  BadgeComponent,
   ButtonDirective,
   ButtonGroupComponent,
   CardBodyComponent,
@@ -20,11 +22,15 @@ import {
   TextColorDirective
 } from '@coreui/angular';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
-import { IconDirective } from '@coreui/icons-angular';
+import { IconDirective, IconSetService } from '@coreui/icons-angular';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { importProvidersFrom } from '@angular/core';
 
 import { WidgetsBrandComponent } from '../widgets/widgets-brand/widgets-brand.component';
 import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
+import { ChartService, ChartData } from '../../services/chart.service';
+import { getStyle, hexToRgba } from '@coreui/utils';
 
 interface IUser {
   name: string;
@@ -40,10 +46,49 @@ interface IUser {
   color: string;
 }
 
+interface IVehicle {
+  id: string;
+  model: string;
+  status: string;
+  statusColor: string;
+  lastService: string;
+  mileage: number;
+  mileagePercent: number;
+  mileageColor: string;
+  fuelPercent: number;
+  fuelColor: string;
+}
+
 @Component({
     templateUrl: 'dashboard.component.html',
     styleUrls: ['dashboard.component.scss'],
-    imports: [WidgetsDropdownComponent, TextColorDirective, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressBarDirective, ProgressComponent, WidgetsBrandComponent, CardHeaderComponent, TableDirective, AvatarComponent]
+    imports: [
+      CommonModule,
+      NgClass,
+      WidgetsDropdownComponent,
+      TextColorDirective,
+      CardComponent,
+      CardBodyComponent,
+      RowComponent,
+      ColComponent,
+      ButtonDirective,
+      IconDirective,
+      ReactiveFormsModule,
+      ButtonGroupComponent,
+      FormCheckLabelDirective,
+      ChartjsComponent,
+      NgStyle,
+      CardFooterComponent,
+      GutterDirective,
+      ProgressBarDirective,
+      ProgressComponent,
+      WidgetsBrandComponent,
+      CardHeaderComponent,
+      TableDirective,
+      AvatarComponent,
+      BadgeComponent
+
+    ]
 })
 export class DashboardComponent implements OnInit {
 
@@ -51,6 +96,8 @@ export class DashboardComponent implements OnInit {
   readonly #document: Document = inject(DOCUMENT);
   readonly #renderer: Renderer2 = inject(Renderer2);
   readonly #chartsData: DashboardChartsData = inject(DashboardChartsData);
+  readonly #iconSetService: IconSetService = inject(IconSetService);
+  readonly #chartService: ChartService = inject(ChartService);
 
   public users: IUser[] = [
     {
@@ -145,9 +192,145 @@ export class DashboardComponent implements OnInit {
     trafficRadio: new FormControl('Month')
   });
 
+  // Vehicle metrics
+  selectedVehicle: string = 'all';
+  showVehicleDetails: boolean = true;
+  vehicleData: IVehicle[] = [
+    {
+      id: 'V-001',
+      model: 'Tesla Model S',
+      status: 'Active',
+      statusColor: 'success',
+      lastService: '2023-05-15',
+      mileage: 45892,
+      mileagePercent: 65,
+      mileageColor: 'success',
+      fuelPercent: 78,
+      fuelColor: 'info'
+    },
+    {
+      id: 'V-002',
+      model: 'Ford Mustang Mach-E',
+      status: 'Maintenance',
+      statusColor: 'warning',
+      lastService: '2023-04-02',
+      mileage: 32456,
+      mileagePercent: 42,
+      mileageColor: 'success',
+      fuelPercent: 32,
+      fuelColor: 'danger'
+    },
+    {
+      id: 'V-003',
+      model: 'BMW i4',
+      status: 'Inactive',
+      statusColor: 'danger',
+      lastService: '2023-06-20',
+      mileage: 12340,
+      mileagePercent: 18,
+      mileageColor: 'success',
+      fuelPercent: 95,
+      fuelColor: 'success'
+    },
+    {
+      id: 'V-004',
+      model: 'Audi e-tron',
+      status: 'Active',
+      statusColor: 'success',
+      lastService: '2023-03-10',
+      mileage: 58932,
+      mileagePercent: 78,
+      mileageColor: 'warning',
+      fuelPercent: 45,
+      fuelColor: 'warning'
+    }
+  ];
+
+  // Vehicle charts
+  vehicleCharts: any = {
+    performance: {
+      data: {},
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              drawOnChartArea: false
+            }
+          },
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              maxTicksLimit: 5,
+              stepSize: 20
+            }
+          }
+        },
+        elements: {
+          line: {
+            tension: 0.4
+          },
+          point: {
+            radius: 0,
+            hitRadius: 10,
+            hoverRadius: 4,
+            hoverBorderWidth: 3
+          }
+        }
+      }
+    },
+    maintenance: {
+      data: {},
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          r: {
+            angleLines: {
+              display: true
+            },
+            suggestedMin: 0,
+            suggestedMax: 100
+          }
+        }
+      }
+    },
+    distribution: {
+      data: {},
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom'
+          }
+        },
+        cutout: '70%'
+      }
+    }
+  };
+
+  // Tab control for vehicle charts
+  activeTab: string = 'performance';
+
+  constructor() {
+    this.initCharts();
+  }
+
   ngOnInit(): void {
     this.initCharts();
     this.updateChartOnColorModeChange();
+    this.initVehicleCharts();
   }
 
   initCharts(): void {
@@ -185,5 +368,45 @@ export class DashboardComponent implements OnInit {
         this.mainChartRef().update();
       });
     }
+  }
+
+  selectVehicle(type: string): void {
+    this.selectedVehicle = type;
+
+    // In a real app, you would filter data based on vehicle type
+    // This is a simplified example
+    if (type === 'all') {
+      this.showVehicleDetails = true;
+    } else if (type === 'fleet') {
+      this.showVehicleDetails = true;
+      // Filter for fleet vehicles
+    } else if (type === 'private') {
+      this.showVehicleDetails = true;
+      // Filter for private vehicles
+    }
+  }
+
+  private initVehicleCharts(): void {
+    this.#chartService.getVehiclePerformanceData()
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(data => {
+        this.vehicleCharts.performance.data = data;
+      });
+
+    this.#chartService.getMaintenanceData()
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(data => {
+        this.vehicleCharts.maintenance.data = data;
+      });
+
+    this.#chartService.getVehicleDistributionData()
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(data => {
+        this.vehicleCharts.distribution.data = data;
+      });
+  }
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
   }
 }

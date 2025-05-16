@@ -13,7 +13,7 @@ export const navItems: INavData[] = [
   {
     name: 'admin.title',
     url: '/admins',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-user' },
     badge: {
       color: 'info',
       text: 'NEW'
@@ -22,7 +22,7 @@ export const navItems: INavData[] = [
   {
     name: 'location.title',
     url: '/location',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-location-pin' },
     badge: {
       color: 'info',
       text: 'NEW'
@@ -31,7 +31,7 @@ export const navItems: INavData[] = [
   {
     name: 'serviceCategory.title',
     url: '/servicecategory',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-list' },
     badge: {
       color: 'info',
       text: 'NEW'
@@ -40,7 +40,7 @@ export const navItems: INavData[] = [
   {
     name: 'specialty.title',
     url: '/specialty',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-medical-cross' },
     badge: {
       color: 'info',
       text: 'NEW'
@@ -49,13 +49,13 @@ export const navItems: INavData[] = [
   {
     name: 'requests.total',
     url: '/request',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-inbox' },
     badge: { color: 'info', text: 'NEW' }
   },
   {
     name: 'nurse.title',
     url: '/nurse',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-people' },
     badge: { color: 'info', text: 'NEW' }
   },
 

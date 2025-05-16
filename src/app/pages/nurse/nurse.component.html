@@ -1,5 +1,12 @@
 <div class="container mt-4">
-  
+  <h2>{{ 'nurse.title' | translate | async }}</h2>
+
+  <!-- Add Nurse Button -->
+  <div class="mb-3" *ngIf="!showForm">
+    <button class="btn btn-success rounded-pill px-4" (click)="showAddForm()">
+      {{ 'common.add' | translate | async }}
+    </button>
+  </div>
 
   <!-- Nurse Form -->
   <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="submit()" class="mb-4 card p-3 shadow-sm">
@@ -55,14 +62,7 @@
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage | translate | async }}</div>
 
   <div class="table-container">
-    <div class="table-header">
-      <h3>{{ 'nurse.title' | translate | async }}</h3>
-      <div class="table-actions">
-        <button class="btn btn-success rounded-pill px-4" (click)="showAddForm()">
-          {{ 'common.add' | translate | async }}
-        </button>
-      </div>
-    </div>
+     
     <div class="table-responsive">
       <table class="table table-hover">
         <thead>

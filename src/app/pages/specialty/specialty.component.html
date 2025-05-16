@@ -3,8 +3,8 @@
     <div class="card-header gradient-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
       <h4 class="mb-0 fw-bold">{{ 'specialty.title' | translate | async }}</h4>
       <!-- Add Specialty Button -->
-      <button cButton color="light" class="rounded-pill px-3 py-1 fw-semibold btn-hover-effect" *ngIf="!showForm && !isEditMode" (click)="showAddForm()">
-        <c-icon name="cilPlus" class="me-1"></c-icon> {{ 'specialty.add' | translate | async }}
+      <button cButton color="light" class="fw-semibold" *ngIf="!showForm && !isEditMode" (click)="showAddForm()">
+        <c-icon name="cilPlus"></c-icon> {{ 'specialty.add' | translate | async }}
       </button>
     </div>
     <div class="card-body p-4">
@@ -53,12 +53,12 @@
           </div>
         </div>
         <div class="mt-3 d-flex flex-column flex-md-row gap-2">
-          <button cButton color="primary" type="submit" class="rounded-pill px-4 py-2 fw-semibold btn-hover-effect" [disabled]="form.invalid || isLoading">
-            <c-icon [name]="isEditMode ? 'cilPencil' : 'cilPlus'" class="me-1"></c-icon>
+          <button cButton color="primary" type="submit" class="fw-semibold" [disabled]="form.invalid || isLoading">
+            <c-icon [name]="isEditMode ? 'cilPencil' : 'cilPlus'"></c-icon>
             {{ isEditMode ? ('specialty.edit' | translate | async) : ('specialty.add' | translate | async) }}
           </button>
-          <button cButton color="secondary" type="button" class="rounded-pill px-4 py-2 btn-hover-effect" (click)="cancel()" *ngIf="isEditMode || showForm">
-            <c-icon name="cilX" class="me-1"></c-icon>
+          <button cButton color="secondary" type="button" (click)="cancel()" *ngIf="isEditMode || showForm">
+            <c-icon name="cilX"></c-icon>
             {{ 'common.cancel' | translate | async }}
           </button>
         </div>
@@ -85,12 +85,12 @@
                 <td>{{ specialty.descriptionEn }}</td>
                 <td class="text-center">
                   <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch justify-content-center">
-                    <button cButton color="primary" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="edit(specialty)">
-                      <c-icon name="cilPencil" class="me-1"></c-icon>
+                    <button cButton color="primary" class="btn-sm" (click)="edit(specialty)">
+                      <c-icon name="cilPencil"></c-icon>
                       <span class="d-none d-md-inline">{{ 'specialty.edit' | translate | async }}</span>
                     </button>
-                    <button cButton color="danger" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="delete(specialty.id!)">
-                      <c-icon name="cilTrash" class="me-1"></c-icon>
+                    <button cButton color="danger" class="btn-sm" (click)="delete(specialty.id!)">
+                      <c-icon name="cilTrash"></c-icon>
                       <span class="d-none d-md-inline">{{ 'specialty.delete' | translate | async }}</span>
                     </button>
                   </div>
@@ -130,12 +130,12 @@
       </div>
     </c-modal-body>
     <c-modal-footer class="border-top-0">
-      <button cButton color="secondary" (click)="closeDeleteModal()" class="rounded-pill px-4 py-2">
-        <c-icon name="cilX" class="me-1"></c-icon>
+      <button cButton color="secondary" (click)="closeDeleteModal()">
+        <c-icon name="cilX"></c-icon>
         {{ 'common.cancel' | translate | async }}
       </button>
-      <button cButton color="danger" (click)="confirmDelete()" class="rounded-pill px-4 py-2">
-        <c-icon name="cilTrash" class="me-1"></c-icon>
+      <button cButton color="danger" (click)="confirmDelete()">
+        <c-icon name="cilTrash"></c-icon>
         {{ 'specialty.delete' | translate | async }}
       </button>
     </c-modal-footer>

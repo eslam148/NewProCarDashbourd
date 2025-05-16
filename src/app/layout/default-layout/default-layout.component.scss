@@ -33,96 +33,461 @@
 //  --scrollbar-track-transition: height ease-out 150ms, width ease-out 150ms;
 //}
 
+// Sidebar brand customization
+.sidebar-header-custom {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.sidebar-brand {
+  background: transparent;
+  padding: 1.15rem 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  svg {
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+  }
+
+  .sidebar-brand-text {
+    color: white;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    opacity: 0.95;
+  }
+
+  &:hover {
+    .sidebar-brand-text {
+      transform: translateY(-1px);
+      opacity: 1;
+    }
+
+    svg {
+      filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.3));
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Improved sidebar navigation
 .sidebar-nav {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0.75rem;
+
+  // Add space for better visual separation
+  > li {
+    margin-bottom: 0.35rem;
+  }
 }
 
+// Enhanced icon wrapper for consistent icon placement and better styling
+.sidebar-icon-wrapper {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  // Add subtle glow effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  // Icon styling
+  svg {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  }
+}
+
+// Category-specific icon colors
+.sidebar-icon-wrapper {
+  &.icon-dashboard {
+    background: rgba(49, 113, 235, 0.15);
+    svg { color: rgba(98, 153, 255, 0.9); }
+  }
+
+  &.icon-admin {
+    background: rgba(128, 90, 213, 0.15);
+    svg { color: rgba(159, 122, 234, 0.9); }
+  }
+
+  &.icon-location {
+    background: rgba(72, 187, 120, 0.15);
+    svg { color: rgba(104, 211, 145, 0.9); }
+  }
+
+  &.icon-category {
+    background: rgba(214, 158, 46, 0.15);
+    svg { color: rgba(246, 196, 85, 0.9); }
+  }
+
+  &.icon-specialty {
+    background: rgba(229, 83, 83, 0.15);
+    svg { color: rgba(245, 101, 101, 0.9); }
+  }
+
+  &.icon-requests {
+    background: rgba(56, 178, 172, 0.15);
+    svg { color: rgba(79, 209, 197, 0.9); }
+  }
+
+  &.icon-nurse {
+    background: rgba(237, 137, 54, 0.15);
+    svg { color: rgba(252, 175, 69, 0.9); }
+  }
+}
+
+// Enhanced hover effects for icons
+.sidebar-link {
+  &:hover,
+  &:focus {
+    .sidebar-icon-wrapper {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+      &::before {
+        opacity: 1;
+      }
+
+      svg {
+        transform: scale(1.15);
+        color: white !important;
+      }
+    }
+  }
+
+  &.active {
+    .sidebar-icon-wrapper {
+      background: rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+
+      svg {
+        color: white !important;
+        transform: scale(1.1);
+        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+      }
+    }
+  }
+
+  &:active .sidebar-icon-wrapper {
+    transform: translateY(0);
+  }
+}
+
+// Improved animation for icon pulse on hover
+.sidebar-link:hover .sidebar-icon-wrapper svg {
+  animation: iconPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes iconPulse {
+  0% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+// Section titles
 .sidebar-title {
-  font-size: 0.85em;
-  letter-spacing: 0.04em;
-  color: #8a99b5;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.4);
   margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
   padding-left: 0.75rem;
   font-weight: 700;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    bottom: -0.35rem;
+    width: 2rem;
+    height: 2px;
+    background: var(--primary-gradient, linear-gradient(135deg, #321fdb 0%, #1f1498 100%));
+    border-radius: 2px;
+  }
 }
 
+// Enhanced sidebar links
 .sidebar-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: #e2e8f0;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
-  border-radius: 6px;
-  transition: background 0.18s, color 0.18s;
-  font-size: 1.04em;
-  font-weight: 500;
-  margin-bottom: 2px;
-}
-.sidebar-link:hover,
-.sidebar-link:focus,
-.sidebar-link.active {
-  background: #2a3346;
-  color: #fff;
-  text-decoration: none;
-}
-.sidebar-link svg {
-  font-size: 1.2em;
-  color: #8a99b5;
-  transition: color 0.18s;
-}
-.sidebar-link:hover svg,
-.sidebar-link:focus svg,
-.sidebar-link.active svg {
-  color: #3b82f6;
-}
-.badge {
-  font-size: 0.75em;
-  padding: 2px 8px;
   border-radius: 8px;
-  font-weight: 600;
-}
-.sidebar-subnav {
-  list-style: none;
-  margin: 0 0 0.5rem 0;
-  padding-left: 1.5rem;
-}
-.sidebar-subnav .sidebar-link {
-  font-size: 0.97em;
-  color: #b6c2d6;
-  background: transparent;
-  border-radius: 4px;
-  padding-left: 1.2rem;
-}
-.sidebar-subnav .sidebar-link:hover,
-.sidebar-subnav .sidebar-link:focus,
-.sidebar-subnav .sidebar-link.active {
-  background: #232b3b;
-  color: #fff;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  position: relative;
+  overflow: hidden;
+
+  // Add subtle hover effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent);
+    transition: width 0.3s ease;
+  }
+
+  &:hover,
+  &:focus,
+  &.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    text-decoration: none;
+
+    &::before {
+      width: 100%;
+    }
+
+    .sidebar-icon-wrapper {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  &.active {
+    background: var(--primary-gradient, linear-gradient(135deg, #321fdb 0%, #1f1498 100%));
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 60%;
+      background: white;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .sidebar-icon-wrapper {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  // Badge styling
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+  }
+
+  // Submenu arrow animation
+  .submenu-arrow {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+  }
 }
 
+// Handle submenu toggle
+.has-submenu {
+  > .sidebar-link {
+    cursor: pointer;
+  }
+
+  &.open {
+    > .sidebar-link .submenu-arrow {
+      transform: rotate(90deg);
+    }
+  }
+}
+
+// Submenu styling
+.sidebar-subnav {
+  list-style: none;
+  margin: 0;
+  padding-left: 1.5rem;
+  overflow: hidden;
+  height: 0;
+  transition: height 0.3s ease;
+
+  li {
+    margin-bottom: 0.2rem;
+  }
+
+  .sidebar-link {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.65);
+    background: transparent;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+
+    &:hover,
+    &:focus,
+    &.active {
+      background: rgba(255, 255, 255, 0.07);
+      color: white;
+    }
+
+    &.active {
+      background: rgba(255, 255, 255, 0.1);
+
+      &::after {
+        height: 40%;
+      }
+    }
+  }
+}
+
+// Make sidebar footer nicer
+c-sidebar-footer {
+  padding: 0.75rem;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  button {
+    width: 100%;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    svg {
+      transition: transform 0.3s ease;
+    }
+
+    &:hover svg {
+      transform: translateX(-2px);
+    }
+  }
+}
+
+// Responsive styles
 @media (max-width: 991px) {
   .sidebar-nav {
-    font-size: 1em;
+    padding: 0.5rem;
   }
+
+  .sidebar-link {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
   .sidebar-title {
-    font-size: 0.95em;
+    font-size: 0.7rem;
     padding-left: 0.5rem;
+  }
+
+  .sidebar-subnav .sidebar-link {
+    padding: 0.4rem 0.65rem;
   }
 }
 
 /* Dark mode support */
 :host-context(body.dark) .sidebar-link {
-  color: #b6c2d6;
+  color: rgba(255, 255, 255, 0.65);
 }
+
 :host-context(body.dark) .sidebar-link:hover,
 :host-context(body.dark) .sidebar-link:focus,
 :host-context(body.dark) .sidebar-link.active {
-  background: #232b3b;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
 }
+
+:host-context(body.dark) .sidebar-link.active {
+  background: var(--primary-gradient, linear-gradient(135deg, #321fdb 0%, #1f1498 100%));
+}
+
 :host-context(body.dark) .sidebar-title {
-  color: #7a869a;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+// Collapsed sidebar optimizations
+:host-context(.sidebar.sidebar-narrow) {
+  .sidebar-link {
+    padding: 0.75rem;
+    justify-content: center;
+
+    .sidebar-icon-wrapper {
+      margin-right: 0;
+    }
+
+    svg {
+      margin: 0;
+      font-size: 1.35rem;
+    }
+
+    span, .badge, .submenu-arrow {
+      display: none;
+    }
+  }
+
+  .sidebar-title {
+    text-align: center;
+    padding-left: 0;
+
+    &::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  // Hide submenus in narrow mode
+  .has-submenu {
+    .sidebar-subnav {
+      display: none;
+    }
+  }
+}
+
+// Custom animation for page transitions
+.body {
+  animation: fadeInContent 0.4s ease;
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -1,4 +1,68 @@
 <app-widgets-dropdown />
+
+<!-- Quick Action Buttons -->
+<c-card class="mb-4">
+  <c-card-header class="d-flex justify-content-between align-items-center">
+    <strong>Quick Actions</strong>
+    <button cButton color="light" size="sm">
+      <svg cIcon name="cilOptions" class="me-1"></svg>
+      Customize
+    </button>
+  </c-card-header>
+  <c-card-body>
+    <c-row class="g-3">
+      <c-col [md]="2" [sm]="4" [xs]="6">
+        <div class="action-button-card text-center p-3">
+          <div class="action-icon bg-light-primary mb-3 mx-auto">
+            <svg cIcon name="cilCarAlt" size="xl"></svg>
+          </div>
+          <h6 class="mb-0 fw-semibold">Add Vehicle</h6>
+        </div>
+      </c-col>
+      <c-col [md]="2" [sm]="4" [xs]="6">
+        <div class="action-button-card text-center p-3">
+          <div class="action-icon bg-light-success mb-3 mx-auto">
+            <svg cIcon name="cilSpeedometer" size="xl"></svg>
+          </div>
+          <h6 class="mb-0 fw-semibold">Diagnostics</h6>
+        </div>
+      </c-col>
+      <c-col [md]="2" [sm]="4" [xs]="6">
+        <div class="action-button-card text-center p-3">
+          <div class="action-icon bg-light-info mb-3 mx-auto">
+            <svg cIcon name="cilCalendar" size="xl"></svg>
+          </div>
+          <h6 class="mb-0 fw-semibold">Schedule</h6>
+        </div>
+      </c-col>
+      <c-col [md]="2" [sm]="4" [xs]="6">
+        <div class="action-button-card text-center p-3">
+          <div class="action-icon bg-light-warning mb-3 mx-auto">
+            <svg cIcon name="cilBell" size="xl"></svg>
+          </div>
+          <h6 class="mb-0 fw-semibold">Alerts</h6>
+        </div>
+      </c-col>
+      <c-col [md]="2" [sm]="4" [xs]="6">
+        <div class="action-button-card text-center p-3">
+          <div class="action-icon bg-light-danger mb-3 mx-auto">
+            <svg cIcon name="cilSettings" size="xl"></svg>
+          </div>
+          <h6 class="mb-0 fw-semibold">Maintenance</h6>
+        </div>
+      </c-col>
+      <c-col [md]="2" [sm]="4" [xs]="6">
+        <div class="action-button-card text-center p-3">
+          <div class="action-icon bg-light-primary mb-3 mx-auto">
+            <svg cIcon name="cilChart" size="xl"></svg>
+          </div>
+          <h6 class="mb-0 fw-semibold">Reports</h6>
+        </div>
+      </c-col>
+    </c-row>
+  </c-card-body>
+</c-card>
+
 <c-card class="my-4">
   <c-card-body>
     <c-row>
@@ -107,6 +171,194 @@
       </c-col>
     </c-row>
   </c-card-footer>
+</c-card>
+
+<!-- New Vehicle Performance Metrics Card -->
+<c-card class="mb-4">
+  <c-card-header class="d-flex justify-content-between align-items-center">
+    <strong>Vehicle Performance Metrics</strong>
+    <c-button-group role="group" size="sm">
+      <button cButton color="primary" variant="outline" [active]="selectedVehicle === 'all'" (click)="selectVehicle('all')">All Vehicles</button>
+      <button cButton color="primary" variant="outline" [active]="selectedVehicle === 'fleet'" (click)="selectVehicle('fleet')">Fleet</button>
+      <button cButton color="primary" variant="outline" [active]="selectedVehicle === 'private'" (click)="selectVehicle('private')">Private</button>
+    </c-button-group>
+  </c-card-header>
+  <c-card-body>
+    <c-row [gutter]="4">
+      <c-col [md]="3" [sm]="6">
+        <div class="vehicle-metric-card p-3 mb-3 rounded bg-light-success">
+          <div class="d-flex align-items-center">
+            <div class="metric-icon bg-success p-3 rounded me-3">
+              <svg cIcon name="cilSpeedometer" size="xl" class="text-white"></svg>
+            </div>
+            <div>
+              <div class="text-medium-emphasis small">Avg. Speed</div>
+              <div class="fs-4 fw-semibold">56 km/h</div>
+            </div>
+          </div>
+          <div class="progress mt-3" style="height: 4px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </c-col>
+      <c-col [md]="3" [sm]="6">
+        <div class="vehicle-metric-card p-3 mb-3 rounded bg-light-info">
+          <div class="d-flex align-items-center">
+            <div class="metric-icon bg-info p-3 rounded me-3">
+              <svg cIcon name="cilGarage" size="xl" class="text-white"></svg>
+            </div>
+            <div>
+              <div class="text-medium-emphasis small">Fuel Efficiency</div>
+              <div class="fs-4 fw-semibold">7.2 L/100km</div>
+            </div>
+          </div>
+          <div class="progress mt-3" style="height: 4px;">
+            <div class="progress-bar bg-info" role="progressbar" style="width: 78%" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </c-col>
+      <c-col [md]="3" [sm]="6">
+        <div class="vehicle-metric-card p-3 mb-3 rounded bg-light-warning">
+          <div class="d-flex align-items-center">
+            <div class="metric-icon bg-warning p-3 rounded me-3">
+              <svg cIcon name="cilLocationPin" size="xl" class="text-white"></svg>
+            </div>
+            <div>
+              <div class="text-medium-emphasis small">Total Distance</div>
+              <div class="fs-4 fw-semibold">14,382 km</div>
+            </div>
+          </div>
+          <div class="progress mt-3" style="height: 4px;">
+            <div class="progress-bar bg-warning" role="progressbar" style="width: 45%" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </c-col>
+      <c-col [md]="3" [sm]="6">
+        <div class="vehicle-metric-card p-3 mb-3 rounded bg-light-danger">
+          <div class="d-flex align-items-center">
+            <div class="metric-icon bg-danger p-3 rounded me-3">
+              <svg cIcon name="cilSettings" size="xl" class="text-white"></svg>
+            </div>
+            <div>
+              <div class="text-medium-emphasis small">Maintenance</div>
+              <div class="fs-4 fw-semibold">93% <small class="text-success">↑</small></div>
+            </div>
+          </div>
+          <div class="progress mt-3" style="height: 4px;">
+            <div class="progress-bar bg-danger" role="progressbar" style="width: 93%" aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </c-col>
+    </c-row>
+
+    <c-row class="mt-4" *ngIf="showVehicleDetails">
+      <c-col xs="12">
+        <h4 class="mb-3">Vehicle Status Overview</h4>
+        <table cTable hover responsive>
+          <thead>
+            <tr>
+              <th scope="col">Vehicle ID</th>
+              <th scope="col">Model</th>
+              <th scope="col">Status</th>
+              <th scope="col">Last Service</th>
+              <th scope="col">Mileage</th>
+              <th scope="col">Fuel Level</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vehicle of vehicleData">
+              <td><span class="fw-semibold">{{vehicle.id}}</span></td>
+              <td>{{vehicle.model}}</td>
+              <td>
+                <c-badge [color]="vehicle.statusColor">{{vehicle.status}}</c-badge>
+              </td>
+              <td>{{vehicle.lastService}}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="progress flex-grow-1 me-2" style="height: 5px">
+                    <div class="progress-bar" [style.width.%]="vehicle.mileagePercent" [ngClass]="'bg-' + vehicle.mileageColor"></div>
+                  </div>
+                  <div>{{vehicle.mileage}} km</div>
+                </div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="progress flex-grow-1 me-2" style="height: 5px">
+                    <div class="progress-bar" [style.width.%]="vehicle.fuelPercent" [ngClass]="'bg-' + vehicle.fuelColor"></div>
+                  </div>
+                  <div>{{vehicle.fuelPercent}}%</div>
+                </div>
+              </td>
+              <td>
+                <button cButton color="primary" size="sm" variant="ghost" class="me-1">
+                  <svg cIcon name="cilPencil"></svg>
+                </button>
+                <button cButton color="info" size="sm" variant="ghost">
+                  <svg cIcon name="cilInfo"></svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-col>
+    </c-row>
+
+    <!-- New Vehicle Performance Chart -->
+    <c-row class="mt-4">
+      <c-col xs="12">
+        <h4 class="mb-3">Vehicle Performance Trends</h4>
+
+        <!-- Using simplified tab structure -->
+        <div class="card">
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" (click)="setActiveTab('performance')" href="javascript:void(0);">Performance</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" (click)="setActiveTab('maintenance')" href="javascript:void(0);">Maintenance</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" (click)="setActiveTab('distribution')" href="javascript:void(0);">Fleet Distribution</a>
+              </li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <!-- Tab Content -->
+            <div [ngClass]="{'d-block': activeTab === 'performance', 'd-none': activeTab !== 'performance'}">
+              <c-chart
+                type="line"
+                [data]="vehicleCharts.performance.data"
+                [options]="vehicleCharts.performance.options"
+                height="300"
+              ></c-chart>
+            </div>
+            <div [ngClass]="{'d-block': activeTab === 'maintenance', 'd-none': activeTab !== 'maintenance'}">
+              <c-chart
+                type="radar"
+                [data]="vehicleCharts.maintenance.data"
+                [options]="vehicleCharts.maintenance.options"
+                height="300"
+              ></c-chart>
+            </div>
+            <div [ngClass]="{'d-block': activeTab === 'distribution', 'd-none': activeTab !== 'distribution'}">
+              <div class="d-flex justify-content-center">
+                <div style="max-width: 500px; width: 100%;">
+                  <c-chart
+                    type="doughnut"
+                    [data]="vehicleCharts.distribution.data"
+                    [options]="vehicleCharts.distribution.options"
+                    height="300"
+                  ></c-chart>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </c-col>
+    </c-row>
+  </c-card-body>
 </c-card>
 
 <app-widgets-brand [withCharts]="true" />

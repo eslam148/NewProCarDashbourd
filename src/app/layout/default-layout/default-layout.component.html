@@ -1,4 +1,4 @@
-<!--sidebar-->
+<!-- Enhanced Sidebar -->
 <c-sidebar
   #sidebar1="cSidebar"
   class="d-print-none sidebar sidebar-fixed border-end"
@@ -6,10 +6,11 @@
   id="sidebar1"
   visible
 >
-  <c-sidebar-header class="border-bottom">
-    <c-sidebar-brand [routerLink]="[]">
-      <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="CoreUI Logo"></svg>
-      <svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="CoreUI Logo"></svg>
+  <c-sidebar-header class="sidebar-header-custom d-flex align-items-center justify-content-center">
+    <c-sidebar-brand [routerLink]="['/']" class="d-flex align-items-center">
+      <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="36" name="logo" title="ProCar Dashboard"></svg>
+      <svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="ProCar Dashboard"></svg>
+      <span class="ms-2 fw-semibold d-none d-md-inline fs-lg sidebar-brand-text">ProCar</span>
     </c-sidebar-brand>
   </c-sidebar-header>
 
@@ -17,30 +18,44 @@
     <ul class="sidebar-nav">
       <ng-container *ngFor="let item of navItems">
         <!-- Section Title -->
-        <li *ngIf="item.title" class="sidebar-title text-uppercase fw-bold small text-secondary px-3 mt-3 mb-1">
+        <li *ngIf="item.title" class="sidebar-title text-uppercase">
           {{ item.name! | translate | async }}
         </li>
 
         <!-- Nav Item (no children) -->
-        <li *ngIf="!item.title && !item.children">
-          <a [routerLink]="item.url" class="sidebar-link d-flex align-items-center px-3 py-2">
-            <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name" class="me-2"></svg>
-            <span>{{ item.name! | translate | async }}</span>
-            <span *ngIf="item.badge" class="badge bg-info ms-auto">{{ item.badge.text }}</span>
+        <li *ngIf="!item.title && !item.children" class="sidebar-item">
+          <a
+            [routerLink]="item.url"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}"
+            class="sidebar-link d-flex align-items-center"
+          >
+            <div [ngClass]="getIconClass(item)" class="sidebar-icon-wrapper">
+              <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name"></svg>
+            </div>
+            <span class="sidebar-text">{{ item.name! | translate | async }}</span>
+            <span *ngIf="item.badge" class="badge ms-auto">{{ item.badge.text }}</span>
           </a>
         </li>
 
         <!-- Nav Item with Children -->
-        <li *ngIf="!item.title && item.children">
-          <div class="sidebar-link d-flex align-items-center px-3 py-2">
-            <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name" class="me-2"></svg>
-            <span>{{ item.name! | translate | async }}</span>
+        <li *ngIf="!item.title && item.children" class="sidebar-item has-submenu">
+          <div class="sidebar-link d-flex align-items-center" (click)="toggleSubmenu($event)">
+            <div [ngClass]="getIconClass(item)" class="sidebar-icon-wrapper">
+              <svg *ngIf="item.iconComponent" cIcon [name]="item.iconComponent.name"></svg>
+            </div>
+            <span class="sidebar-text">{{ item.name! | translate | async }}</span>
+            <svg cIcon class="submenu-arrow ms-auto" name="cilChevronRight"></svg>
           </div>
-          <ul class="sidebar-subnav ps-4">
-            <li *ngFor="let child of item.children">
-              <a [routerLink]="child.url" class="sidebar-link d-flex align-items-center py-1">
+          <ul class="sidebar-subnav">
+            <li *ngFor="let child of item.children" class="sidebar-subitem">
+              <a
+                [routerLink]="child.url"
+                routerLinkActive="active"
+                class="sidebar-link d-flex align-items-center"
+              >
                 <span>{{ child.name! | translate | async }}</span>
-                <span *ngIf="child.badge" class="badge bg-info ms-auto">{{ child.badge.text }}</span>
+                <span *ngIf="child.badge" class="badge ms-auto">{{ child.badge.text }}</span>
               </a>
             </li>
           </ul>
@@ -49,14 +64,24 @@
     </ul>
   </ng-scrollbar>
 
-  @if (!sidebar1.narrow) {
+  <ng-container *ngIf="!sidebar1.narrow">
     <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
-      <button cSidebarToggler aria-label="Toggle sidebar fold"></button>
+      <button cSidebarToggler aria-label="Toggle sidebar fold" class="d-flex align-items-center justify-content-center w-100">
+        <svg cIcon name="cilChevronLeft" class="me-1"></svg>
+        <span class="small">Collapse</span>
+      </button>
     </c-sidebar-footer>
-  }
+  </ng-container>
+  <ng-container *ngIf="sidebar1.narrow">
+    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
+      <button cSidebarToggler aria-label="Toggle sidebar expand" class="d-flex align-items-center justify-content-center w-100">
+        <svg cIcon name="cilChevronRight"></svg>
+      </button>
+    </c-sidebar-footer>
+  </ng-container>
 </c-sidebar>
 
-<!--main-->
+<!-- Main Layout -->
 <div class="wrapper d-flex flex-column min-vh-100">
   <!--app-header-->
   <app-default-header
