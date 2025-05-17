@@ -1,4 +1,4 @@
- 
+
 <!-- Delete Confirmation Modal -->
 <c-modal
   [visible]="showDeleteModal"
@@ -44,26 +44,7 @@
           {{ 'disease.title' | translate | async }}
         </h4>
         <div class="d-flex gap-2">
-          <form [formGroup]="searchForm" class="d-flex" (ngSubmit)="onSearch()">
-            <div class="input-group">
-              <span class="input-group-text">
-                <svg cIcon name="cilSearch" width="16" height="16"></svg>
-              </span>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="searchKey"
-                [placeholder]="'disease.searchPlaceholder' | translate | async"
-              >
-              <button
-                cButton
-                color="primary"
-                type="submit"
-              >
-                {{ 'common.search' | translate | async }}
-              </button>
-            </div>
-          </form>
+         
           <button
             cButton
             color="primary"
