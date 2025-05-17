@@ -55,9 +55,10 @@
         <button
           cButton
           color="primary"
+          class="btn-icon-text"
           (click)="onCreateAdmin()"
         >
-          <i class="cil-plus me-2"></i>
+          <svg cIcon name="cilPlus" width="16" height="16" class="me-2"></svg>
           {{ 'admin.create' | translate | async }}
         </button>
       </div>
@@ -100,7 +101,13 @@
           <tr *ngFor="let admin of (admins$ | async) ?? []">
             <td>
               <div class="d-flex align-items-center">
-                <img [src]="admin.imageUrl || 'assets/img/avatars/default.png'" [alt]="admin.firstName" class="avatar">
+                <img
+                  [src]="admin.imageUrl || defaultAvatarPath"
+                  [alt]="admin.firstName"
+                  class="avatar"
+                  [ngClass]="{'default-avatar': !admin.imageUrl}"
+                  (error)="handleImageError($event)"
+                >
                 <div class="ms-3">
                   <div class="fw-semibold">{{ admin.firstName }} {{ admin.lastName }}</div>
                 </div>
@@ -111,23 +118,24 @@
               <button
                 cButton
                 color="primary"
-                variant="ghost"
+                shape="rounded-pill"
                 size="sm"
                 cTooltip="{{ 'admin.editTooltip' | translate | async }}"
                 (click)="onEditAdmin(admin)"
-                class="btn btn-sm btn-primary rounded-pill px-3 me-2"
+                class="me-2"
               >
+                <svg cIcon name="cilPencil" width="16" height="16" class="me-1"></svg>
                 {{ 'common.edit' | translate | async }}
               </button>
               <button
                 cButton
                 color="danger"
-                variant="ghost"
+                shape="rounded-pill"
                 size="sm"
                 cTooltip="{{ 'admin.deleteTooltip' | translate | async }}"
                 (click)="onDeleteAdmin(admin.id)"
-                class="btn btn-sm btn-danger rounded-pill px-3"
               >
+                <svg cIcon name="cilTrash" width="16" height="16" class="me-1"></svg>
                 {{ 'common.delete' | translate | async }}
               </button>
             </td>

@@ -30,15 +30,106 @@
   }
 }
 
-.btn {
-  transition: all 0.2s ease-in-out;
+// Enhanced button styling
+button[cButton] {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
-  &.btn-sm {
-    padding: 0.25rem 0.5rem;
+  &:active {
+    transform: translateY(0);
+  }
+
+  &[size="sm"] {
+    font-size: 0.85rem;
+  }
+
+  &[shape="rounded-pill"] {
+    border-radius: 50rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  // Add ripple effect
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+  }
+
+  &:focus:not(:active)::after {
+    animation: ripple 0.8s ease-out;
+  }
+}
+
+// Ripple animation
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(25, 25);
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
+  }
+}
+
+// Action cell in table
+.actions-cell {
+  text-align: right;
+  white-space: nowrap;
+  min-width: 180px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+
+    svg {
+      transition: transform 0.2s ease;
+    }
+
+    &:hover svg {
+      transform: scale(1.2);
+    }
+  }
+}
+
+// Avatar styling
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    border-color: var(--cui-primary);
+  }
+
+  // Add subtle indicator for default avatar
+  &.default-avatar {
+    border: 2px dashed var(--cui-primary-light, #70a6e8);
+    box-shadow: 0 0 0 2px rgba(var(--cui-primary-rgb), 0.1);
   }
 }
 
@@ -89,18 +180,6 @@
   }
 }
 
-.img-thumbnail {
-  transition: transform 0.2s ease-in-out;
-  border-radius: 0.25rem;
-  padding: 0.25rem;
-  background-color: #fff;
-  border: 1px solid #dee2e6;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-}
-
 // Loading spinner animation
 .spinner-border {
   width: 3rem;
@@ -127,23 +206,11 @@
     }
   }
 
-  .btn-group {
-    flex-direction: column;
+  .actions-cell {
     width: 100%;
-
-    .btn {
-      width: 100%;
-      margin: 0.25rem 0;
-    }
-  }
-
-  .btn-icon {
-    width: 1.75rem;
-    height: 1.75rem;
-
-    i {
-      font-size: 0.875rem;
-    }
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
   }
 
   .avatar {

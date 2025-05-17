@@ -62,6 +62,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   protected readonly Math = Math; // Make Math available in template
   private destroy$ = new Subject<void>();
 
+  // Default avatar path - update to use an existing avatar image
+  defaultAvatarPath = 'assets/images/avatars/8.jpg';
+
   constructor(
     private store: Store<{ admin: AdminState }>,
     private fb: FormBuilder
@@ -191,6 +194,16 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   dismissError(): void {
     // Handle error dismissal
+  }
+
+  /**
+   * Handles image loading errors by setting a default avatar image
+   */
+  handleImageError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement) {
+      imgElement.src = this.defaultAvatarPath;
+    }
   }
 }
 

@@ -342,7 +342,8 @@
   padding-left: 1.5rem;
   overflow: hidden;
   height: 0;
-  transition: height 0.3s ease;
+  transition: height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
 
   li {
     margin-bottom: 0.2rem;
@@ -372,6 +373,11 @@
   }
 }
 
+// Show submenu when parent is open
+.has-submenu.open .sidebar-subnav {
+  opacity: 1;
+}
+
 // Make sidebar footer nicer
 c-sidebar-footer {
   padding: 0.75rem;
@@ -399,6 +405,15 @@ c-sidebar-footer {
       transform: translateX(-2px);
     }
   }
+}
+
+// Improved sidebar toggle animations
+:host-context(.sidebar:not(.sidebar-narrow)) c-sidebar-footer button:hover svg {
+  transform: translateX(-4px);
+}
+
+:host-context(.sidebar.sidebar-narrow) c-sidebar-footer button:hover svg {
+  transform: translateX(4px);
 }
 
 // Responsive styles
@@ -475,6 +490,43 @@ c-sidebar-footer {
   // Hide submenus in narrow mode
   .has-submenu {
     .sidebar-subnav {
+      display: none;
+    }
+  }
+
+  // Fix for brand when sidebar is collapsed
+  .sidebar-brand {
+    justify-content: center;
+    padding: 1.15rem 0.5rem;
+
+    .sidebar-brand-text {
+      display: none;
+    }
+  }
+}
+
+// Fix transition issues when sidebar collapses/expands
+.sidebar {
+  transition: width 0.3s ease, margin 0.3s ease;
+
+  &.sidebar-narrow {
+    width: 4rem;
+
+    .sidebar-brand-full {
+      display: none;
+    }
+
+    .sidebar-brand-narrow {
+      display: block;
+    }
+  }
+
+  &:not(.sidebar-narrow) {
+    .sidebar-brand-full {
+      display: block;
+    }
+
+    .sidebar-brand-narrow {
       display: none;
     }
   }
