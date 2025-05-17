@@ -1,4 +1,4 @@
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NurseService } from '../../services/nurse.service';
 import { NurseDto } from '../../Models/DTOs/NurseDto';
@@ -8,16 +8,26 @@ import { CommonModule } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { PaginationModule } from '@coreui/angular';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { MapSelectorComponent } from '../../shared/components/map-selector/map-selector.component';
 
 @Component({
   selector: 'app-nurse',
   standalone: true,
   templateUrl: './nurse.component.html',
   styleUrls: ['./nurse.component.scss'],
-  imports: [TranslatePipe, CommonModule, ReactiveFormsModule, PaginationModule, PaginationComponent],
+  imports: [
+    TranslatePipe,
+    CommonModule,
+    ReactiveFormsModule,
+    PaginationModule,
+    PaginationComponent,
+    MapSelectorComponent
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class NurseComponent implements OnInit {
+export class NurseComponent implements OnInit, AfterViewInit {
+  @ViewChild('mapSelector') mapSelector?: MapSelectorComponent;
+
   nurses: NurseDto[] = [];
   form: FormGroup;
   showForm = false;
@@ -31,6 +41,10 @@ export class NurseComponent implements OnInit {
   pageSize = 10;
   totalCount = 0;
   imagePreview: string | ArrayBuffer | null = null;
+
+  // Map-related properties
+  showMap = false;
+  defaultAvatarPath = 'assets/images/avatars/8.jpg';
 
   constructor(
     private fb: FormBuilder,
@@ -61,6 +75,10 @@ export class NurseComponent implements OnInit {
     this.loadNurses();
   }
 
+  ngAfterViewInit() {
+    // Component view has been initialized
+  }
+
   loadNurses() {
     this.nurseService.getAllNurses({ pageNumber: this.pageNumber, pageSize: this.pageSize, searchKey: '', cityId: 0 }).subscribe({
       next: (res) => {
@@ -89,6 +107,7 @@ export class NurseComponent implements OnInit {
     this.isEditMode = false;
     this.form.reset();
     this.showForm = true;
+    this.showMap = true;
   }
 
   editNurse(nurse: NurseDto) {
@@ -98,6 +117,18 @@ export class NurseComponent implements OnInit {
       id: nurse.id
     });
     this.showForm = true;
+    this.showMap = true;
+
+    // Set timeout to ensure the map is initialized before updating the marker
+    setTimeout(() => {
+      if (nurse.latitude && nurse.longitude && this.mapSelector) {
+        this.mapSelector.refreshMap();
+        this.mapSelector.updateMarkerPosition(
+          parseFloat(nurse.latitude),
+          parseFloat(nurse.longitude)
+        );
+      }
+    }, 500);
   }
 
   onImageSelected(event: any) {
@@ -113,6 +144,28 @@ export class NurseComponent implements OnInit {
     }
   }
 
+  // Handle map location selection
+  onLocationSelected(location: {lat: number, lng: number}) {
+    this.form.patchValue({
+      latitude: location.lat.toString(),
+      longitude: location.lng.toString()
+    });
+    console.log('Location selected:', location);
+  }
+
+  toggleMap() {
+    this.showMap = !this.showMap;
+
+    // When map is shown, refresh it to ensure it renders properly
+    if (this.showMap) {
+      setTimeout(() => {
+        if (this.mapSelector) {
+          this.mapSelector.refreshMap();
+        }
+      }, 100);
+    }
+  }
+
   submit() {
     if (this.form.valid) {
       const formValue = this.form.value;
@@ -121,15 +174,23 @@ export class NurseComponent implements OnInit {
       if (formValue.id) formData.append('Id', formValue.id);
       if (formValue.firstName) formData.append('FirstName', formValue.firstName);
       if (formValue.lastName) formData.append('LastName', formValue.lastName);
+      if (formValue.phoneNumber) formData.append('PhoneNumber', formValue.phoneNumber);
+      if (formValue.specialization) formData.append('Specialization', formValue.specialization);
+      if (formValue.governorate) formData.append('Governorate', formValue.governorate);
+      if (formValue.city) formData.append('City', formValue.city);
+
+      // Add latitude and longitude from the map
+      if (formValue.latitude) formData.append('Latitude', formValue.latitude);
+      if (formValue.longitude) formData.append('Longitude', formValue.longitude);
+
       if (this.selectedImageFile) {
         formData.append('Image', this.selectedImageFile);
       }
       if (formValue.cityId) formData.append('CityId', formValue.cityId.toString());
       if (formValue.governorateId) formData.append('GovernorateId', formValue.governorateId.toString());
-      if (formValue.latitude) formData.append('Latitude', formValue.latitude);
-      if (formValue.longitude) formData.append('Longitude', formValue.longitude);
       if (formValue.medicalLicense || formValue.licenseNumber) formData.append('MedicalLicense', formValue.medicalLicense || formValue.licenseNumber);
       if (formValue.specialtyId) formData.append('SpecialtyId', formValue.specialtyId.toString());
+      if (formValue.rate) formData.append('Rate', formValue.rate.toString());
 
       if (this.isEditMode) {
         this.nurseService.updateNurse(formData).subscribe({
@@ -144,15 +205,27 @@ export class NurseComponent implements OnInit {
           }
         });
       } else {
-        // Add nurse logic (similar, using FormData)
+        this.nurseService.addNurse(formData).subscribe({
+          next: () => {
+            this.successMessage = 'nurse.addSuccess';
+            this.loadNurses();
+            this.cancel();
+          },
+          error: (error) => {
+            this.errorMessage = 'nurse.addError';
+            console.error('Error adding nurse:', error);
+          }
+        });
       }
     }
   }
 
   cancel() {
     this.showForm = false;
+    this.showMap = false;
     this.form.reset();
     this.isEditMode = false;
+    this.imagePreview = null;
   }
 
   openDeleteModal(id: string) {
@@ -179,6 +252,14 @@ export class NurseComponent implements OnInit {
           this.closeDeleteModal();
         }
       });
+    }
+  }
+
+  // Handle image loading errors by setting a default avatar image
+  handleImageError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    if (imgElement) {
+      imgElement.src = this.defaultAvatarPath;
     }
   }
 }

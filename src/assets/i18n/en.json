@@ -321,7 +321,19 @@
     "deleteNurseError": "Error deleting nurse",
     "updateSuccess": "Nurse updated successfully",
     "addSuccess": "Nurse added successfully",
-    "deleteSuccess": "Nurse deleted successfully"
+    "deleteSuccess": "Nurse deleted successfully",
+    "location": "Location on Map"
+  },
+  "map": {
+    "instructions": "Click on the map to select a location or drag the marker to adjust position",
+    "showMap": "Show Map",
+    "hideMap": "Hide Map",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "selectLocation": "Select Location",
+    "currentLocation": "Use Current Location",
+    "locationSelected": "Location Selected",
+    "searchLocation": "Search Location"
   },
   "requests": {
     "from": "From",
