@@ -128,7 +128,8 @@
     "error404": "Error 404",
     "error500": "Error 500",
     "links": "Links",
-    "docs": "Docs"
+    "docs": "Docs",
+    "confirmDelete": "Are you sure you want to delete this item?"
   },
   "auth": {
     "login": "Login",
@@ -199,6 +200,22 @@
     "addCityToStart": "Add New City",
     "selectGovernorateInstruction": "Select a governorate to add a city",
     "allGovernorates": "All Governorates"
+  },
+  "disease": {
+    "title": "Disease Management",
+    "searchPlaceholder": "Search by disease name",
+    "create": "Add Disease",
+    "edit": "Edit Disease",
+    "nameEn": "English Name",
+    "nameAr": "Arabic Name",
+    "nameEnPlaceholder": "Enter disease name in English",
+    "nameArPlaceholder": "Enter disease name in Arabic",
+    "confirmDelete": "Are you sure you want to delete this disease?",
+    "noResults": "No diseases found",
+    "tryDifferentSearch": "Try a different search term",
+    "deleteSuccess": "Disease deleted successfully",
+    "addSuccess": "Disease added successfully",
+    "updateSuccess": "Disease updated successfully"
   },
   "serviceCategory": {
     "title": "Service Categories Management",

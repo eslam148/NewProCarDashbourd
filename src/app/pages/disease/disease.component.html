@@ -1,0 +1,238 @@
+ 
+<!-- Delete Confirmation Modal -->
+<c-modal
+  [visible]="showDeleteModal"
+  (visibleChange)="onDeleteModalChange($event)"
+  [backdrop]="true"
+  [size]="'sm'"
+>
+  <c-modal-header>
+    <h5 cModalTitle>{{ 'common.delete' | translate | async }}</h5>
+    <button
+      cButtonClose
+      (click)="onDeleteModalChange(false)"
+    ></button>
+  </c-modal-header>
+  <c-modal-body>
+    <p>{{ 'common.confirmDelete' | translate | async }}</p>
+  </c-modal-body>
+  <c-modal-footer>
+    <button
+      cButton
+      color="secondary"
+      (click)="onDeleteModalChange(false)"
+    >
+      {{ 'common.cancel' | translate | async }}
+    </button>
+    <button
+      cButton
+      color="danger"
+      (click)="confirmDelete()"
+    >
+      {{ 'common.delete' | translate | async }}
+    </button>
+  </c-modal-footer>
+</c-modal>
+
+<!-- Main Content -->
+@if(!showForm) {
+  <c-card>
+    <c-card-header>
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0 text-primary">
+          <svg cIcon name="cilMedicalCross" class="me-2" width="24" height="24"></svg>
+          {{ 'disease.title' | translate | async }}
+        </h4>
+        <div class="d-flex gap-2">
+          <form [formGroup]="searchForm" class="d-flex" (ngSubmit)="onSearch()">
+            <div class="input-group">
+              <span class="input-group-text">
+                <svg cIcon name="cilSearch" width="16" height="16"></svg>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="searchKey"
+                [placeholder]="'disease.searchPlaceholder' | translate | async"
+              >
+              <button
+                cButton
+                color="primary"
+                type="submit"
+              >
+                {{ 'common.search' | translate | async }}
+              </button>
+            </div>
+          </form>
+          <button
+            cButton
+            color="primary"
+            variant="outline"
+            class="btn-icon-text"
+            (click)="onCreateDisease()"
+          >
+            <svg cIcon name="cilPlus" width="16" height="16" class="me-2"></svg>
+            {{ 'disease.create' | translate | async }}
+          </button>
+        </div>
+      </div>
+    </c-card-header>
+
+    <c-card-body>
+      <!-- Loading State -->
+      @if(loading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">{{ 'common.loading' | translate | async }}</span>
+          </div>
+          <p class="mt-3">{{ 'common.loading' | translate | async }}</p>
+        </div>
+      }
+
+      <!-- Error State -->
+      @if(error) {
+        <c-alert color="danger" [dismissible]="true" (visibleChange)="dismissError()">
+          <svg cIcon name="cilWarning" class="me-2" width="24" height="24"></svg>
+          {{ error }}
+        </c-alert>
+      }
+
+      <!-- No Results State -->
+      @if(!loading && diseases.length === 0) {
+        <div class="text-center py-5">
+          <svg cIcon name="cilMedicalCross" class="text-muted mb-3" width="48" height="48"></svg>
+          <h5>{{ 'disease.noResults' | translate | async }}</h5>
+          <p class="text-muted">{{ 'disease.tryDifferentSearch' | translate | async }}</p>
+        </div>
+      }
+
+      <!-- Diseases Table -->
+      @if(!loading && diseases.length > 0) {
+        <table cTable responsive hover striped>
+          <thead>
+            <tr>
+              <th class="text-center" style="width: 5%;">#</th>
+              <th class="text-start" style="width: 40%;">{{ 'disease.nameEn' | translate | async }}</th>
+              <th class="text-end" style="width: 40%;">{{ 'disease.nameAr' | translate | async }}</th>
+              <th class="text-center" style="width: 15%;">{{ 'common.actions' | translate | async }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(disease of diseases; track disease.id; let i = $index) {
+              <tr>
+                <td class="text-center">{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                <td class="text-start">{{ disease.nameEn }}</td>
+                <td class="text-end">{{ disease.nameAr }}</td>
+                <td class="text-center">
+                  <div class="btn-group">
+                    <button
+                      cButton
+                      color="info"
+                      variant="ghost"
+                      size="sm"
+                      cTooltip="{{ 'common.edit' | translate | async }}"
+                      (click)="onEditDisease(disease)"
+                    >
+                      <svg cIcon name="cilPencil" width="16" height="16"></svg>
+                    </button>
+                    <button
+                      cButton
+                      color="danger"
+                      variant="ghost"
+                      size="sm"
+                      cTooltip="{{ 'common.delete' | translate | async }}"
+                      (click)="onDeleteDisease(disease.id!)"
+                    >
+                      <svg cIcon name="cilTrash" width="16" height="16"></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div>
+            <span class="me-2">{{ 'common.showing' | translate | async }}</span>
+            <span class="fw-bold">{{ (currentPage - 1) * pageSize + 1 }}</span>
+            <span class="mx-1">{{ 'common.to' | translate | async }}</span>
+            <span class="fw-bold">{{ Math.min(currentPage * pageSize, totalItems) }}</span>
+            <span class="mx-1">{{ 'common.of' | translate | async }}</span>
+            <span class="fw-bold">{{ totalItems }}</span>
+            <span>{{ 'common.entries' | translate | async }}</span>
+          </div>
+
+          <app-pagination
+            [currentPage]="currentPage"
+            [totalItems]="totalItems"
+            [pageSize]="pageSize"
+            (pageChange)="onPageChange($event)"
+            size="sm"
+          ></app-pagination>
+        </div>
+      }
+    </c-card-body>
+  </c-card>
+}
+
+<!-- Disease Form -->
+@if(showForm) {
+  <c-card>
+    <c-card-header>
+      <h4 class="mb-0">
+        {{ (isEditMode ? 'disease.edit' : 'disease.create') | translate | async }}
+      </h4>
+    </c-card-header>
+    <c-card-body>
+      <form [formGroup]="diseaseForm" (ngSubmit)="onFormSubmit()">
+        <div class="mb-3">
+          <label for="nameEn" class="form-label">{{ 'disease.nameEn' | translate | async }}</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nameEn"
+            formControlName="nameEn"
+            [placeholder]="'disease.nameEnPlaceholder' | translate | async"
+            required
+          >
+        </div>
+
+        <div class="mb-3">
+          <label for="nameAr" class="form-label">{{ 'disease.nameAr' | translate | async }}</label>
+          <input
+            type="text"
+            class="form-control arabic-input"
+            id="nameAr"
+            formControlName="nameAr"
+            [placeholder]="'disease.nameArPlaceholder' | translate | async"
+            dir="rtl"
+            lang="ar"
+            required
+          >
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button
+            cButton
+            color="secondary"
+            type="button"
+            (click)="onFormCancel()"
+          >
+            {{ 'common.cancel' | translate | async }}
+          </button>
+          <button
+            cButton
+            color="primary"
+            type="submit"
+            [disabled]="diseaseForm.invalid || loading"
+          >
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ (isEditMode ? 'common.update' : 'common.save') | translate | async }}
+          </button>
+        </div>
+      </form>
+    </c-card-body>
+  </c-card>
+}

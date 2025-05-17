@@ -30,6 +30,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'disease',
+        loadComponent: () => import('./pages/disease/disease.component').then(m => m.DiseaseComponent),
+        data: {
+          title: 'Disease'
+        }
+      },
+      {
         path: 'location',
         loadComponent: () => import('./pages/location/location.component').then(m => m.LocationComponent),
         data: {

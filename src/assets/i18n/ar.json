@@ -120,7 +120,8 @@
     "error404": "خطأ 404",
     "error500": "خطأ 500",
     "links": "روابط",
-    "docs": "التوثيق"
+    "docs": "التوثيق",
+    "confirmDelete": "هل أنت متأكد من حذف هذا العنصر؟"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -362,5 +363,21 @@
     "currentLocation": "استخدم الموقع الحالي",
     "locationSelected": "تم تحديد الموقع",
     "searchLocation": "بحث عن موقع"
+  },
+  "disease": {
+    "title": "إدارة الأمراض",
+    "searchPlaceholder": "بحث بإسم المرض",
+    "create": "إضافة مرض",
+    "edit": "تعديل مرض",
+    "nameEn": "الاسم بالإنجليزية",
+    "nameAr": "الاسم بالعربية",
+    "nameEnPlaceholder": "أدخل اسم المرض بالإنجليزية",
+    "nameArPlaceholder": "أدخل اسم المرض بالعربية",
+    "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا المرض؟",
+    "noResults": "لا توجد أمراض",
+    "tryDifferentSearch": "جرب بحثًا مختلفًا",
+    "deleteSuccess": "تم حذف المرض بنجاح",
+    "addSuccess": "تم إضافة المرض بنجاح",
+    "updateSuccess": "تم تحديث المرض بنجاح"
   }
 }
