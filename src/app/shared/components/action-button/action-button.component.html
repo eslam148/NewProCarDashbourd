@@ -1,0 +1,38 @@
+<ng-container *ngIf="variant !== ''">
+  <button
+    cButton
+    [color]="color"
+    [shape]="shape"
+    [size]="size"
+    [variant]="variant"
+    [class.btn-block]="block"
+    [class.icon-only]="iconOnly"
+    [disabled]="disabled || loading"
+    [cTooltip]="tooltip ? ((tooltip | translate | async) || '') : ''"
+    [type]="type"
+    (click)="onClick()"
+  >
+    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+    <svg *ngIf="icon && !loading" cIcon [name]="icon" [ngClass]="{'me-2': !iconOnly && text}"></svg>
+    <span *ngIf="text && !iconOnly">{{ text | translate | async }}</span>
+  </button>
+</ng-container>
+
+<ng-container *ngIf="variant === ''">
+  <button
+    cButton
+    [color]="color"
+    [shape]="shape"
+    [size]="size"
+    [class.btn-block]="block"
+    [class.icon-only]="iconOnly"
+    [disabled]="disabled || loading"
+    [cTooltip]="tooltip ? ((tooltip | translate | async) || '') : ''"
+    [type]="type"
+    (click)="onClick()"
+  >
+    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+    <svg *ngIf="icon && !loading" cIcon [name]="icon" [ngClass]="{'me-2': !iconOnly && text}"></svg>
+    <span *ngIf="text && !iconOnly">{{ text | translate | async }}</span>
+  </button>
+</ng-container>

@@ -1,0 +1,130 @@
+/* Table styling */
+.table {
+  --bs-table-hover-bg: rgba(var(--cui-primary-rgb), 0.075);
+  --bs-table-hover-color: var(--cui-body-color);
+
+  thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    color: var(--cui-text-muted);
+    border-top: 0;
+    border-bottom: 2px solid var(--cui-border-color);
+    vertical-align: middle;
+    padding: 0.75rem;
+  }
+
+  tbody td {
+    vertical-align: middle;
+    padding: 0.75rem;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--cui-border-color);
+  }
+
+  .actions-cell {
+    width: 1%;
+    white-space: nowrap;
+    text-align: end;
+  }
+}
+
+/* Card styling */
+.card {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+  border: var(--cui-card-border-width) solid var(--cui-card-border-color);
+}
+
+/* Avatar styling */
+.avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--cui-border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &.default-avatar {
+    background-color: var(--cui-secondary);
+    color: var(--cui-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+}
+
+/* Button styling */
+.btn-icon-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+
+  svg {
+    margin-top: -2px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card-header .d-flex.gap-2 {
+    width: 100%;
+  }
+
+  form.d-flex {
+    width: 100%;
+  }
+}
+
+/* Table loading overlay */
+.table-responsive {
+  position: relative;
+  min-height: 150px;
+}
+
+/* RTL Support */
+:host-context(html[lang="ar"]) {
+  .actions-cell {
+    text-align: start;
+  }
+
+  .btn-icon-text svg {
+    margin-left: 0.25rem;
+    margin-right: 0;
+  }
+}
+
+/* Animation for table row hover */
+.table-hover tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+/* Status indicators */
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+
+  &.active {
+    background-color: var(--cui-success);
+  }
+
+  &.inactive {
+    background-color: var(--cui-danger);
+  }
+
+  &.pending {
+    background-color: var(--cui-warning);
+  }
+}
+
+/* Pagination styling is handled by the pagination component */

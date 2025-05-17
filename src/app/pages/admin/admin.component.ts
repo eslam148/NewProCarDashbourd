@@ -8,7 +8,6 @@ import { IconModule } from '@coreui/icons-angular';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../pipes/translate.pipe';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 import { AdminsDto } from '../../Models/DTOs/AdminsDto';
 import { RegisterDto } from '../../Models/DTOs/RegisterDto';
@@ -17,6 +16,12 @@ import { AdminState } from '../../store/admin/admin.reducer';
 import { loadAdmins, deleteAdmin, registerAdmin, updateAdmin } from '../../store/admin/admin.actions';
 import { selectAdmins, selectAdminLoading, selectAdminError } from '../../store/admin/admin.selectors';
 import { AdminFormComponent } from './admin-form/admin-form.component';
+
+// Import shared components
+import {
+  DataTableComponent,
+  ActionButtonComponent
+} from '../../shared/components';
 
 interface PaginatedResponse<T> {
   items: T[];
@@ -43,7 +48,8 @@ interface PaginatedResponse<T> {
     TooltipModule,
     AdminFormComponent,
     TranslatePipe,
-    PaginationComponent
+    DataTableComponent,
+    ActionButtonComponent
   ]
 })
 export class AdminComponent implements OnInit, OnDestroy {
@@ -64,6 +70,13 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   // Default avatar path - update to use an existing avatar image
   defaultAvatarPath = 'assets/images/avatars/8.jpg';
+
+  // Table columns definition
+  tableColumns = [
+    { key: 'firstName', label: 'admin.firstName' },
+    { key: 'lastName', label: 'admin.lastName' },
+    { key: 'phoneNumber', label: 'admin.phone' }
+  ];
 
   constructor(
     private store: Store<{ admin: AdminState }>,
@@ -118,33 +131,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     }
   }
 
-  onPageSizeChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    if (select) {
-      const size = parseInt(select.value, 10);
-      if (!isNaN(size)) {
-        this.pageSize = size;
-        this.currentPage = 1;
-        this.loadAdmins();
-      }
-    }
-  }
-
-  getPageRange(): number[] {
-    const range: number[] = [];
-    const maxPages = 5;
-    let start = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
-    let end = Math.min(this.totalPages, start + maxPages - 1);
-
-    if (end - start + 1 < maxPages) {
-      start = Math.max(1, end - maxPages + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      range.push(i);
-    }
-
-    return range;
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 1;
+    this.loadAdmins();
   }
 
   onDeleteAdmin(adminId: string): void {

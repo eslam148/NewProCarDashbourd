@@ -11,6 +11,45 @@ import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
+import {
+  cilHome,
+  cilUser,
+  cilPeople,
+  cilMedicalCross,
+  cilSpeedometer,
+  cilSettings,
+  cilPlus,
+  cilPencil,
+  cilTrash,
+  cilSearch,
+  cilX,
+  cilCheck,
+  cilWarning,
+  cilBan,
+  cilLocationPin,
+  cilCalendar,
+  cilBell,
+  cilOptions,
+  cilMenu,
+  cilList,
+  cilMap,
+  cilInfo,
+  cilDescription,
+  cilClock,
+  cilTask,
+  cilNotes,
+  cilFilter,
+  cilCloudUpload,
+  cilSave,
+  cilReload,
+  cilChevronBottom,
+  cilChevronTop,
+  cilChevronLeft,
+  cilChevronRight,
+  cilMagnifyingGlass,
+  cilStar,
+  cilPhone
+} from '@coreui/icons';
 
 @Component({
     selector: 'app-root',
@@ -53,6 +92,47 @@ export class AppComponent implements OnInit {
 
     this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
+
+    // Register all icons for use across the application
+    this.#iconSetService.icons = {
+      cilHome,
+      cilUser,
+      cilPeople,
+      cilMedicalCross,
+      cilSpeedometer,
+      cilSettings,
+      cilPlus,
+      cilPencil,
+      cilTrash,
+      cilSearch,
+      cilX,
+      cilCheck,
+      cilWarning,
+      cilBan,
+      cilLocationPin,
+      cilCalendar,
+      cilBell,
+      cilOptions,
+      cilMenu,
+      cilList,
+      cilMap,
+      cilInfo,
+      cilDescription,
+      cilClock,
+      cilTask,
+      cilNotes,
+      cilFilter,
+      cilCloudUpload,
+      cilSave,
+      cilReload,
+      cilChevronBottom,
+      cilChevronTop,
+      cilChevronLeft,
+      cilChevronRight,
+      cilMagnifyingGlass,
+      cilStar,
+      cilPhone
+    };
   }
 
   ngOnInit(): void {
@@ -78,5 +158,25 @@ export class AppComponent implements OnInit {
         takeUntilDestroyed(this.#destroyRef)
       )
       .subscribe();
+
+    this.#router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      const rt = this.getChild(this.#router.routerState.root);
+      const routeTitle = rt?.snapshot.data['title'] || '';
+      if (routeTitle) {
+        this.#titleService.setTitle(`${this.title} | ${routeTitle}`);
+      } else {
+        this.#titleService.setTitle(this.title);
+      }
+    });
+  }
+
+  getChild(activatedRoute: any): any {
+    if (activatedRoute.firstChild) {
+      return this.getChild(activatedRoute.firstChild);
+    } else {
+      return activatedRoute;
+    }
   }
 }

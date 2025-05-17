@@ -24,6 +24,7 @@ import {
   cilWarning,
   cilMedicalCross
 } from '@coreui/icons';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 
 @Component({
   selector: 'app-specialty',
@@ -38,7 +39,8 @@ import {
     FormModule,
     GridModule,
     TableModule,
-    IconModule
+    IconModule,
+    ActionButtonComponent
   ],
   templateUrl: './specialty.component.html',
   styleUrls: ['./specialty.component.scss'],

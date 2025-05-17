@@ -65,3 +65,89 @@ $success-dark: color.scale($success, $lightness: -15%);
   --input-bg: #{color.scale($dark, $lightness: -3%)};
   --input-border: #{color.scale($secondary, $lightness: -30%)};
 }
+
+// This file contains shared variables for the application
+// These will be imported and used across components to maintain consistency
+
+// Color Variables
+// Use CoreUI variables when possible, define custom ones only when needed
+$app-primary: var(--cui-primary);
+$app-secondary: var(--cui-secondary);
+$app-success: var(--cui-success);
+$app-info: var(--cui-info);
+$app-warning: var(--cui-warning);
+$app-danger: var(--cui-danger);
+$app-light: var(--cui-light);
+$app-dark: var(--cui-dark);
+
+// Typography
+$app-font-family-base: var(--cui-body-font-family);
+$app-font-size-base: var(--cui-body-font-size);
+$app-font-weight-normal: var(--cui-font-weight-normal);
+$app-font-weight-bold: var(--cui-font-weight-bold);
+$app-line-height-base: var(--cui-body-line-height);
+
+// Spacing
+$app-spacer: 1rem;
+$app-spacer-xs: $app-spacer * 0.25;
+$app-spacer-sm: $app-spacer * 0.5;
+$app-spacer-md: $app-spacer;
+$app-spacer-lg: $app-spacer * 1.5;
+$app-spacer-xl: $app-spacer * 3;
+
+// Border
+$app-border-width: 1px;
+$app-border-color: var(--cui-border-color);
+$app-border-radius: 0.375rem;
+
+// Shadows
+$app-box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$app-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+$app-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+// Card Variables
+$app-card-border-radius: 0.5rem;
+$app-card-box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+
+// Form Variables
+$app-input-border-radius: 0.375rem;
+$app-input-border-color: var(--cui-input-border-color);
+$app-input-padding-y: 0.5rem;
+$app-input-padding-x: 0.75rem;
+$app-input-bg: var(--cui-input-bg);
+$app-input-color: var(--cui-input-color);
+
+// Button Variables
+$app-btn-border-radius: 0.375rem;
+$app-btn-font-weight: var(--cui-btn-font-weight);
+$app-btn-padding-y: 0.375rem;
+$app-btn-padding-x: 0.75rem;
+
+// Table Variables
+$app-table-border-color: var(--cui-border-color);
+$app-table-striped-color: var(--cui-table-striped-color);
+$app-table-striped-bg: var(--cui-table-striped-bg);
+$app-table-hover-color: var(--cui-table-hover-color);
+$app-table-hover-bg: var(--cui-table-hover-bg);
+
+// Z-index
+$app-z-index-dropdown: 1000;
+$app-z-index-fixed: 1030;
+$app-z-index-modal-backdrop: 1040;
+$app-z-index-modal: 1050;
+$app-z-index-tooltip: 1080;
+
+// Transition durations
+$app-transition-base: 0.2s ease-in-out;
+$app-transition-fade: opacity 0.15s linear;
+
+// RTL Support
+$app-rtl-support: true;
+
+// Responsive Breakpoints
+$app-breakpoint-xs: 0;
+$app-breakpoint-sm: 576px;
+$app-breakpoint-md: 768px;
+$app-breakpoint-lg: 992px;
+$app-breakpoint-xl: 1200px;
+$app-breakpoint-xxl: 1400px;

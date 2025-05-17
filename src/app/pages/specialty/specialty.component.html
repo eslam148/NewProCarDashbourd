@@ -3,9 +3,13 @@
     <div class="card-header gradient-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
       <h4 class="mb-0 fw-bold">{{ 'specialty.title' | translate | async }}</h4>
       <!-- Add Specialty Button -->
-      <button cButton color="light" class="fw-semibold" *ngIf="!showForm && !isEditMode" (click)="showAddForm()">
-        <c-icon name="cilPlus"></c-icon> {{ 'specialty.add' | translate | async }}
-      </button>
+      <app-action-button
+        *ngIf="!showForm && !isEditMode"
+        text="specialty.add"
+        icon="cilPlus"
+        color="light"
+        (clicked)="showAddForm()"
+      ></app-action-button>
     </div>
     <div class="card-body p-4">
       <!-- Feedback Messages -->
@@ -53,14 +57,21 @@
           </div>
         </div>
         <div class="mt-3 d-flex flex-column flex-md-row gap-2">
-          <button cButton color="primary" type="submit" class="fw-semibold" [disabled]="form.invalid || isLoading">
-            <c-icon [name]="isEditMode ? 'cilPencil' : 'cilPlus'"></c-icon>
-            {{ isEditMode ? ('specialty.edit' | translate | async) : ('specialty.add' | translate | async) }}
-          </button>
-          <button cButton color="secondary" type="button" (click)="cancel()" *ngIf="isEditMode || showForm">
-            <c-icon name="cilX"></c-icon>
-            {{ 'common.cancel' | translate | async }}
-          </button>
+          <app-action-button
+            color="primary"
+            type="submit"
+            [icon]="isEditMode ? 'cilPencil' : 'cilPlus'"
+            [text]="isEditMode ? 'specialty.edit' : 'specialty.add'"
+            [disabled]="form.invalid || isLoading"
+          ></app-action-button>
+
+          <app-action-button
+            *ngIf="isEditMode || showForm"
+            color="secondary"
+            icon="cilX"
+            text="common.cancel"
+            (clicked)="cancel()"
+          ></app-action-button>
         </div>
       </form>
 
@@ -85,14 +96,23 @@
                 <td>{{ specialty.descriptionEn }}</td>
                 <td class="text-center">
                   <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch justify-content-center">
-                    <button cButton color="primary" class="btn-sm" (click)="edit(specialty)">
-                      <c-icon name="cilPencil"></c-icon>
-                      <span class="d-none d-md-inline">{{ 'specialty.edit' | translate | async }}</span>
-                    </button>
-                    <button cButton color="danger" class="btn-sm" (click)="delete(specialty.id!)">
-                      <c-icon name="cilTrash"></c-icon>
-                      <span class="d-none d-md-inline">{{ 'specialty.delete' | translate | async }}</span>
-                    </button>
+                    <app-action-button
+                      color="primary"
+                      size="lg"
+                      icon="cilPencil"
+                      text="specialty.edit"
+                      shape = "rounded-pill"
+                      (clicked)="edit(specialty)"
+                    ></app-action-button>
+
+                    <app-action-button
+                      color="danger"
+                      size="sm"
+                      icon="cilTrash"
+                      text="specialty.delete"
+                      shape = "rounded-pill"
+                      (clicked)="delete(specialty.id!)"
+                    ></app-action-button>
                   </div>
                 </td>
               </tr>
@@ -130,14 +150,19 @@
       </div>
     </c-modal-body>
     <c-modal-footer class="border-top-0">
-      <button cButton color="secondary" (click)="closeDeleteModal()">
-        <c-icon name="cilX"></c-icon>
-        {{ 'common.cancel' | translate | async }}
-      </button>
-      <button cButton color="danger" (click)="confirmDelete()">
-        <c-icon name="cilTrash"></c-icon>
-        {{ 'specialty.delete' | translate | async }}
-      </button>
+      <app-action-button
+        color="secondary"
+        icon="cilX"
+        text="common.cancel"
+        (clicked)="closeDeleteModal()"
+      ></app-action-button>
+
+      <app-action-button
+        color="danger"
+        icon="cilTrash"
+        text="specialty.delete"
+        (clicked)="confirmDelete()"
+      ></app-action-button>
     </c-modal-footer>
   </c-modal>
 </div>

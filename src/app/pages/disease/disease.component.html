@@ -1,4 +1,3 @@
-
 <!-- Delete Confirmation Modal -->
 <c-modal
   [visible]="showDeleteModal"
@@ -7,29 +6,21 @@
   [size]="'sm'"
 >
   <c-modal-header>
-    <h5 cModalTitle>{{ 'common.delete' | translate | async }}</h5>
+    <h5 cModalTitle>{{ 'disease.delete' | translate | async }}</h5>
     <button
       cButtonClose
       (click)="onDeleteModalChange(false)"
     ></button>
   </c-modal-header>
   <c-modal-body>
-    <p>{{ 'common.confirmDelete' | translate | async }}</p>
+    <p>{{ 'disease.confirmDelete' | translate | async }}</p>
   </c-modal-body>
   <c-modal-footer>
-    <button
-      cButton
-      color="secondary"
-      (click)="onDeleteModalChange(false)"
-    >
-      {{ 'common.cancel' | translate | async }}
+    <button cButton color="secondary" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="onDeleteModalChange(false)">
+      <svg cIcon name="cilX" class="me-1"></svg> {{ 'common.cancel' | translate | async }}
     </button>
-    <button
-      cButton
-      color="danger"
-      (click)="confirmDelete()"
-    >
-      {{ 'common.delete' | translate | async }}
+    <button cButton color="danger" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="confirmDelete()">
+      <svg cIcon name="cilTrash" class="me-1"></svg> {{ 'common.delete' | translate | async }}
     </button>
   </c-modal-footer>
 </c-modal>
@@ -37,23 +28,15 @@
 <!-- Main Content -->
 @if(!showForm) {
   <c-card>
-    <c-card-header>
-      <div class="d-flex justify-content-between align-items-center">
-        <h4 class="mb-0 text-primary">
+    <c-card-header class="custom-card">
+      <div class="card-header gradient-info d-flex justify-content-between align-items-center">
+        <h4 class="mb-0 text-white">
           <svg cIcon name="cilMedicalCross" class="me-2" width="24" height="24"></svg>
           {{ 'disease.title' | translate | async }}
         </h4>
         <div class="d-flex gap-2">
-         
-          <button
-            cButton
-            color="primary"
-            variant="outline"
-            class="btn-icon-text"
-            (click)="onCreateDisease()"
-          >
-            <svg cIcon name="cilPlus" width="16" height="16" class="me-2"></svg>
-            {{ 'disease.create' | translate | async }}
+          <button cButton color="light" class="rounded-pill px-3 py-1 fw-semibold btn-hover-effect" (click)="onCreateDisease()">
+            <svg cIcon name="cilPlus" class="me-1"></svg> {{ 'disease.create' | translate | async }}
           </button>
         </div>
       </div>
@@ -93,9 +76,9 @@
           <thead>
             <tr>
               <th class="text-center" style="width: 5%;">#</th>
-              <th class="text-start" style="width: 40%;">{{ 'disease.nameEn' | translate | async }}</th>
-              <th class="text-end" style="width: 40%;">{{ 'disease.nameAr' | translate | async }}</th>
-              <th class="text-center" style="width: 15%;">{{ 'common.actions' | translate | async }}</th>
+              <th class="text-start" style="width: 30%;">{{ 'disease.nameEn' | translate | async }}</th>
+              <th class="text-end" style="width: 30%;">{{ 'disease.nameAr' | translate | async }}</th>
+              <th class="text-center" style="width: 20%;">{{ 'common.actions' | translate | async }}</th>
             </tr>
           </thead>
           <tbody>
@@ -105,26 +88,12 @@
                 <td class="text-start">{{ disease.nameEn }}</td>
                 <td class="text-end">{{ disease.nameAr }}</td>
                 <td class="text-center">
-                  <div class="btn-group">
-                    <button
-                      cButton
-                      color="info"
-                      variant="ghost"
-                      size="sm"
-                      cTooltip="{{ 'common.edit' | translate | async }}"
-                      (click)="onEditDisease(disease)"
-                    >
-                      <svg cIcon name="cilPencil" width="16" height="16"></svg>
+                  <div class="d-flex gap-2 justify-content-center">
+                    <button cButton color="primary" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="onEditDisease(disease)">
+                      <svg cIcon name="cilPencil" class="me-1"></svg> {{ 'common.edit' | translate | async }}
                     </button>
-                    <button
-                      cButton
-                      color="danger"
-                      variant="ghost"
-                      size="sm"
-                      cTooltip="{{ 'common.delete' | translate | async }}"
-                      (click)="onDeleteDisease(disease.id!)"
-                    >
-                      <svg cIcon name="cilTrash" width="16" height="16"></svg>
+                    <button cButton color="danger" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="onDeleteDisease(disease.id!)">
+                      <svg cIcon name="cilTrash" class="me-1"></svg> {{ 'common.delete' | translate | async }}
                     </button>
                   </div>
                 </td>
@@ -194,23 +163,12 @@
           >
         </div>
 
-        <div class="d-flex justify-content-end gap-2 mt-4">
-          <button
-            cButton
-            color="secondary"
-            type="button"
-            (click)="onFormCancel()"
-          >
-            {{ 'common.cancel' | translate | async }}
+        <div class="mt-3 d-flex gap-2">
+          <button cButton color="primary" class="rounded-pill px-3 py-1 btn-hover-effect" type="submit">
+            <svg cIcon name="cilSave" class="me-1"></svg> {{ isEditMode ? ('disease.update' | translate | async) : ('disease.create' | translate | async) }}
           </button>
-          <button
-            cButton
-            color="primary"
-            type="submit"
-            [disabled]="diseaseForm.invalid || loading"
-          >
-            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            {{ (isEditMode ? 'common.update' : 'common.save') | translate | async }}
+          <button cButton color="secondary" class="rounded-pill px-3 py-1 btn-hover-effect" (click)="onFormCancel()">
+            <svg cIcon name="cilX" class="me-1"></svg> {{ 'common.cancel' | translate | async }}
           </button>
         </div>
       </form>

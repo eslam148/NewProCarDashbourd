@@ -1,0 +1,124 @@
+<div class="card">
+  <div class="card-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">{{ title | translate | async }}</h4>
+      <div class="d-flex gap-2">
+        <!-- Custom Search Template if provided -->
+        <ng-container *ngIf="searchTemplate">
+          <ng-container *ngTemplateOutlet="searchTemplate"></ng-container>
+        </ng-container>
+
+        <!-- Default Search Form -->
+        <ng-container *ngIf="showSearch && searchForm && !searchTemplate">
+          <form [formGroup]="searchForm" class="d-flex" (ngSubmit)="onSearch()">
+            <div class="input-group">
+              <span class="input-group-text">
+                <svg cIcon name="cilMagnifyingGlass" width="16" height="16"></svg>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="SearchKey"
+                [placeholder]="searchPlaceholder | translate | async"
+              >
+              <button
+                cButton
+                color="primary"
+                type="submit"
+              >
+                {{ 'common.search' | translate | async }}
+              </button>
+            </div>
+          </form>
+        </ng-container>
+
+        <!-- Create Button -->
+        <ng-container *ngIf="showCreateButton">
+          <button
+            cButton
+            color="primary"
+            class="btn-icon-text"
+            (click)="onCreateClick()"
+          >
+            <svg cIcon name="cilPlus" width="16" height="16" class="me-2"></svg>
+            {{ createButtonText | translate | async }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{ 'common.loading' | translate | async }}</span>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <svg cIcon name="cilWarning" class="me-2"></svg>
+      {{ error }}
+      <button type="button" class="btn-close" (click)="dismissError()"></button>
+    </div>
+
+    <!-- No Results State -->
+    <ng-container *ngIf="!loading && items.length === 0">
+      <!-- Custom Empty Template if provided -->
+      <ng-container *ngIf="emptyTemplate">
+        <ng-container *ngTemplateOutlet="emptyTemplate"></ng-container>
+      </ng-container>
+
+      <!-- Default Empty State -->
+      <div *ngIf="!emptyTemplate" class="text-center py-5">
+        <svg cIcon name="cilBan" class="text-muted mb-3" width="48" height="48"></svg>
+        <h5>{{ 'common.noResults' | translate | async }}</h5>
+        <p class="text-muted">{{ 'common.tryDifferentSearch' | translate | async }}</p>
+      </div>
+    </ng-container>
+
+    <!-- Data Table -->
+    <div *ngIf="!loading && items.length > 0" class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th *ngFor="let column of columns">{{ column.label | translate | async }}</th>
+            <th *ngIf="actionsTemplate" class="actions-cell">{{ 'common.actions' | translate | async }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <!-- Custom Item Template if provided -->
+            <ng-container *ngIf="itemTemplate">
+              <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
+            </ng-container>
+
+            <!-- Default Column Rendering -->
+            <ng-container *ngIf="!itemTemplate">
+              <td *ngFor="let column of columns">
+                {{ getValue(item, column.key) }}
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <td *ngIf="actionsTemplate" class="actions-cell">
+              <ng-container *ngTemplateOutlet="actionsTemplate; context: { $implicit: item }"></ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="!loading && items.length > 0 && totalItems > pageSize" class="d-flex justify-content-center mt-4">
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        (pageChange)="onPageChangeEvent($event)"
+        size="sm"
+      ></app-pagination>
+    </div>
+  </div>
+</div>

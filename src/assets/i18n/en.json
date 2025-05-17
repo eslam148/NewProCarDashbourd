@@ -219,6 +219,7 @@
   },
   "serviceCategory": {
     "title": "Service Categories Management",
+    "noSubCategoriesDescription": "No sub-categories available",
     "description": "Manage and organize your service categories effectively",
     "add": "Add New Category",
     "edit": "Edit Category",
@@ -353,6 +354,7 @@
     "searchLocation": "Search Location"
   },
   "requests": {
+    "title": "Requests Management",
     "from": "From",
     "to": "To",
     "filter": "Filter",
@@ -382,6 +384,14 @@
     "distanceBetween": "Distance between {0} and {1}",
     "distanceToNurse": "Distance to Nurse",
     "distanceToUser": "Distance to User",
-    "loadingDetails": "Loading details..."
+    "loadingDetails": "Loading details...",
+    "confirmDelete": "Are you sure you want to delete this request?",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close"
+
   }
 }

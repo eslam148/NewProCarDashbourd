@@ -100,10 +100,20 @@
       </div>
 
       <div class="d-flex justify-content-end gap-2">
-        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-        <button type="submit" class="btn btn-primary" [disabled]="adminForm.invalid">
-          {{ isEditMode ? 'Update' : 'Create' }}
-        </button>
+        <app-action-button
+          color="secondary"
+          icon="cilX"
+          text="common.cancel"
+          (clicked)="onCancel()"
+        ></app-action-button>
+
+        <app-action-button
+          color="primary"
+          type="submit"
+          icon="cilSave"
+          [text]="isEditMode ? 'common.update' : 'common.create'"
+          [disabled]="adminForm.invalid"
+        ></app-action-button>
       </div>
     </form>
   </div>

@@ -14,6 +14,7 @@ import {
 import { IconModule } from '@coreui/icons-angular';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import { DiseaseService } from '../../services/disease.service';
 import { DiseaseDto } from '../../Models/DTOs/DiseaseDto';
 import { Subject } from 'rxjs';

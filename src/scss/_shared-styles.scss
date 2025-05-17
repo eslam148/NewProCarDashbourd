@@ -1,0 +1,166 @@
+// Import variables
+@use 'variables' as vars;
+
+// Shared Mixins
+@mixin card-shadow {
+  box-shadow: vars.$app-card-box-shadow;
+  border-radius: vars.$app-card-border-radius;
+  border: vars.$app-border-width solid vars.$app-border-color;
+}
+
+@mixin form-control-base {
+  display: block;
+  width: 100%;
+  padding: vars.$app-input-padding-y vars.$app-input-padding-x;
+  font-family: vars.$app-font-family-base;
+  font-size: vars.$app-font-size-base;
+  line-height: vars.$app-line-height-base;
+  color: vars.$app-input-color;
+  background-color: vars.$app-input-bg;
+  background-clip: padding-box;
+  border: vars.$app-border-width solid vars.$app-input-border-color;
+  border-radius: vars.$app-input-border-radius;
+  transition: border-color vars.$app-transition-base, box-shadow vars.$app-transition-base;
+
+  &:focus {
+    border-color: var(--cui-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--cui-primary-rgb), 0.25);
+    outline: 0;
+  }
+}
+
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: vars.$app-btn-font-weight;
+  padding: vars.$app-btn-padding-y vars.$app-btn-padding-x;
+  border-radius: vars.$app-btn-border-radius;
+  transition: all vars.$app-transition-base;
+}
+
+// Shared Utility Classes
+
+// Flex utilities
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Spacing utilities
+.gap-xs { gap: vars.$app-spacer-xs; }
+.gap-sm { gap: vars.$app-spacer-sm; }
+.gap-md { gap: vars.$app-spacer-md; }
+.gap-lg { gap: vars.$app-spacer-lg; }
+.gap-xl { gap: vars.$app-spacer-xl; }
+
+// Text utilities
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-bold {
+  font-weight: vars.$app-font-weight-bold;
+}
+
+// Card styles
+.app-card {
+  @include card-shadow;
+  margin-bottom: vars.$app-spacer-md;
+  background-color: var(--cui-card-bg);
+}
+
+// Table styles
+.app-table {
+  width: 100%;
+  margin-bottom: vars.$app-spacer-md;
+  color: var(--cui-body-color);
+  vertical-align: top;
+  border-color: vars.$app-table-border-color;
+
+  th {
+    font-weight: vars.$app-font-weight-bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    border-bottom: 2px solid vars.$app-table-border-color;
+    padding: vars.$app-spacer * 0.75;
+  }
+
+  td {
+    padding: vars.$app-spacer * 0.75;
+    border-bottom: 1px solid vars.$app-table-border-color;
+  }
+
+  tbody tr:hover {
+    background-color: vars.$app-table-hover-bg;
+    color: vars.$app-table-hover-color;
+  }
+}
+
+// Form styles
+.app-form-control {
+  @include form-control-base;
+}
+
+// Responsive image
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+// Avatar styles
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  &.avatar-sm {
+    width: 32px;
+    height: 32px;
+  }
+
+  &.avatar-lg {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+// Status indicator
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: vars.$app-font-weight-bold;
+  border-radius: 1rem;
+  text-transform: uppercase;
+
+  &.status-active {
+    background-color: rgba(var(--cui-success-rgb), 0.1);
+    color: var(--cui-success);
+  }
+
+  &.status-inactive {
+    background-color: rgba(var(--cui-danger-rgb), 0.1);
+    color: var(--cui-danger);
+  }
+
+  &.status-pending {
+    background-color: rgba(var(--cui-warning-rgb), 0.1);
+    color: var(--cui-warning);
+  }
+}

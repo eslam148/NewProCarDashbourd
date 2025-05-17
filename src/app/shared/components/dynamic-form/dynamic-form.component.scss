@@ -1,0 +1,152 @@
+/* Modal styling */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1051;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Form styling */
+.form-group-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  width: 100%;
+}
+
+.form-horizontal .form-group {
+  display: flex;
+  align-items: flex-start;
+
+  & > label {
+    width: 30%;
+    margin-bottom: 0;
+    text-align: end;
+    padding-right: 15px;
+    padding-top: 7px;
+  }
+
+  & > input,
+  & > select,
+  & > textarea,
+  & > .form-check,
+  & > .invalid-feedback {
+    width: 70%;
+  }
+
+  & > .invalid-feedback {
+    margin-left: 30%;
+  }
+}
+
+/* Form validation */
+.required-indicator {
+  color: var(--cui-danger);
+  margin-left: 3px;
+}
+
+.is-invalid {
+  border-color: var(--cui-form-invalid-border-color);
+
+  &:focus {
+    border-color: var(--cui-form-invalid-border-color);
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+  }
+}
+
+.invalid-feedback {
+  display: block;
+  color: var(--cui-form-feedback-invalid-color);
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
+
+/* File input styling */
+input[type="file"] {
+  padding: 0.375rem;
+}
+
+/* RTL support */
+:host-context(html[lang="ar"]) {
+  .form-horizontal .form-group {
+    & > label {
+      text-align: start;
+      padding-right: 0;
+      padding-left: 15px;
+    }
+
+    & > .invalid-feedback {
+      margin-left: 0;
+      margin-right: 30%;
+    }
+  }
+
+  .required-indicator {
+    margin-left: 0;
+    margin-right: 3px;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .modal-container {
+    max-width: 90%;
+  }
+
+  .form-horizontal .form-group {
+    flex-direction: column;
+
+    & > label {
+      width: 100%;
+      text-align: start;
+      margin-bottom: 0.25rem;
+      padding-right: 0;
+      padding-top: 0;
+    }
+
+    & > input,
+    & > select,
+    & > textarea,
+    & > .form-check,
+    & > .invalid-feedback {
+      width: 100%;
+    }
+
+    & > .invalid-feedback {
+      margin-left: 0;
+    }
+  }
+}
+
+/* Animation for modal */
+.modal-backdrop,
+.modal-container {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

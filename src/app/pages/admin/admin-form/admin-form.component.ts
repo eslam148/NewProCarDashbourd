@@ -4,13 +4,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractContro
 import { AdminsDto } from '../../../Models/DTOs/AdminsDto';
 import { RegisterDto } from '../../../Models/DTOs/RegisterDto';
 import { UpdateAdminDto } from '../../../Models/DTOs/UpdateAdminDto';
+import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
 
 @Component({
   selector: 'app-admin-form',
   templateUrl: './admin-form.component.html',
   styleUrls: ['./admin-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, ActionButtonComponent]
 })
 export class AdminFormComponent implements OnInit {
   @Input() admin: AdminsDto | null = null;

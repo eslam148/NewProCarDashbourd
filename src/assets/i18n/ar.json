@@ -199,6 +199,7 @@
   },
   "serviceCategory": {
     "title": "إدارة فئات الخدمات",
+    "noSubCategoriesDescription": "لا توجد فئات فرعية",
     "description": "قم بإدارة فئات الخدمات وتنظيمها بشكل فعال",
     "add": "إضافة فئة جديدة",
     "edit": "تعديل الفئة",
@@ -322,6 +323,7 @@
     "location": "الموقع على الخريطة"
   },
   "requests": {
+    "title": "إدارة الطلبات",
     "from": "من",
     "to": "إلى",
     "filter": "بحث",
@@ -368,7 +370,7 @@
     "title": "إدارة الأمراض",
     "searchPlaceholder": "بحث بإسم المرض",
     "create": "إضافة مرض",
-    "edit": "تعديل مرض",
+
     "nameEn": "الاسم بالإنجليزية",
     "nameAr": "الاسم بالعربية",
     "nameEnPlaceholder": "أدخل اسم المرض بالإنجليزية",
@@ -378,6 +380,20 @@
     "tryDifferentSearch": "جرب بحثًا مختلفًا",
     "deleteSuccess": "تم حذف المرض بنجاح",
     "addSuccess": "تم إضافة المرض بنجاح",
-    "updateSuccess": "تم تحديث المرض بنجاح"
+    "updateSuccess": "تم تحديث المرض بنجاح",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "close": "اغلاق",
+
+    "add": "إضافة",
+    "search": "بحث",
+    "total": "إجمالي",
+    "page": "صفحة",
+    "totalPages": "إجمالي الصفحات",
+    "update": "تحديث"
+
   }
 }

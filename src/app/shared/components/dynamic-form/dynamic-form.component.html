@@ -1,0 +1,143 @@
+<ng-container *ngIf="isModal; else standardForm">
+  <div class="modal-backdrop" (click)="onCancel()"></div>
+  <div class="modal-container">
+    <c-card>
+      <c-card-header>
+        <h5>{{ title | translate | async }}</h5>
+        <button cButtonClose (click)="onCancel()"></button>
+      </c-card-header>
+
+      <c-card-body>
+        <ng-container *ngTemplateOutlet="formContent"></ng-container>
+      </c-card-body>
+
+      <c-card-footer *ngIf="showButtons">
+        <div class="d-flex justify-content-end">
+          <button cButton color="secondary" (click)="onCancel()" class="me-2">
+            {{ cancelText | translate | async }}
+          </button>
+          <button cButton color="primary" (click)="onSubmit()" [disabled]="loading || form.invalid">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ submitText | translate | async }}
+          </button>
+        </div>
+      </c-card-footer>
+    </c-card>
+  </div>
+</ng-container>
+
+<ng-template #standardForm>
+  <c-card>
+    <c-card-header *ngIf="title">
+      <h5>{{ title | translate | async }}</h5>
+    </c-card-header>
+
+    <c-card-body>
+      <ng-container *ngTemplateOutlet="formContent"></ng-container>
+    </c-card-body>
+
+    <c-card-footer *ngIf="showButtons">
+      <div class="d-flex justify-content-end">
+        <button cButton color="secondary" (click)="onCancel()" class="me-2">
+          {{ cancelText | translate | async }}
+        </button>
+        <button cButton color="primary" (click)="onSubmit()" [disabled]="loading || form.invalid">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ submitText | translate | async }}
+        </button>
+      </div>
+    </c-card-footer>
+  </c-card>
+</ng-template>
+
+<ng-template #formContent>
+  <form [formGroup]="form" [class.form-horizontal]="formLayout === 'horizontal'" [class.form-vertical]="formLayout === 'vertical'">
+    <div class="form-group-container">
+      <ng-container *ngFor="let field of fields">
+        <div class="form-group" [ngClass]="field.classes">
+          <label [for]="field.key" class="form-label">
+            {{ field.label | translate | async }}
+            <span class="required-indicator" *ngIf="field.required">*</span>
+          </label>
+
+          <!-- Text, Email, Password, Number Inputs -->
+          <ng-container *ngIf="['text', 'email', 'password', 'number', 'date'].includes(field.type)">
+            <input
+              [type]="field.type"
+              class="form-control"
+              [id]="field.key"
+              [formControlName]="field.key"
+              [placeholder]="field.placeholder ? (field.placeholder | translate | async) : ''"
+              [attr.min]="field.min"
+              [attr.max]="field.max"
+              [class.is-invalid]="form.get(field.key)?.invalid && form.get(field.key)?.touched"
+            >
+          </ng-container>
+
+          <!-- Select Dropdown -->
+          <ng-container *ngIf="field.type === 'select'">
+            <select
+              class="form-select"
+              [id]="field.key"
+              [formControlName]="field.key"
+              [multiple]="field.multiple"
+              [class.is-invalid]="form.get(field.key)?.invalid && form.get(field.key)?.touched"
+            >
+              <option value="" disabled selected>{{ 'common.selectOption' | translate | async }}</option>
+              <option *ngFor="let option of field.options" [value]="option.value">
+                {{ option.label | translate | async }}
+              </option>
+            </select>
+          </ng-container>
+
+          <!-- Textarea -->
+          <ng-container *ngIf="field.type === 'textarea'">
+            <textarea
+              class="form-control"
+              [id]="field.key"
+              [formControlName]="field.key"
+              [rows]="field.rows || 3"
+              [cols]="field.cols"
+              [placeholder]="field.placeholder ? (field.placeholder | translate | async) : ''"
+              [class.is-invalid]="form.get(field.key)?.invalid && form.get(field.key)?.touched"
+            ></textarea>
+          </ng-container>
+
+          <!-- Checkbox -->
+          <ng-container *ngIf="field.type === 'checkbox'">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [id]="field.key"
+                [formControlName]="field.key"
+                [class.is-invalid]="form.get(field.key)?.invalid && form.get(field.key)?.touched"
+              >
+              <label class="form-check-label" [for]="field.key">
+                {{ field.placeholder ? (field.placeholder | translate | async) : '' }}
+              </label>
+            </div>
+          </ng-container>
+
+          <!-- File Input -->
+          <ng-container *ngIf="field.type === 'file'">
+            <input
+              type="file"
+              class="form-control"
+              [id]="field.key"
+              [formControlName]="field.key"
+              [attr.accept]="field.accept"
+              [multiple]="field.multiple"
+              [class.is-invalid]="form.get(field.key)?.invalid && form.get(field.key)?.touched"
+            >
+          </ng-container>
+
+          <!-- Validation error messages -->
+          <div class="invalid-feedback" *ngIf="form.get(field.key)?.invalid && form.get(field.key)?.touched">
+            {{ getErrorMessage(field.key) | translate | async }}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </form>
+</ng-template>

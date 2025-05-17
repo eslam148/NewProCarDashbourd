@@ -16,150 +16,86 @@
     <p>{{ 'admin.confirmDelete' | translate | async }}</p>
   </c-modal-body>
   <c-modal-footer>
-    <button
-      cButton
+    <app-action-button
       color="secondary"
-      (click)="onDeleteModalChange(false)"
-    >
-      {{ 'common.cancel' | translate | async }}
-    </button>
-    <button
-      cButton
+      text="common.cancel"
+      icon="cilX"
+      (clicked)="onDeleteModalChange(false)"
+    ></app-action-button>
+
+    <app-action-button
       color="danger"
-      (click)="confirmDelete()"
-    >
-      {{ 'common.delete' | translate | async }}
-    </button>
+      text="common.delete"
+      icon="cilTrash"
+      (clicked)="confirmDelete()"
+    ></app-action-button>
   </c-modal-footer>
 </c-modal>
+
 @if(!showForm){
-<!-- Main Content -->
-<div class="card">
-  <div class="card-header">
-    <div class="d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">{{ 'admin.title' | translate | async }}</h4>
-      <div class="d-flex gap-2">
-        <form [formGroup]="searchForm" class="d-flex" (ngSubmit)="onSearch()">
-          <div class="input-group">
-            <span class="input-group-text">
-              <i class="cil-magnifying-glass"></i>
-            </span>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="SearchKey"
-              [placeholder]="'admin.searchPlaceholder' | translate | async"
-            >
-          </div>
-        </form>
-        <button
-          cButton
-          color="primary"
-          class="btn-icon-text"
-          (click)="onCreateAdmin()"
+<!-- Main Content using DataTableComponent -->
+<app-data-table
+  [title]="'admin.title'"
+  [items]="(admins$ | async) || []"
+  [loading]="(loading$ | async) || false"
+  [error]="(error$ | async)"
+  [columns]="tableColumns"
+  [searchForm]="searchForm"
+  [currentPage]="currentPage"
+  [pageSize]="pageSize"
+  [totalItems]="totalItems"
+  [createButtonText]="'admin.create'"
+  [searchPlaceholder]="'admin.searchPlaceholder'"
+  (search)="onSearch()"
+  (pageChange)="onPageChange($event)"
+  (create)="onCreateAdmin()"
+  (pageSizeChange)="onPageSizeChange($event)"
+  (dismissErrorEvent)="dismissError()"
+>
+  <!-- Custom Item Template -->
+  <ng-template #itemTemplate let-admin>
+    <td>
+      <div class="d-flex align-items-center">
+        <img
+          [src]="admin.imageUrl || defaultAvatarPath"
+          [alt]="admin.firstName"
+          class="avatar"
+          [ngClass]="{'default-avatar': !admin.imageUrl}"
+          (error)="handleImageError($event)"
         >
-          <svg cIcon name="cilPlus" width="16" height="16" class="me-2"></svg>
-          {{ 'admin.create' | translate | async }}
-        </button>
+        <div class="ms-3">
+          <div class="fw-semibold">{{ admin.firstName }}</div>
+        </div>
       </div>
-    </div>
-  </div>
+    </td>
+    <td>{{ admin.lastName }}</td>
+    <td>{{ admin.phoneNumber }}</td>
+  </ng-template>
 
-  <div class="card-body">
-    <!-- Loading State -->
-    <div *ngIf="loading$ | async" class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">{{ 'common.loading' | translate | async }}</span>
-      </div>
-    </div>
+  <!-- Custom Actions Template -->
+  <ng-template #actionsTemplate let-admin>
+    <app-action-button
+      [text]="'common.edit'"
+      [icon]="'cilPencil'"
+      [color]="'primary'"
+      [shape]="'rounded-pill'"
+      [size]="'sm'"
+      [tooltip]="'admin.editTooltip'"
+      (clicked)="onEditAdmin(admin)"
+      class="me-2"
+    ></app-action-button>
 
-    <!-- Error State -->
-    <div *ngIf="error$ | async as error" class="alert alert-danger alert-dismissible fade show" role="alert">
-      <i class="cil-warning me-2"></i>
-      {{ error }}
-      <button type="button" class="btn-close" (click)="dismissError()"></button>
-    </div>
-
-    <!-- No Results State -->
-    <div *ngIf="!(loading$ | async) && ((admins$ | async)?.length ?? 0) === 0" class="text-center py-5">
-      <i class="cil-people display-4 text-muted mb-3"></i>
-      <h5>{{ 'admin.noResults' | translate | async }}</h5>
-      <p class="text-muted">{{ 'admin.tryDifferentSearch' | translate | async }}</p>
-    </div>
-
-    <!-- Admins Table -->
-    <div *ngIf="!(loading$ | async) && ((admins$ | async)?.length ?? 0) > 0" class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>{{ 'admin.name' | translate | async }}</th>
-            <th>{{ 'admin.phone' | translate | async }}</th>
-            <th class="actions-cell">{{ 'admin.actions' | translate | async }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let admin of (admins$ | async) ?? []">
-            <td>
-              <div class="d-flex align-items-center">
-                <img
-                  [src]="admin.imageUrl || defaultAvatarPath"
-                  [alt]="admin.firstName"
-                  class="avatar"
-                  [ngClass]="{'default-avatar': !admin.imageUrl}"
-                  (error)="handleImageError($event)"
-                >
-                <div class="ms-3">
-                  <div class="fw-semibold">{{ admin.firstName }} {{ admin.lastName }}</div>
-                </div>
-              </div>
-            </td>
-            <td>{{ admin.phoneNumber }}</td>
-            <td class="actions-cell">
-              <button
-                cButton
-                color="primary"
-                shape="rounded-pill"
-                size="sm"
-                cTooltip="{{ 'admin.editTooltip' | translate | async }}"
-                (click)="onEditAdmin(admin)"
-                class="me-2"
-              >
-                <svg cIcon name="cilPencil" width="16" height="16" class="me-1"></svg>
-                {{ 'common.edit' | translate | async }}
-              </button>
-              <button
-                cButton
-                color="danger"
-                shape="rounded-pill"
-                size="sm"
-                cTooltip="{{ 'admin.deleteTooltip' | translate | async }}"
-                (click)="onDeleteAdmin(admin.id)"
-              >
-                <svg cIcon name="cilTrash" width="16" height="16" class="me-1"></svg>
-                {{ 'common.delete' | translate | async }}
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="((admins$ | async)?.length ?? 0) === 0" class="empty-row">
-            <td colspan="3">{{ 'admin.noResults' | translate | async }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Pagination -->
-    <div *ngIf="!(loading$ | async) && ((admins$ | async)?.length ?? 0) > 0" class="d-flex justify-content-center mt-4">
-      <app-pagination
-        [currentPage]="currentPage"
-        [totalItems]="totalItems"
-        [pageSize]="pageSize"
-        (pageChange)="onPageChange($event)"
-        size="sm"
-      ></app-pagination>
-    </div>
-  </div>
-</div>
-
+    <app-action-button
+      [text]="'common.delete'"
+      [icon]="'cilTrash'"
+      [color]="'danger'"
+      [shape]="'rounded-pill'"
+      [size]="'sm'"
+      [tooltip]="'admin.deleteTooltip'"
+      (clicked)="onDeleteAdmin(admin.id)"
+    ></app-action-button>
+  </ng-template>
+</app-data-table>
 }
 
 <!-- Admin Form Modal -->

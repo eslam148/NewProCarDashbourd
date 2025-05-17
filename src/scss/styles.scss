@@ -15,6 +15,9 @@
 // Import Chart.js custom tooltips styles
 @use "@coreui/chartjs/scss/coreui-chartjs";
 
+// Import our shared styles and utilities
+@use "./_shared-styles" as shared;
+
 // Custom styles for this theme
 @use "./theme.scss";
 
@@ -67,11 +70,10 @@
   }
 }
 
-// Custom table responsive styles
+// Custom table responsive styles - using shared mixins
 .table-container {
-  border-radius: 0.75rem;
+  @include shared.card-shadow;
   overflow: hidden;
-  box-shadow: var(--card-shadow);
 
   @media (max-width: 768px) {
     .custom-table {
@@ -101,6 +103,8 @@
 .btn-primary {
   background-color: var(--primary);
   border-color: var(--primary);
+  @include shared.button-base;
+
   &:hover, &:focus {
     background-color: var(--primary-dark);
     border-color: var(--primary-dark);
@@ -110,6 +114,8 @@
 .btn-success {
   background-color: var(--success);
   border-color: var(--success);
+  @include shared.button-base;
+
   &:hover, &:focus {
     background-color: var(--success-dark);
     border-color: var(--success-dark);
@@ -120,6 +126,8 @@
   background-color: var(--secondary);
   border-color: var(--secondary);
   color: var(--primary);
+  @include shared.button-base;
+
   &:hover, &:focus {
     background-color: #{color.scale(v.$secondary, $lightness: -5%)};
     border-color: #{color.scale(v.$secondary, $lightness: -5%)};
