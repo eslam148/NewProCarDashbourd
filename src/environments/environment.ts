@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://procare.runasp.net',
+  apiUrl: 'https://procare.runasp.net',
   defaultLanguage: 'en',
   supportedLanguages: ['en', 'ar'],
   appName: 'CoreUI Admin',
