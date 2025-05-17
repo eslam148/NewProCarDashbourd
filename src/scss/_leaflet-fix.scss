@@ -1,0 +1,28 @@
+/* Fix Leaflet image paths */
+.leaflet-control-layers-toggle {
+  background-image: url("/assets/leaflet/layers.png") !important;
+}
+
+.leaflet-retina .leaflet-control-layers-toggle {
+  background-image: url("/assets/leaflet/layers-2x.png") !important;
+}
+
+.leaflet-default-icon-path {
+  background-image: url("/assets/leaflet/marker-icon.png") !important;
+}
+
+/* Fix marker icons */
+.leaflet-marker-shadow {
+  background-image: url("/assets/leaflet/marker-shadow.png") !important;
+}
+
+/* Override all other unknown image paths */
+.leaflet-container .leaflet-overlay-pane svg,
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+  max-width: none !important;
+  max-height: none !important;
+}

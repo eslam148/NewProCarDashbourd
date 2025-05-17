@@ -132,3 +132,24 @@ html[lang="ar"] {
     }
   }
 }
+
+/* Leaflet PNG path fix */
+.leaflet-default-icon-path {
+  background-image: url(assets/leaflet/marker-icon.png);
+}
+
+.leaflet-control-layers-toggle {
+  background-image: url(assets/leaflet/layers.png);
+  width: 36px;
+  height: 36px;
+}
+
+.leaflet-retina .leaflet-control-layers-toggle {
+  background-image: url(assets/leaflet/layers-2x.png);
+  background-size: 26px 26px;
+}
+
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  background-image: none !important;
+}

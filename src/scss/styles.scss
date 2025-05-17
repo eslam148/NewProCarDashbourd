@@ -45,6 +45,9 @@
 // Custom Leaflet styling
 @use "./leaflet.scss";
 
+// Leaflet image path fixes
+@use "./_leaflet-fix.scss";
+
 // Examples
 // We use those styles to show code examples, you should remove them in your application.
 @use "./examples.scss";

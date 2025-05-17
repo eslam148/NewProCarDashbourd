@@ -11,6 +11,7 @@ import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { iconSubset } from './icons/icon-subset';
 import { brandSet, flagSet, freeSet } from '@coreui/icons';
+import { fixLeafletIcons } from './leaflet-fix';
 import {
   cilHome,
   cilUser,
@@ -138,6 +139,11 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // Check authentication state on app initialization
     this.#store.dispatch(checkAuth());
+
+    // Fix Leaflet icon paths
+    if (isPlatformBrowser(this.platformId)) {
+      fixLeafletIcons();
+    }
 
     this.#router.events.pipe(
         takeUntilDestroyed(this.#destroyRef)
