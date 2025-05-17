@@ -3,10 +3,23 @@
 // custom .chartjs-tooltip-body-item padding
 @use "charts";
 
+// Image size adjustments
+.sidebar-brand-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.header-brand-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
 // custom scrollbar styling is now imported in styles.scss
 // @use "scrollbar";
 
- // custom calendar today cell color
+// custom calendar today cell color
 .calendar-cell.today {
   --cui-calendar-cell-today-color: var(--cui-info) !important;
 }

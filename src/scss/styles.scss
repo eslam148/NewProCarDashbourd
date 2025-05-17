@@ -1,8 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 
+// Import our custom variables first, with namespace
+@use "./variables" as v;
+@use "sass:color";
+
 // Import styles with default layout.
-@use "@coreui/coreui/scss/coreui" as * with (
-  $enable-deprecation-messages: false
+@use "@coreui/coreui/scss/coreui" with (
+  $enable-deprecation-messages: false,
+  $primary: v.$primary,
+  $secondary: v.$secondary,
+  $success: v.$success
 );
 
 // Import Chart.js custom tooltips styles
@@ -74,6 +81,57 @@
     .table-responsive {
       margin-bottom: 0;
     }
+  }
+}
+
+// Color utility classes based on our theme
+.bg-primary { background-color: var(--primary) !important; }
+.bg-secondary { background-color: var(--secondary) !important; }
+.bg-success { background-color: var(--success) !important; }
+
+.text-primary { color: var(--primary) !important; }
+.text-secondary { color: var(--secondary) !important; }
+.text-success { color: var(--success) !important; }
+
+.border-primary { border-color: var(--primary) !important; }
+.border-secondary { border-color: var(--secondary) !important; }
+.border-success { border-color: var(--success) !important; }
+
+// Apply to buttons
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  &:hover, &:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+  }
+}
+
+.btn-success {
+  background-color: var(--success);
+  border-color: var(--success);
+  &:hover, &:focus {
+    background-color: var(--success-dark);
+    border-color: var(--success-dark);
+  }
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+  color: var(--primary);
+  &:hover, &:focus {
+    background-color: #{color.scale(v.$secondary, $lightness: -5%)};
+    border-color: #{color.scale(v.$secondary, $lightness: -5%)};
+    color: var(--primary);
+  }
+}
+
+// Link colors
+a {
+  color: var(--primary);
+  &:hover {
+    color: var(--primary-dark);
   }
 }
 

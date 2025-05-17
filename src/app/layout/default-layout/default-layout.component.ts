@@ -39,9 +39,8 @@ function isOverflown(element: HTMLElement) {
     SidebarComponent,
     SidebarHeaderComponent,
     SidebarBrandComponent,
-    SidebarFooterComponent,
-    SidebarToggleDirective,
-    SidebarTogglerDirective,
+
+
     ContainerComponent,
     DefaultFooterComponent,
     DefaultHeaderComponent,

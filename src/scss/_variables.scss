@@ -1,0 +1,67 @@
+// ProCare Theme Variables
+@use "sass:color";
+
+// Main Color Palette
+$white: #FFFFFF;
+$black: #000000;
+$primary: #CD2C4E;
+$secondary: #FDD5DD;
+$success: #40C5AA;
+$light: #F8F9FA;
+$dark: #343A40;
+
+// Fonts
+$font-family-arabic: 'Almarai', sans-serif;
+$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+// Additional colors based on the main palette
+$primary-light: color.scale($primary, $lightness: 15%);
+$primary-dark: color.scale($primary, $lightness: -15%);
+$success-light: color.scale($success, $lightness: 15%);
+$success-dark: color.scale($success, $lightness: -15%);
+
+// Theme-wide variables
+:root {
+  // Main palette
+  --white: #{$white};
+  --black: #{$black};
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+  --success: #{$success};
+  --light: #{$light};
+  --dark: #{$dark};
+
+  // Fonts
+  --font-family-arabic: #{$font-family-arabic};
+  --font-family-base: #{$font-family-base};
+
+  // Component specific colors
+  --body-bg: #{$white};
+  --body-color: #{$black};
+  --link-color: #{$primary};
+  --link-hover-color: #{$primary-dark};
+
+  // Gradients
+  --primary-gradient: linear-gradient(135deg, #{$primary} 0%, #{$primary-dark} 100%);
+  --success-gradient: linear-gradient(135deg, #{$success} 0%, #{$success-dark} 100%);
+
+  // UI Components
+  --header-bg: #{$white};
+  --sidebar-bg: #{$white};
+  --card-bg: #{$white};
+  --input-bg: #{$white};
+  --input-border: #{$secondary};
+  --btn-primary-bg: #{$primary};
+  --btn-success-bg: #{$success};
+}
+
+// Dark mode (optional)
+[data-theme="dark"] {
+  --body-bg: #{$dark};
+  --body-color: #{$white};
+  --header-bg: #{color.scale($dark, $lightness: -5%)};
+  --sidebar-bg: #{color.scale($dark, $lightness: -5%)};
+  --card-bg: #{color.scale($dark, $lightness: -3%)};
+  --input-bg: #{color.scale($dark, $lightness: -3%)};
+  --input-border: #{color.scale($secondary, $lightness: -30%)};
+}

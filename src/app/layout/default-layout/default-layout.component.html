@@ -1,21 +1,20 @@
 <!-- Enhanced Sidebar -->
 <c-sidebar
   #sidebar1="cSidebar"
-  class="d-print-none sidebar sidebar-fixed border-end"
+  class="d-print-none sidebar sidebar-fixed border-end bg-black"
   colorScheme="dark"
   id="sidebar1"
   visible
 >
-  <c-sidebar-header class="sidebar-header-custom d-flex align-items-center justify-content-center">
-    <c-sidebar-brand [routerLink]="['/']" class="d-flex align-items-center">
-      <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="36" name="logo" title="ProCar Dashboard"></svg>
-      <svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="ProCar Dashboard"></svg>
-      <span class="ms-2 fw-semibold d-none d-md-inline fs-lg sidebar-brand-text">ProCar</span>
+  <c-sidebar-header class="sidebar-header-custom d-flex align-items-center justify-content-center ">
+    <c-sidebar-brand [routerLink]="['/']" class="d-flex align-items-center"  style="background-color: #CD2C4E !important;">
+      <img src="assets/images/icons/favicon.svg" alt="ProCar Logo" class="sidebar-brand-icon ">
+      <span class="ms-2 fw-semibold d-none d-md-inline fs-lg sidebar-brand-text text-black">ProCar</span>
     </c-sidebar-brand>
   </c-sidebar-header>
 
   <ng-scrollbar pointerEventsMethod="scrollbar" visibility="hover">
-    <ul class="sidebar-nav">
+    <ul class="sidebar-nav bg-black">
       <ng-container *ngFor="let item of navItems">
         <!-- Section Title -->
         <li *ngIf="item.title" class="sidebar-title text-uppercase">
@@ -64,21 +63,7 @@
     </ul>
   </ng-scrollbar>
 
-  <ng-container *ngIf="!sidebar1.narrow">
-    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
-      <button cSidebarToggler aria-label="Toggle sidebar fold" class="d-flex align-items-center justify-content-center w-100">
-        <svg cIcon name="cilChevronLeft" class="me-1" width="16" height="16"></svg>
-        <span class="small">Collapse</span>
-      </button>
-    </c-sidebar-footer>
-  </ng-container>
-  <ng-container *ngIf="sidebar1.narrow">
-    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
-      <button cSidebarToggler aria-label="Toggle sidebar expand" class="d-flex align-items-center justify-content-center w-100">
-        <svg cIcon name="cilChevronRight" width="16" height="16"></svg>
-      </button>
-    </c-sidebar-footer>
-  </ng-container>
+
 </c-sidebar>
 
 <!-- Main Layout -->

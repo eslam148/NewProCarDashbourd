@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#FDD5DD" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGradient)" />
+
+  <!-- Heart with figure and heartbeat, centered and scaled -->
+  <g transform="translate(56, 76) scale(0.78)">
+    <!-- Heart outline - Primary color -->
+    <path fill="#CD2C4E" d="M256,460.3c-3.3,0-6.6-1-9.4-3.1c-53.9-40.8-99-77.6-132.5-109.9C73.3,303.5,45,261.6,45,212.6
+      c0-39.3,14.7-75.3,41.4-101.5C112.8,85.2,149.4,71,189.5,71c28.5,0,54.9,9.4,76.5,27.2C287.7,80.4,314,71,342.5,71
+      c40.1,0,76.7,14.2,103,40.1c26.7,26.2,41.4,62.2,41.4,101.5c0,49-28.3,90.9-69.1,134.7c-33.5,32.3-78.6,69.2-132.5,109.9
+      C262.6,459.3,259.3,460.3,256,460.3z" />
+
+        <!-- Person figure inside heart - black color -->    <g fill="#000000">      <!-- Head -->      <circle cx="256" cy="180" r="35"/>            <!-- Body -->      <path d="M256,215c-40,0-72,32-72,72v65c0,0,28,18,72,18s72-18,72-18v-65C328,247,296,215,256,215z"/>
+    </g>
+
+    <!-- Heartbeat line - Primary color -->
+    <path fill="none" stroke="#CD2C4E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"
+      d="M110,280 L160,280 L180,230 L210,330 L240,280 L400,280" />
+  </g>
+</svg>

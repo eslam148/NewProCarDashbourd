@@ -53,3 +53,82 @@ c-icon {
 }
 
 // Add your other global styles below
+
+/* RTL Support for Arabic text */
+html[lang="ar"] {
+  direction: rtl;
+  text-align: right;
+
+  .sidebar {
+    right: 0;
+    left: auto;
+  }
+
+  .header {
+    padding-right: var(--cui-header-padding-x);
+    padding-left: 0;
+  }
+
+  .header-toggler {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  .wrapper {
+    padding-inline: var(--cui-sidebar-occupy-end, 0) var(--cui-sidebar-occupy-start, 0);
+  }
+
+  .sidebar-brand {
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  .nav {
+    padding-right: 0;
+  }
+
+  // RTL text direction for form elements
+  .form-control,
+  .form-select {
+    text-align: right;
+  }
+}
+
+// Extend utility classes for RTL layouts
+.ms-auto-rtl {
+  html[lang="ar"] & {
+    margin-right: auto !important;
+    margin-left: 0 !important;
+  }
+}
+
+.me-auto-rtl {
+  html[lang="ar"] & {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+  }
+}
+
+// Float utilities for RTL
+html[lang="ar"] {
+  .float-start {
+    float: right !important;
+  }
+
+  .float-end {
+    float: left !important;
+  }
+}
+
+// Responsive RTL classes
+@media (min-width: 768px) {
+  html[lang="ar"] {
+    .text-md-start {
+      text-align: right !important;
+    }
+
+    .text-md-end {
+      text-align: left !important;
+    }
+  }
+}
