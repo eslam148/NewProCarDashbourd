@@ -7,14 +7,13 @@ import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import * as L from 'leaflet';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
-
-// Direct import of Leaflet CSS to ensure it's loaded
-import 'leaflet/dist/leaflet.css';
+import { RouterModule } from '@angular/router';
+import { fixLeafletIcons } from '../../leaflet-fix';
 
 @Component({
   selector: 'app-requests',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, TranslatePipe, PaginationComponent],
+  imports: [ReactiveFormsModule, CommonModule, TranslatePipe, PaginationComponent, RouterModule],
   providers: [DatePipe, DecimalPipe],
   templateUrl: './requests.component.html',
   styleUrls: ['./requests.component.scss']

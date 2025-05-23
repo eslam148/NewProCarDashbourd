@@ -58,6 +58,9 @@
 // Import Custom Scrollbar
 @use "./_scrollbar.scss" as scrollbar;
 
+// Import Leaflet styles
+@use './leaflet' as leaflet-custom;
+
 // Empty state styles
 .empty-state {
   display: flex;

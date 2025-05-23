@@ -87,3 +87,23 @@
   padding: 2px 8px !important;
   font-size: 10px !important;
 }
+
+$leaflet-image-path: "../../node_modules/leaflet/dist/images/";
+
+.leaflet-control-layers-toggle {
+  background-image: url("#{$leaflet-image-path}layers.png");
+}
+
+@media (-webkit-min-device-pixel-ratio:2), (min-resolution:192dpi) {
+  .leaflet-control-layers-toggle {
+    background-image: url("#{$leaflet-image-path}layers-2x.png");
+  }
+}
+
+.leaflet-marker-icon {
+  background-image: url("#{$leaflet-image-path}marker-icon.png");
+}
+
+.leaflet-marker-shadow {
+  background-image: url("#{$leaflet-image-path}marker-shadow.png");
+}
