@@ -1,13 +1,11 @@
 [build]
-  command = """
-    npm install --legacy-peer-deps
-    npm run build
-  """
+  command = "npm install && npm install -g @angular/cli && npm run build"
   publish = "dist/coreui-free-angular-admin-template/browser"
 
 [build.environment]
   NODE_VERSION = "20.11.1"
   NPM_CONFIG_LEGACY_PEER_DEPS = "true"
+  CI = "false"
 
 [[redirects]]
   from = "/*"
