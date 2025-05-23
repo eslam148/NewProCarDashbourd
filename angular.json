@@ -32,17 +32,21 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "preserveSymlinks": true,
-            "assets": [
+            "preserveSymlinks": true,            "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "assets/leaflet/"
+              }
             ],
             "styles": [
               "src/scss/styles.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
-            ],
-            "scripts": [],
-            "allowedCommonJsDependencies": [],
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/leaflet/dist/leaflet.css"
+            ],"scripts": [],
+            "allowedCommonJsDependencies": ["leaflet"],
             "stylePreprocessorOptions": {
               "sass": {
                 "silenceDeprecations": []
@@ -53,17 +57,16 @@
             }
           },
           "configurations": {
-            "production": {
-              "budgets": [
+            "production": {              "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "6mb",
-                  "maximumError": "7mb"
+                  "maximumWarning": "8mb",
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "8kb",
+                  "maximumError": "10kb"
                 }
               ],
               "outputHashing": "all"

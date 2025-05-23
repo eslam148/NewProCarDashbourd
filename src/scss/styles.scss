@@ -43,10 +43,7 @@
 @use "./_tables.scss" as tables;
 
 // Custom Leaflet styling
-@use "./leaflet.scss";
-
-// Leaflet image path fixes
-@use "./_leaflet-fix.scss";
+@use "./_leaflet-combined.scss";
 
 // Examples
 // We use those styles to show code examples, you should remove them in your application.
