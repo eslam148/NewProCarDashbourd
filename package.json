@@ -61,6 +61,8 @@
     "@types/jasmine": "^5.1.7",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.13.10",
+    "copy-webpack-plugin": "^13.0.0",
+    "file-loader": "^6.2.0",
     "jasmine-core": "^5.6.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",

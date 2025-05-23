@@ -68,12 +68,13 @@ export class AppComponent implements OnInit {
 
   readonly #colorModeService = inject(ColorModeService);
   readonly #iconSetService = inject(IconSetService);
+  readonly #platformId = inject(PLATFORM_ID);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {
+  constructor() {
     this.#titleService.setTitle(this.title);
 
     // Enhanced icon registration to ensure all icons are properly loaded
-    if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.#platformId)) {
       // Register all icon sets
       this.#iconSetService.icons = {
         ...freeSet,
@@ -141,7 +142,7 @@ export class AppComponent implements OnInit {
     this.#store.dispatch(checkAuth());
 
     // Fix Leaflet icon paths
-    if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.#platformId)) {
       fixLeafletIcons();
     }
 
