@@ -9,11 +9,10 @@
     "theme": "default",
     "coreui_library_short_version": "5.4",
     "coreui_library_docs_url": "https://coreui.io/angular/docs/"
-  },
-  "scripts": {
+  },  "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
