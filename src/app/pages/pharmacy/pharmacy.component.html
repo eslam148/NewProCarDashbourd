@@ -10,27 +10,30 @@
 
   <!-- Main Content Card -->
   <c-card class="mb-4">
-    <c-card-header>
-      <strong>{{ 'PHARMACY.TITLE' | translate }}</strong>
-      <app-action-button
-        color="primary"
-        icon="cilPlus"
-        text="PHARMACY.ADD_NEW"
-        class="float-end"
-        (clicked)="openModal()"
-      ></app-action-button>
+    <c-card-header class="d-flex justify-content-between align-items-center">
+      <strong>{{ 'PHARMACY.TITLE' | translate | async  }}</strong>
+      <div class="d-flex gap-2">
+        <button
+          class="btn btn-primary rounded-pill px-3 py-1"
+          (click)="openForm()"
+          style="display: flex; align-items: center; gap: 0.5rem;"
+        >
+          <i class="fas fa-plus"></i>
+          {{ 'PHARMACY.ADD_NEW' | translate | async }}
+        </button>
+      </div>
     </c-card-header>
     <c-card-body>
       <!-- Pharmacies Table -->
       <table cTable hover>
         <thead>
           <tr>
-            <th>{{ 'PHARMACY.TABLE.NAME' | translate }}</th>
-            <th>{{ 'PHARMACY.TABLE.ADDRESS' | translate }}</th>
-            <th>{{ 'PHARMACY.TABLE.PHONE' | translate }}</th>
-            <th>{{ 'PHARMACY.TABLE.GOVERNORATE' | translate }}</th>
-            <th>{{ 'PHARMACY.TABLE.CITY' | translate }}</th>
-            <th>{{ 'PHARMACY.TABLE.ACTIONS' | translate }}</th>
+            <th>{{ 'PHARMACY.TABLE.NAME' | translate | async }}</th>
+            <th>{{ 'PHARMACY.TABLE.ADDRESS' | translate | async }}</th>
+            <th>{{ 'PHARMACY.TABLE.PHONE' | translate | async }}</th>
+            <th>{{ 'PHARMACY.TABLE.GOVERNORATE' | translate | async }}</th>
+            <th>{{ 'PHARMACY.TABLE.CITY' | translate  | async}}</th>
+            <th>{{ 'PHARMACY.TABLE.ACTIONS' | translate | async }}</th>
           </tr>
         </thead>
         <tbody>
@@ -46,18 +49,18 @@
                   color="primary"
                   size="sm"
                   icon="cilPencil"
-                  text="PHARMACY.BUTTONS.EDIT"
-                  tooltip="PHARMACY.BUTTONS.EDIT"
-                  (clicked)="openModal(pharmacy)"
+                  [text]="'PHARMACY.BUTTONS.EDIT'"
+                  [tooltip]="'PHARMACY.BUTTONS.EDIT'"
+                  (clicked)="openForm(pharmacy)"
                 ></app-action-button>
 
                 <app-action-button
                   color="danger"
                   size="sm"
                   icon="cilTrash"
-                  text="PHARMACY.BUTTONS.DELETE"
-                  tooltip="PHARMACY.BUTTONS.DELETE"
-                  (clicked)="deletePharmacy(pharmacy.id.toString())"
+                  [text]="'PHARMACY.BUTTONS.DELETE' "
+                  [tooltip]="'PHARMACY.BUTTONS.DELETE' "
+                  (clicked)="openDeleteModal(pharmacy.id.toString())"
                 ></app-action-button>
               </div>
             </td>
@@ -68,25 +71,25 @@
       <!-- Pagination -->
       <div class="d-flex justify-content-between align-items-center mt-3">
         <div>
-          <span>Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalItems) }} of {{ totalItems }} entries</span>
+          <span>{{ 'common.showing' | translate | async }} {{ (currentPage - 1) * pageSize + 1 }} {{ 'common.to' | translate |  async }} {{ Math.min(currentPage * pageSize, totalItems) }} {{ 'common.of' | translate | async }} {{ totalItems }} {{ 'common.entries' | translate | async }}</span>
         </div>
         <div class="d-flex gap-2">
           <app-action-button
             color="secondary"
             size="sm"
             icon="cilArrowLeft"
-            text="Previous"
+            [text]="'common.previous' "
             [disabled]="currentPage === 1"
             (clicked)="onPageChange(currentPage - 1)"
           ></app-action-button>
 
-          <span class="align-self-center mx-2">Page {{ currentPage }} of {{ Math.ceil(totalItems / pageSize) }}</span>
+          <span class="align-self-center mx-2">{{ 'common.page' | translate | async }} {{ currentPage }} {{ 'common.of' | translate | async }} {{ Math.ceil(totalItems / pageSize) }}</span>
 
           <app-action-button
             color="secondary"
             size="sm"
             icon="cilArrowRight"
-            text="Next"
+            [text]="'common.next' "
             [disabled]="currentPage >= Math.ceil(totalItems / pageSize)"
             (clicked)="onPageChange(currentPage + 1)"
           ></app-action-button>
@@ -95,116 +98,295 @@
     </c-card-body>
   </c-card>
 
-  <!-- Add/Edit Modal -->
-  <c-modal
-    [visible]="showModal"
-    (visibleChange)="closeModal()"
-  >
-    <c-modal-header>
-      <h5 cModalTitle>
-        {{ (isEditing ? 'PHARMACY.BUTTONS.EDIT' : 'PHARMACY.BUTTONS.ADD') | translate }}
+  <!-- Add/Edit Form Section -->
+  <c-card class="mb-4" *ngIf="showForm" data-form-section>
+    <c-card-header class="d-flex justify-content-between align-items-center bg-light">
+      <h5 class="mb-0">
+        <i class="fas fa-plus-circle me-2" *ngIf="!isEditing"></i>
+        <i class="fas fa-edit me-2" *ngIf="isEditing"></i>
+        {{ (isEditing ? 'PHARMACY.EDIT_TITLE' : 'PHARMACY.ADD_TITLE') | translate | async }}
       </h5>
-    </c-modal-header>
-    <c-modal-body>
+      <button
+        class="btn btn-outline-secondary btn-sm"
+        (click)="closeForm()"
+        type="button"
+      >
+        <i class="fas fa-times me-1"></i>
+        {{ 'PHARMACY.BUTTONS.CANCEL' | translate | async }}
+      </button>
+    </c-card-header>
+    <c-card-body>
       <form [formGroup]="pharmacyForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label cLabel for="name">{{ 'PHARMACY.FORM.NAME' | translate }}</label>
-          <input
-            cFormControl
-            id="name"
-            formControlName="name"
-            [placeholder]="'PHARMACY.FORM.NAME_PLACEHOLDER' | translate"
-          />
+        <!-- Basic Information Row -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label cLabel for="name">{{ 'PHARMACY.FORM.NAME' | translate | async }}</label>
+            <input
+              cFormControl
+              id="name"
+              formControlName="name"
+              [placeholder]="'PHARMACY.FORM.NAME_PLACEHOLDER' | translate |async"
+              class="form-control"
+            />
+            <div *ngIf="pharmacyForm.get('name')?.invalid && pharmacyForm.get('name')?.touched" class="text-danger small mt-1">
+              {{ 'PHARMACY.FORM.NAME_REQUIRED' | translate }}
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label cLabel for="phone">{{ 'PHARMACY.FORM.PHONE' | translate |async }}</label>
+            <input
+              cFormControl
+              id="phone"
+              formControlName="phone"
+              [placeholder]="'PHARMACY.FORM.PHONE_PLACEHOLDER' | translate |async"
+              class="form-control"
+            />
+            <div *ngIf="pharmacyForm.get('phone')?.invalid && pharmacyForm.get('phone')?.touched" class="text-danger small mt-1">
+              {{ 'PHARMACY.FORM.PHONE_REQUIRED' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Information Row -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label cLabel for="email">{{ 'PHARMACY.FORM.EMAIL' | translate | async }}</label>
+            <input
+              cFormControl
+              id="email"
+              type="email"
+              formControlName="email"
+              [placeholder]="'PHARMACY.FORM.EMAIL_PLACEHOLDER' | translate | async"
+              class="form-control"
+            />
+            <div *ngIf="pharmacyForm.get('email')?.invalid && pharmacyForm.get('email')?.touched" class="text-danger small mt-1">
+              {{ 'PHARMACY.FORM.EMAIL_INVALID' | translate | async }}
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label cLabel for="address">{{ 'PHARMACY.FORM.ADDRESS' | translate | async }}</label>
+            <input
+              cFormControl
+              id="address"
+              formControlName="address"
+              [placeholder]="'PHARMACY.FORM.ADDRESS_PLACEHOLDER' | translate | async "
+              class="form-control"
+            />
+            <div *ngIf="pharmacyForm.get('address')?.invalid && pharmacyForm.get('address')?.touched" class="text-danger small mt-1">
+              {{ 'PHARMACY.FORM.ADDRESS_REQUIRED' | translate | async }}
+            </div>
+          </div>
         </div>
 
         <div class="mb-3">
-          <label cLabel for="address">{{ 'PHARMACY.FORM.ADDRESS' | translate }}</label>
-          <input
-            cFormControl
-            id="address"
-            formControlName="address"
-            [placeholder]="'PHARMACY.FORM.ADDRESS_PLACEHOLDER' | translate"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label cLabel for="phone">{{ 'PHARMACY.FORM.PHONE' | translate }}</label>
-          <input
-            cFormControl
-            id="phone"
-            formControlName="phone"
-            [placeholder]="'PHARMACY.FORM.PHONE_PLACEHOLDER' | translate"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label cLabel for="governorateId">{{ 'PHARMACY.FORM.GOVERNORATE' | translate }}</label>
+          <label cLabel for="governorateId">{{ 'PHARMACY.FORM.GOVERNORATE' | translate | async }}</label>
           <select
             cSelect
             id="governorateId"
             formControlName="governorateId"
             (change)="onGovernorateChange($event)"
           >
-            <option value="">{{ 'PHARMACY.FORM.GOVERNORATE_PLACEHOLDER' | translate }}</option>
+            <option value="">{{ 'PHARMACY.FORM.GOVERNORATE_PLACEHOLDER' | translate | async }}</option>
             <option *ngFor="let gov of governorates" [value]="gov.id">
-              {{ gov.nameEn }}
+              {{ getCurrentLanguage() === 'ar' ? gov.nameAr : gov.nameEn }}
             </option>
           </select>
         </div>
 
         <div class="mb-3">
-          <label cLabel for="cityId">{{ 'PHARMACY.FORM.CITY' | translate }}</label>
+          <label cLabel for="cityId">{{ 'PHARMACY.FORM.CITY' | translate | async }}</label>
           <select cSelect id="cityId" formControlName="cityId">
-            <option value="">{{ 'PHARMACY.FORM.CITY_PLACEHOLDER' | translate }}</option>
+            <option value="">{{ 'PHARMACY.FORM.CITY_PLACEHOLDER' | translate | async }}</option>
             <option *ngFor="let city of cities" [value]="city.id">
-              {{ city.nameEn }}
+              {{ getCurrentLanguage() === 'ar' ? city.nameAr : city.nameEn }}
             </option>
           </select>
         </div>
 
-        <div class="mb-3">
-          <label cLabel for="latitude">{{ 'PHARMACY.FORM.LATITUDE' | translate }}</label>
-          <input
-            cFormControl
-            id="latitude"
-            type="number"
-            formControlName="latitude"
-            [placeholder]="'PHARMACY.FORM.LATITUDE_PLACEHOLDER' | translate"
-            step="0.000001"
-          />
+        <!-- Location Information Section -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <h6 class="text-primary mb-3">
+              <i class="fas fa-map-marker-alt me-2"></i>
+              {{ 'PHARMACY.FORM.LOCATION_SECTION' | translate | async }}
+            </h6>
+          </div>
+        </div>
+
+        <!-- Coordinate Display Row -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label cLabel for="latitude">{{ 'PHARMACY.FORM.LATITUDE' | translate | async }}</label>
+            <input
+              cFormControl
+              id="latitude"
+              type="number"
+              formControlName="latitude"
+              [placeholder]="'PHARMACY.FORM.LATITUDE_PLACEHOLDER' | translate | async"
+              step="0.000001"
+              class="form-control"
+              readonly
+            />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label cLabel for="longitude">{{ 'PHARMACY.FORM.LONGITUDE' | translate | async }}</label>
+            <input
+              cFormControl
+              id="longitude"
+              type="number"
+              formControlName="longitude"
+              [placeholder]="'PHARMACY.FORM.LONGITUDE_PLACEHOLDER' | translate | async"
+              step="0.000001"
+              class="form-control"
+              readonly
+            />
+          </div>
+        </div>
+
+        <!-- Map Controls Row -->
+        <div class="row mb-3">
+          <div class="col-12">
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                (click)="toggleMap()"
+              >
+                <i class="fas fa-map-marker-alt me-1"></i>
+                {{ showMap ? ('PHARMACY.MAP.HIDE_MAP' | translate | async) : ('PHARMACY.MAP.SELECT_LOCATION' | translate | async) }}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-success"
+                (click)="getCurrentLocation()"
+              >
+                <i class="fas fa-crosshairs me-1"></i>
+                {{ 'PHARMACY.MAP.USE_CURRENT_LOCATION' | translate | async }}
+              </button>
+
+              <small class="text-muted">
+                {{ 'PHARMACY.MAP.INSTRUCTIONS' | translate | async }}
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="row mb-3" *ngIf="showMap">
+          <div class="col-12">
+            <div class="card border-primary">
+              <div class="card-header bg-primary text-white">
+                <h6 class="mb-0">
+                  <i class="fas fa-map me-2"></i>
+                  {{ 'PHARMACY.MAP.TITLE' | translate | async }}
+                </h6>
+              </div>
+              <div class="card-body p-0">
+                <div style="height: 400px; width: 100%;">
+                  <app-map-selector
+                    [initialLatitude]="selectedLatitude"
+                    [initialLongitude]="selectedLongitude"
+                    [initialZoom]="13"
+                    [visible]="showMap"
+                    (locationSelected)="onLocationSelected($event)"
+                  ></app-map-selector>
+                </div>
+              </div>
+              <div class="card-footer">
+                <small class="text-muted">
+                  <i class="fas fa-info-circle me-1"></i>
+                  {{ 'PHARMACY.MAP.DETAILED_INSTRUCTIONS' | translate | async }}
+                </small>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="mb-3">
-          <label cLabel for="longitude">{{ 'PHARMACY.FORM.LONGITUDE' | translate }}</label>
-          <input
+          <label cLabel for="notes">{{ 'PHARMACY.FORM.NOTES' | translate | async }}</label>
+          <textarea
             cFormControl
-            id="longitude"
-            type="number"
-            formControlName="longitude"
-            [placeholder]="'PHARMACY.FORM.LONGITUDE_PLACEHOLDER' | translate"
-            step="0.000001"
-          />
+            id="notes"
+            formControlName="notes"
+            rows="3"
+            [placeholder]="'PHARMACY.FORM.NOTES_PLACEHOLDER' | translate | async"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label cLabel for="addressNotes">{{ 'PHARMACY.FORM.ADDRESS_NOTES' | translate | async }}</label>
+          <textarea
+            cFormControl
+            id="addressNotes"
+            formControlName="addressNotes"
+            rows="2"
+            [placeholder]="'PHARMACY.FORM.ADDRESS_NOTES_PLACEHOLDER' | translate | async"
+          ></textarea>
+        </div>
+        <!-- Form Buttons -->
+        <div class="d-flex gap-2 justify-content-end mt-4">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="closeForm()"
+          >
+            <i class="fas fa-times me-1"></i>
+            {{ 'PHARMACY.BUTTONS.CANCEL' | translate | async }}
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="pharmacyForm.invalid"
+            (click)="onSubmit()"
+          >
+            <i class="fas fa-plus me-1" *ngIf="!isEditing"></i>
+            <i class="fas fa-save me-1" *ngIf="isEditing"></i>
+            {{ isEditing ? ('PHARMACY.BUTTONS.UPDATE' | translate | async) : ('PHARMACY.BUTTONS.ADD' | translate | async) }}
+          </button>
         </div>
       </form>
-    </c-modal-body>
-    <c-modal-footer>
-      <div class="d-flex gap-2">
-        <app-action-button
-          color="secondary"
-          icon="cilX"
-          text="PHARMACY.BUTTONS.CANCEL"
-          (clicked)="closeModal()"
-        ></app-action-button>
+    </c-card-body>
+  </c-card>
 
-        <app-action-button
-          color="primary"
-          [icon]="isEditing ? 'cilPencil' : 'cilPlus'"
-          [text]="isEditing ? 'PHARMACY.BUTTONS.UPDATE' : 'PHARMACY.BUTTONS.ADD'"
-          type="submit"
-          [disabled]="pharmacyForm.invalid"
-          (clicked)="onSubmit()"
-        ></app-action-button>
+  <!-- Delete Confirmation Modal (Bootstrap) -->
+  <div class="modal fade show" tabindex="-1"
+       [ngStyle]="{display: isDeleteModalOpen ? 'block' : 'none', background: 'rgba(0,0,0,0.4)'}"
+       style="z-index: 2000; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <h5 class="modal-title">{{ 'PHARMACY.DELETE.TITLE' | translate | async }}</h5>
+          <button type="button" class="btn-close" (click)="closeDeleteModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <div class="mb-3">
+              <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+            </div>
+            <p class="mb-3">{{ 'PHARMACY.DELETE.MESSAGE' | translate | async }}</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <app-action-button
+            color="secondary"
+            icon="cilX"
+            text="common.cancel"
+            (clicked)="closeDeleteModal()"
+          ></app-action-button>
+
+          <app-action-button
+            color="danger"
+            icon="cilTrash"
+            text="PHARMACY.BUTTONS.DELETE"
+            (clicked)="confirmDelete()"
+          ></app-action-button>
+        </div>
       </div>
-    </c-modal-footer>
-  </c-modal>
+    </div>
+  </div>
 </div>

@@ -27,6 +27,7 @@
     "showing": "إظهار",
     "to": "إلى",
     "of": "من",
+    "page": "صفحة",
     "allGovernorates": "كل المحافظات",
     "actions": "الإجراءات",
     "preview": "معاينة",
@@ -396,36 +397,65 @@
   "PHARMACY": {
     "TITLE": "الصيدليات",
     "ADD_NEW": "إضافة صيدلية جديدة",
+    "ADD_TITLE": "إضافة صيدلية جديدة",
+    "EDIT_TITLE": "تعديل الصيدلية",
     "TABLE": {
       "NAME": "الاسم",
       "ADDRESS": "العنوان",
       "PHONE": "الهاتف",
+      "EMAIL": "البريد الإلكتروني",
       "GOVERNORATE": "المحافظة",
       "CITY": "المدينة",
       "ACTIONS": "الإجراءات"
     },
     "FORM": {
-      "NAME": "الاسم",
+      "NAME": "اسم الصيدلية",
       "NAME_PLACEHOLDER": "أدخل اسم الصيدلية",
+      "NAME_REQUIRED": "اسم الصيدلية مطلوب",
       "ADDRESS": "العنوان",
-      "ADDRESS_PLACEHOLDER": "أدخل العنوان",
-      "PHONE": "الهاتف",
+      "ADDRESS_PLACEHOLDER": "أدخل عنوان الصيدلية",
+      "ADDRESS_REQUIRED": "العنوان مطلوب",
+      "PHONE": "رقم الهاتف",
       "PHONE_PLACEHOLDER": "أدخل رقم الهاتف",
+      "PHONE_REQUIRED": "رقم هاتف صحيح مطلوب",
+      "EMAIL": "البريد الإلكتروني",
+      "EMAIL_PLACEHOLDER": "أدخل البريد الإلكتروني",
+      "EMAIL_INVALID": "يرجى إدخال بريد إلكتروني صحيح",
       "GOVERNORATE": "المحافظة",
       "GOVERNORATE_PLACEHOLDER": "اختر المحافظة",
       "CITY": "المدينة",
       "CITY_PLACEHOLDER": "اختر المدينة",
+      "LOCATION_SECTION": "معلومات الموقع",
       "LATITUDE": "خط العرض",
-      "LATITUDE_PLACEHOLDER": "أدخل خط العرض",
+      "LATITUDE_PLACEHOLDER": "حدد الموقع على الخريطة",
       "LONGITUDE": "خط الطول",
-      "LONGITUDE_PLACEHOLDER": "أدخل خط الطول"
+      "LONGITUDE_PLACEHOLDER": "حدد الموقع على الخريطة",
+      "NOTES": "ملاحظات",
+      "NOTES_PLACEHOLDER": "أدخل ملاحظات إضافية",
+      "ADDRESS_NOTES": "تفاصيل العنوان",
+      "ADDRESS_NOTES_PLACEHOLDER": "أدخل تفاصيل العنوان",
+      "VALIDATION_ERROR": "يرجى ملء جميع الحقول المطلوبة بشكل صحيح"
+    },
+    "MAP": {
+      "TITLE": "حدد موقع الصيدلية",
+      "SELECT_LOCATION": "حدد الموقع على الخريطة",
+      "HIDE_MAP": "إخفاء الخريطة",
+      "USE_CURRENT_LOCATION": "استخدم الموقع الحالي",
+      "INSTRUCTIONS": "انقر على الخريطة لتحديد موقع الصيدلية",
+      "DETAILED_INSTRUCTIONS": "انقر في أي مكان على الخريطة لتحديد موقع الصيدلية. يمكنك أيضاً سحب العلامة لضبط الموقع بدقة.",
+      "LOCATION_ERROR": "تعذر الحصول على الموقع الحالي. يرجى التحديد يدوياً على الخريطة.",
+      "GEOLOCATION_NOT_SUPPORTED": "تحديد الموقع الجغرافي غير مدعوم في هذا المتصفح."
     },
     "BUTTONS": {
       "EDIT": "تعديل",
       "DELETE": "حذف",
       "CANCEL": "إلغاء",
-      "ADD": "إضافة",
-      "UPDATE": "تحديث"
+      "ADD": "إضافة صيدلية",
+      "UPDATE": "تحديث الصيدلية"
+    },
+    "DELETE": {
+      "TITLE": "حذف الصيدلية",
+      "MESSAGE": "هل أنت متأكد من حذف هذه الصيدلية؟"
     },
     "MESSAGES": {
       "ADD_SUCCESS": "تمت إضافة الصيدلية بنجاح",

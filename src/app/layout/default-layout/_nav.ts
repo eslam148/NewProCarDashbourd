@@ -21,7 +21,7 @@ export const navItems: INavData[] = [
     }
   },
   {
-    name: 'pharmacy.title',
+    name: 'PHARMACY.TITLE',
     url: '/pharmacy',
     iconComponent: { name: 'cil-user' },
     badge: {
