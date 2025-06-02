@@ -1,0 +1,210 @@
+<div class="animated fadeIn">
+  <!-- Alert Component -->
+  <c-alert
+    [color]="alertType"
+    [visible]="showAlert"
+    (visibleChange)="showAlert = $event"
+  >
+    {{ alertMessage }}
+  </c-alert>
+
+  <!-- Main Content Card -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <strong>{{ 'PHARMACY.TITLE' | translate }}</strong>
+      <app-action-button
+        color="primary"
+        icon="cilPlus"
+        text="PHARMACY.ADD_NEW"
+        class="float-end"
+        (clicked)="openModal()"
+      ></app-action-button>
+    </c-card-header>
+    <c-card-body>
+      <!-- Pharmacies Table -->
+      <table cTable hover>
+        <thead>
+          <tr>
+            <th>{{ 'PHARMACY.TABLE.NAME' | translate }}</th>
+            <th>{{ 'PHARMACY.TABLE.ADDRESS' | translate }}</th>
+            <th>{{ 'PHARMACY.TABLE.PHONE' | translate }}</th>
+            <th>{{ 'PHARMACY.TABLE.GOVERNORATE' | translate }}</th>
+            <th>{{ 'PHARMACY.TABLE.CITY' | translate }}</th>
+            <th>{{ 'PHARMACY.TABLE.ACTIONS' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pharmacy of pharmacies">
+            <td>{{ pharmacy.name }}</td>
+            <td>{{ pharmacy.addressNotes }}</td>
+            <td>{{ pharmacy.phoneNumber }}</td>
+            <td>{{ getGovernorateName(pharmacy.governorateId) }}</td>
+            <td>{{ getCityName(pharmacy.cityId) }}</td>
+            <td>
+              <div class="d-flex gap-2">
+                <app-action-button
+                  color="primary"
+                  size="sm"
+                  icon="cilPencil"
+                  text="PHARMACY.BUTTONS.EDIT"
+                  tooltip="PHARMACY.BUTTONS.EDIT"
+                  (clicked)="openModal(pharmacy)"
+                ></app-action-button>
+
+                <app-action-button
+                  color="danger"
+                  size="sm"
+                  icon="cilTrash"
+                  text="PHARMACY.BUTTONS.DELETE"
+                  tooltip="PHARMACY.BUTTONS.DELETE"
+                  (clicked)="deletePharmacy(pharmacy.id.toString())"
+                ></app-action-button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <div>
+          <span>Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalItems) }} of {{ totalItems }} entries</span>
+        </div>
+        <div class="d-flex gap-2">
+          <app-action-button
+            color="secondary"
+            size="sm"
+            icon="cilArrowLeft"
+            text="Previous"
+            [disabled]="currentPage === 1"
+            (clicked)="onPageChange(currentPage - 1)"
+          ></app-action-button>
+
+          <span class="align-self-center mx-2">Page {{ currentPage }} of {{ Math.ceil(totalItems / pageSize) }}</span>
+
+          <app-action-button
+            color="secondary"
+            size="sm"
+            icon="cilArrowRight"
+            text="Next"
+            [disabled]="currentPage >= Math.ceil(totalItems / pageSize)"
+            (clicked)="onPageChange(currentPage + 1)"
+          ></app-action-button>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+
+  <!-- Add/Edit Modal -->
+  <c-modal
+    [visible]="showModal"
+    (visibleChange)="closeModal()"
+  >
+    <c-modal-header>
+      <h5 cModalTitle>
+        {{ (isEditing ? 'PHARMACY.BUTTONS.EDIT' : 'PHARMACY.BUTTONS.ADD') | translate }}
+      </h5>
+    </c-modal-header>
+    <c-modal-body>
+      <form [formGroup]="pharmacyForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label cLabel for="name">{{ 'PHARMACY.FORM.NAME' | translate }}</label>
+          <input
+            cFormControl
+            id="name"
+            formControlName="name"
+            [placeholder]="'PHARMACY.FORM.NAME_PLACEHOLDER' | translate"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label cLabel for="address">{{ 'PHARMACY.FORM.ADDRESS' | translate }}</label>
+          <input
+            cFormControl
+            id="address"
+            formControlName="address"
+            [placeholder]="'PHARMACY.FORM.ADDRESS_PLACEHOLDER' | translate"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label cLabel for="phone">{{ 'PHARMACY.FORM.PHONE' | translate }}</label>
+          <input
+            cFormControl
+            id="phone"
+            formControlName="phone"
+            [placeholder]="'PHARMACY.FORM.PHONE_PLACEHOLDER' | translate"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label cLabel for="governorateId">{{ 'PHARMACY.FORM.GOVERNORATE' | translate }}</label>
+          <select
+            cSelect
+            id="governorateId"
+            formControlName="governorateId"
+            (change)="onGovernorateChange($event)"
+          >
+            <option value="">{{ 'PHARMACY.FORM.GOVERNORATE_PLACEHOLDER' | translate }}</option>
+            <option *ngFor="let gov of governorates" [value]="gov.id">
+              {{ gov.nameEn }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label cLabel for="cityId">{{ 'PHARMACY.FORM.CITY' | translate }}</label>
+          <select cSelect id="cityId" formControlName="cityId">
+            <option value="">{{ 'PHARMACY.FORM.CITY_PLACEHOLDER' | translate }}</option>
+            <option *ngFor="let city of cities" [value]="city.id">
+              {{ city.nameEn }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label cLabel for="latitude">{{ 'PHARMACY.FORM.LATITUDE' | translate }}</label>
+          <input
+            cFormControl
+            id="latitude"
+            type="number"
+            formControlName="latitude"
+            [placeholder]="'PHARMACY.FORM.LATITUDE_PLACEHOLDER' | translate"
+            step="0.000001"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label cLabel for="longitude">{{ 'PHARMACY.FORM.LONGITUDE' | translate }}</label>
+          <input
+            cFormControl
+            id="longitude"
+            type="number"
+            formControlName="longitude"
+            [placeholder]="'PHARMACY.FORM.LONGITUDE_PLACEHOLDER' | translate"
+            step="0.000001"
+          />
+        </div>
+      </form>
+    </c-modal-body>
+    <c-modal-footer>
+      <div class="d-flex gap-2">
+        <app-action-button
+          color="secondary"
+          icon="cilX"
+          text="PHARMACY.BUTTONS.CANCEL"
+          (clicked)="closeModal()"
+        ></app-action-button>
+
+        <app-action-button
+          color="primary"
+          [icon]="isEditing ? 'cilPencil' : 'cilPlus'"
+          [text]="isEditing ? 'PHARMACY.BUTTONS.UPDATE' : 'PHARMACY.BUTTONS.ADD'"
+          type="submit"
+          [disabled]="pharmacyForm.invalid"
+          (clicked)="onSubmit()"
+        ></app-action-button>
+      </div>
+    </c-modal-footer>
+  </c-modal>
+</div>

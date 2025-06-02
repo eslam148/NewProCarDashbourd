@@ -5,7 +5,28 @@ This directory contains reusable components for consistent UI across the applica
 ## ActionButtonComponent
 
 ### Overview
-The `ActionButtonComponent` provides a standardized button style across the application with support for icons, translations, loading states, and various styling options.
+The `ActionButtonComponent` provides a **standardized button style** across the application with support for icons, translations, loading states, and various styling options. This component ensures **consistent button colors, shapes, and behavior** throughout the entire application.
+
+### 🎨 **Standardized Color Scheme**
+
+All buttons across the application should follow this color scheme for consistency:
+
+| Color | Usage | Examples |
+|-------|-------|----------|
+| `primary` | Main actions | Add, Save, Update, Submit, Edit |
+| `secondary` | Secondary actions | Cancel, Close, Reset |
+| `success` | Positive confirmations | Confirm, Approve, Accept |
+| `danger` | Destructive actions | Delete, Remove, Reject |
+| `warning` | Caution actions | Warning, Alert, Caution |
+| `info` | Informational actions | View, Details, Info |
+| `light` | Neutral actions | Clear, Neutral |
+| `dark` | Alternative primary | Alternative styling |
+
+### 🔧 **Default Settings**
+- **Shape**: `rounded-pill` (consistent pill-shaped buttons)
+- **Size**: Standard (38px height)
+- **Hover Effects**: Consistent elevation and shadow
+- **Icons**: CoreUI icons with proper spacing
 
 ### Usage
 
@@ -30,7 +51,9 @@ import { ActionButtonComponent } from '../../shared/components';
 2. Use it in your template:
 
 ```html
-<!-- Primary button with icon -->
+<!-- ✅ STANDARDIZED EXAMPLES -->
+
+<!-- Add/Create Button (Primary) -->
 <app-action-button
   color="primary"
   icon="cilPlus"
@@ -38,7 +61,26 @@ import { ActionButtonComponent } from '../../shared/components';
   (clicked)="onCreate()"
 ></app-action-button>
 
-<!-- Submit button -->
+<!-- Edit Button (Primary) -->
+<app-action-button
+  color="primary"
+  icon="cilPencil"
+  text="common.edit"
+  size="sm"
+  (clicked)="onEdit(item)"
+></app-action-button>
+
+<!-- Delete Button (Danger) -->
+<app-action-button
+  color="danger"
+  icon="cilTrash"
+  text="common.delete"
+  size="sm"
+  tooltip="common.delete"
+  (clicked)="onDelete(item)"
+></app-action-button>
+
+<!-- Save/Submit Button (Primary) -->
 <app-action-button
   color="primary"
   type="submit"
@@ -47,22 +89,29 @@ import { ActionButtonComponent } from '../../shared/components';
   [disabled]="form.invalid"
 ></app-action-button>
 
-<!-- Small delete button -->
+<!-- Cancel Button (Secondary) -->
 <app-action-button
-  color="danger"
-  size="sm"
-  icon="cilTrash"
-  text="common.delete"
-  (clicked)="onDelete(item)"
+  color="secondary"
+  icon="cilX"
+  text="common.cancel"
+  (clicked)="onCancel()"
 ></app-action-button>
 
-<!-- Ghost button -->
+<!-- Confirm Button (Success) -->
 <app-action-button
-  color="primary"
-  variant="ghost"
-  icon="cilSettings"
-  text="common.settings"
-  (clicked)="onSettings()"
+  color="success"
+  icon="cilCheck"
+  text="common.confirm"
+  (clicked)="onConfirm()"
+></app-action-button>
+
+<!-- View/Info Button (Info) -->
+<app-action-button
+  color="info"
+  icon="cilMagnifyingGlass"
+  text="common.view"
+  variant="outline"
+  (clicked)="onView(item)"
 ></app-action-button>
 
 <!-- Icon-only button with tooltip -->

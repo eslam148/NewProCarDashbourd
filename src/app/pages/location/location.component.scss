@@ -125,12 +125,12 @@ button[cButton] {
   .card-header {
     border-bottom: 0;
 
-    &.gradient-primary {
-      background: linear-gradient(135deg, var(--cui-primary) 0%, #0056b3 100%);
+    &.bg-primary {
+      background: var(--cui-primary);
     }
 
-    &.gradient-info {
-      background: linear-gradient(135deg, var(--cui-info) 0%, #0f7e9b 100%);
+    &.bg-info {
+      background: var(--cui-info);
     }
   }
 }

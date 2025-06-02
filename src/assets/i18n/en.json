@@ -392,6 +392,54 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "close": "Close"
-
+  },
+  "PHARMACY": {
+    "TITLE": "Pharmacies",
+    "ADD_NEW": "Add New Pharmacy",
+    "TABLE": {
+      "NAME": "Name",
+      "ADDRESS": "Address",
+      "PHONE": "Phone",
+      "GOVERNORATE": "Governorate",
+      "CITY": "City",
+      "ACTIONS": "Actions"
+    },
+    "FORM": {
+      "NAME": "Name",
+      "NAME_PLACEHOLDER": "Enter pharmacy name",
+      "ADDRESS": "Address",
+      "ADDRESS_PLACEHOLDER": "Enter address",
+      "PHONE": "Phone",
+      "PHONE_PLACEHOLDER": "Enter phone number",
+      "GOVERNORATE": "Governorate",
+      "GOVERNORATE_PLACEHOLDER": "Select Governorate",
+      "CITY": "City",
+      "CITY_PLACEHOLDER": "Select City",
+      "LATITUDE": "Latitude",
+      "LATITUDE_PLACEHOLDER": "Enter latitude",
+      "LONGITUDE": "Longitude",
+      "LONGITUDE_PLACEHOLDER": "Enter longitude"
+    },
+    "BUTTONS": {
+      "EDIT": "Edit",
+      "DELETE": "Delete",
+      "CANCEL": "Cancel",
+      "ADD": "Add",
+      "UPDATE": "Update"
+    },
+    "MESSAGES": {
+      "ADD_SUCCESS": "Pharmacy added successfully",
+      "UPDATE_SUCCESS": "Pharmacy updated successfully",
+      "DELETE_SUCCESS": "Pharmacy deleted successfully",
+      "DELETE_CONFIRM": "Are you sure you want to delete this pharmacy?",
+      "ERROR": {
+        "LOAD_PHARMACIES": "Error loading pharmacies",
+        "LOAD_GOVERNORATES": "Error loading governorates",
+        "LOAD_CITIES": "Error loading cities",
+        "ADD": "Error adding pharmacy",
+        "UPDATE": "Error updating pharmacy",
+        "DELETE": "Error deleting pharmacy"
+      }
+    }
   }
 }

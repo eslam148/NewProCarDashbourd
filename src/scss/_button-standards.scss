@@ -1,0 +1,256 @@
+/* 
+ * Button Standardization Guide
+ * ============================
+ * 
+ * This file defines the standardized button colors and styles for the entire application.
+ * All components should use the ActionButtonComponent or follow these standards.
+ */
+
+/* Standardized Button Color Variables */
+:root {
+  // Primary Actions (Add, Save, Update, Submit, Edit)
+  --btn-primary-bg: var(--cui-primary);
+  --btn-primary-border: var(--cui-primary);
+  --btn-primary-color: #ffffff;
+  --btn-primary-hover-bg: var(--cui-primary-dark, #0954a5);
+  --btn-primary-hover-border: var(--cui-primary-dark, #0954a5);
+
+  // Secondary Actions (Cancel, Close, Reset)
+  --btn-secondary-bg: var(--cui-secondary);
+  --btn-secondary-border: var(--cui-secondary);
+  --btn-secondary-color: var(--cui-body-color);
+  --btn-secondary-hover-bg: var(--cui-secondary-dark, #5a6268);
+  --btn-secondary-hover-border: var(--cui-secondary-dark, #5a6268);
+
+  // Success Actions (Confirm, Approve, Accept)
+  --btn-success-bg: var(--cui-success);
+  --btn-success-border: var(--cui-success);
+  --btn-success-color: #ffffff;
+  --btn-success-hover-bg: var(--cui-success-dark, #157347);
+  --btn-success-hover-border: var(--cui-success-dark, #157347);
+
+  // Danger Actions (Delete, Remove, Reject)
+  --btn-danger-bg: var(--cui-danger);
+  --btn-danger-border: var(--cui-danger);
+  --btn-danger-color: #ffffff;
+  --btn-danger-hover-bg: var(--cui-danger-dark, #bb2d3b);
+  --btn-danger-hover-border: var(--cui-danger-dark, #bb2d3b);
+
+  // Warning Actions (Warning, Alert, Caution)
+  --btn-warning-bg: var(--cui-warning);
+  --btn-warning-border: var(--cui-warning);
+  --btn-warning-color: #000000;
+  --btn-warning-hover-bg: var(--cui-warning-dark, #e0a800);
+  --btn-warning-hover-border: var(--cui-warning-dark, #e0a800);
+
+  // Info Actions (View, Details, Info)
+  --btn-info-bg: var(--cui-info);
+  --btn-info-border: var(--cui-info);
+  --btn-info-color: #ffffff;
+  --btn-info-hover-bg: var(--cui-info-dark, #055160);
+  --btn-info-hover-border: var(--cui-info-dark, #055160);
+
+  // Light Actions (Clear, Neutral)
+  --btn-light-bg: var(--cui-light);
+  --btn-light-border: var(--cui-light);
+  --btn-light-color: var(--cui-body-color);
+  --btn-light-hover-bg: var(--cui-light-dark, #e2e6ea);
+  --btn-light-hover-border: var(--cui-light-dark, #e2e6ea);
+
+  // Dark Actions (Alternative primary)
+  --btn-dark-bg: var(--cui-dark);
+  --btn-dark-border: var(--cui-dark);
+  --btn-dark-color: #ffffff;
+  --btn-dark-hover-bg: var(--cui-dark-dark, #1c1f23);
+  --btn-dark-hover-border: var(--cui-dark-dark, #1c1f23);
+}
+
+/* Standardized Button Sizes */
+:root {
+  --btn-height-sm: 32px;
+  --btn-height-default: 38px;
+  --btn-height-lg: 44px;
+  
+  --btn-padding-sm: 0.375rem 1rem;
+  --btn-padding-default: 0.5rem 1.25rem;
+  --btn-padding-lg: 0.625rem 1.5rem;
+  
+  --btn-font-size-sm: 0.85rem;
+  --btn-font-size-default: 0.9rem;
+  --btn-font-size-lg: 1rem;
+}
+
+/* Standardized Button Effects */
+:root {
+  --btn-transition: all 0.3s ease;
+  --btn-border-radius: 50rem; /* Pill shape */
+  --btn-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --btn-box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --btn-box-shadow-focus: 0 0 0 3px rgba(var(--cui-primary-rgb), 0.25);
+  --btn-transform-hover: translateY(-2px);
+  --btn-transform-active: translateY(1px);
+}
+
+/* Global Button Standards - Apply to all buttons */
+.btn, button[cButton], app-action-button button {
+  // Standard sizing
+  min-height: var(--btn-height-default);
+  padding: var(--btn-padding-default);
+  font-size: var(--btn-font-size-default);
+  font-weight: 500;
+  line-height: 1.5;
+  
+  // Standard appearance
+  border-radius: var(--btn-border-radius);
+  border: none;
+  transition: var(--btn-transition);
+  box-shadow: var(--btn-box-shadow);
+  
+  // Standard behavior
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  
+  // Hover effects
+  &:hover:not(:disabled) {
+    transform: var(--btn-transform-hover);
+    box-shadow: var(--btn-box-shadow-hover);
+  }
+  
+  // Active effects
+  &:active:not(:disabled) {
+    transform: var(--btn-transform-active);
+    box-shadow: var(--btn-box-shadow);
+  }
+  
+  // Focus effects
+  &:focus {
+    box-shadow: var(--btn-box-shadow-focus);
+  }
+  
+  // Disabled state
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: var(--btn-box-shadow) !important;
+  }
+  
+  // Icon spacing
+  svg, i {
+    flex-shrink: 0;
+    
+    &:not(:only-child) {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+/* Size Variations */
+.btn-sm, button[cButton][size="sm"] {
+  min-height: var(--btn-height-sm);
+  padding: var(--btn-padding-sm);
+  font-size: var(--btn-font-size-sm);
+}
+
+.btn-lg, button[cButton][size="lg"] {
+  min-height: var(--btn-height-lg);
+  padding: var(--btn-padding-lg);
+  font-size: var(--btn-font-size-lg);
+}
+
+/* Icon-only buttons */
+.btn-icon, .icon-only {
+  width: var(--btn-height-default);
+  height: var(--btn-height-default);
+  padding: 0;
+  
+  &.btn-sm {
+    width: var(--btn-height-sm);
+    height: var(--btn-height-sm);
+  }
+  
+  &.btn-lg {
+    width: var(--btn-height-lg);
+    height: var(--btn-height-lg);
+  }
+  
+  svg, i {
+    margin: 0 !important;
+  }
+}
+
+/* RTL Support */
+html[lang="ar"] {
+  .btn, button[cButton], app-action-button button {
+    svg, i {
+      &:not(:only-child) {
+        margin-right: 0;
+        margin-left: 0.5rem;
+      }
+    }
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+  .btn, button[cButton], app-action-button button {
+    min-height: 36px;
+    padding: 0.375rem 1rem;
+    font-size: 0.85rem;
+    
+    &.btn-sm {
+      min-height: 30px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8rem;
+    }
+    
+    &.btn-lg {
+      min-height: 40px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .btn-icon, .icon-only {
+    width: 36px;
+    height: 36px;
+    
+    &.btn-sm {
+      width: 30px;
+      height: 30px;
+    }
+    
+    &.btn-lg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+/* 
+ * Migration Guide for Developers:
+ * ===============================
+ * 
+ * 1. Replace all direct CoreUI buttons with ActionButtonComponent
+ * 2. Use standardized colors: primary, secondary, success, danger, warning, info, light, dark
+ * 3. Use standardized icons from CoreUI icon set
+ * 4. Follow the color scheme defined in the README.md
+ * 5. Remove custom button styles from individual components
+ * 
+ * Example Migration:
+ * 
+ * OLD:
+ * <c-button color="primary" size="sm" (click)="edit()">Edit</c-button>
+ * 
+ * NEW:
+ * <app-action-button 
+ *   color="primary" 
+ *   size="sm" 
+ *   icon="cilPencil" 
+ *   text="common.edit" 
+ *   (clicked)="edit()"
+ * ></app-action-button>
+ */

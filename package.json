@@ -9,7 +9,8 @@
     "theme": "default",
     "coreui_library_short_version": "5.4",
     "coreui_library_docs_url": "https://coreui.io/angular/docs/"
-  },  "scripts": {
+  },
+  "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
     "build": "ng build",
@@ -23,6 +24,7 @@
     "@angular/common": "^19.2.2",
     "@angular/compiler": "^19.2.2",
     "@angular/core": "^19.2.2",
+    "@angular/fire": "^19.2.0",
     "@angular/forms": "^19.2.2",
     "@angular/language-service": "^19.2.2",
     "@angular/platform-browser": "^19.2.2",
@@ -44,6 +46,7 @@
     "@ngx-translate/http-loader": "^16.0.1",
     "@types/leaflet": "^1.9.17",
     "chart.js": "^4.4.8",
+    "firebase": "^11.8.1",
     "leaflet": "^1.9.4",
     "lodash-es": "^4.17.21",
     "ngx-scrollbar": "^13.0.3",

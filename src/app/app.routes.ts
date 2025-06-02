@@ -37,6 +37,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'pharmacy',
+        loadComponent: () => import('./pages/pharmacy/pharmacy.component').then(m => m.PharmacyComponent),
+        data: {
+          title: 'Pharmacy'
+        }
+      },
+      {
         path: 'location',
         loadComponent: () => import('./pages/location/location.component').then(m => m.LocationComponent),
         data: {

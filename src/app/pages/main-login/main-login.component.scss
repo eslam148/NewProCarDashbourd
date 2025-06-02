@@ -2,8 +2,8 @@
   display: block;
 }
 
-.bg-gradient-light {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+.bg-light {
+  background: #f8f9fa;
 }
 
 // Login container
@@ -75,8 +75,8 @@ button[type="submit"] {
 }
 
 // Right side card styling
-.bg-gradient-primary {
-  background: linear-gradient(135deg, var(--cui-primary) 0%, #0056b3 100%);
+.bg-primary {
+  background: var(--cui-primary);
   position: relative;
   overflow: hidden;
 
@@ -87,7 +87,7 @@ button[type="submit"] {
     right: -50%;
     bottom: -50%;
     left: -50%;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    background: rgba(255, 255, 255, 0.1);
     transform: rotateZ(-45deg) translate(-15%, 0);
     pointer-events: none;
   }

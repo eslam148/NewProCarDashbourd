@@ -14,7 +14,7 @@
   // Table headers
   thead {
     th {
-      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      background: #f8fafc;
       color: #334155;
       font-weight: 600;
       text-transform: uppercase;
@@ -39,7 +39,7 @@
         cursor: pointer;
 
         &:hover {
-          background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+          background: #f1f5f9;
         }
 
         &:after {

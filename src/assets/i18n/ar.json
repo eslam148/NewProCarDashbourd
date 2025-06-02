@@ -370,7 +370,6 @@
     "title": "إدارة الأمراض",
     "searchPlaceholder": "بحث بإسم المرض",
     "create": "إضافة مرض",
-
     "nameEn": "الاسم بالإنجليزية",
     "nameAr": "الاسم بالعربية",
     "nameEnPlaceholder": "أدخل اسم المرض بالإنجليزية",
@@ -387,13 +386,60 @@
     "cancel": "إلغاء",
     "confirm": "تأكيد",
     "close": "اغلاق",
-
     "add": "إضافة",
     "search": "بحث",
     "total": "إجمالي",
     "page": "صفحة",
     "totalPages": "إجمالي الصفحات",
     "update": "تحديث"
-
+  },
+  "PHARMACY": {
+    "TITLE": "الصيدليات",
+    "ADD_NEW": "إضافة صيدلية جديدة",
+    "TABLE": {
+      "NAME": "الاسم",
+      "ADDRESS": "العنوان",
+      "PHONE": "الهاتف",
+      "GOVERNORATE": "المحافظة",
+      "CITY": "المدينة",
+      "ACTIONS": "الإجراءات"
+    },
+    "FORM": {
+      "NAME": "الاسم",
+      "NAME_PLACEHOLDER": "أدخل اسم الصيدلية",
+      "ADDRESS": "العنوان",
+      "ADDRESS_PLACEHOLDER": "أدخل العنوان",
+      "PHONE": "الهاتف",
+      "PHONE_PLACEHOLDER": "أدخل رقم الهاتف",
+      "GOVERNORATE": "المحافظة",
+      "GOVERNORATE_PLACEHOLDER": "اختر المحافظة",
+      "CITY": "المدينة",
+      "CITY_PLACEHOLDER": "اختر المدينة",
+      "LATITUDE": "خط العرض",
+      "LATITUDE_PLACEHOLDER": "أدخل خط العرض",
+      "LONGITUDE": "خط الطول",
+      "LONGITUDE_PLACEHOLDER": "أدخل خط الطول"
+    },
+    "BUTTONS": {
+      "EDIT": "تعديل",
+      "DELETE": "حذف",
+      "CANCEL": "إلغاء",
+      "ADD": "إضافة",
+      "UPDATE": "تحديث"
+    },
+    "MESSAGES": {
+      "ADD_SUCCESS": "تمت إضافة الصيدلية بنجاح",
+      "UPDATE_SUCCESS": "تم تحديث الصيدلية بنجاح",
+      "DELETE_SUCCESS": "تم حذف الصيدلية بنجاح",
+      "DELETE_CONFIRM": "هل أنت متأكد من حذف هذه الصيدلية؟",
+      "ERROR": {
+        "LOAD_PHARMACIES": "خطأ في تحميل الصيدليات",
+        "LOAD_GOVERNORATES": "خطأ في تحميل المحافظات",
+        "LOAD_CITIES": "خطأ في تحميل المدن",
+        "ADD": "خطأ في إضافة الصيدلية",
+        "UPDATE": "خطأ في تحديث الصيدلية",
+        "DELETE": "خطأ في حذف الصيدلية"
+      }
+    }
   }
 }

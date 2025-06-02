@@ -6,7 +6,6 @@ import { map, mergeMap, catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoginDto } from '../../Models/DTOs/LoginDto';
-import { LoginResponse } from '../../Models/Responses/LoginResponse';
 import {
   login,
   loginSuccess,
@@ -45,28 +44,16 @@ export class AuthEffects {
     }
   }
 
-  private transformLoginResponse(response: any): LoginResponse {
-    console.log('Transforming response:', response);
-    const result: LoginResponse = {
-      firstName: response.firstName || '',
-      lastName: response.lastName || '',
-      phoneNumber: response.phoneNumber || '',
-      birthOfDate: response.birthOfDate ? new Date(response.birthOfDate) : new Date(),
-      role: response.role || 'User',
-      token: response.token || '',
-      loginStatus: response.loginStatus || false
-    };
-    console.log('Transformed result:', result);
-    return result;
-  }
+
 
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(login),
-      mergeMap(({ phonenumber, password }) => {
+      mergeMap(({ phonenumber, password ,deviceToken }) => {
         const loginDto: LoginDto = {
           PhoneNumber: phonenumber,
-          Password: password
+          Password: password,
+          deviceToken: deviceToken
         };
         return this.authService.Login(loginDto).pipe(
           map(response => {

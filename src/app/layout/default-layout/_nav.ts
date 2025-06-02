@@ -1,7 +1,7 @@
 import { INavData } from '@coreui/angular';
 
 export const navItems: INavData[] = [
- 
+
   {
     name: 'admin.title',
     url: '/admins',
@@ -14,6 +14,15 @@ export const navItems: INavData[] = [
   {
     name: 'disease.title',
     url: '/disease',
+    iconComponent: { name: 'cil-user' },
+    badge: {
+      color: 'info',
+      text: 'NEW'
+    }
+  },
+  {
+    name: 'pharmacy.title',
+    url: '/pharmacy',
     iconComponent: { name: 'cil-user' },
     badge: {
       color: 'info',

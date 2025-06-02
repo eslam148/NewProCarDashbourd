@@ -2,14 +2,14 @@
 
 // Common Colors and Variables
 :root {
-    // Gradient variables
-    --primary-gradient: linear-gradient(135deg, #321fdb 0%, #1f1498 100%);
-    --success-gradient: linear-gradient(135deg, #2eb85c 0%, #1b9e3e 100%);
-    --info-gradient: linear-gradient(135deg, #39f 0%, #0e7fc1 100%);
-    --warning-gradient: linear-gradient(135deg, #f9b115 0%, #e49113 100%);
-    --danger-gradient: linear-gradient(135deg, #e55353 0%, #d93737 100%);
-    --light-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    --dark-gradient: linear-gradient(135deg, #343a40 0%, #1d2124 100%);
+    // Solid color variables (no gradients)
+    --primary-color: #321fdb;
+    --success-color: #2eb85c;
+    --info-color: #39f;
+    --warning-color: #f9b115;
+    --danger-color: #e55353;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
 
     // Shadow and other variables
     --card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
@@ -19,13 +19,13 @@
 }
 
 // Custom SASS variables for Angular components
-$primary-gradient: var(--primary-gradient);
-$success-gradient: var(--success-gradient);
-$info-gradient: var(--info-gradient);
-$warning-gradient: var(--warning-gradient);
-$danger-gradient: var(--danger-gradient);
-$light-gradient: var(--light-gradient);
-$dark-gradient: var(--dark-gradient);
+$primary-color: var(--primary-color);
+$success-color: var(--success-color);
+$info-color: var(--info-color);
+$warning-color: var(--warning-color);
+$danger-color: var(--danger-color);
+$light-color: var(--light-color);
+$dark-color: var(--dark-color);
 
 // Common Card Styles
 .custom-card {
@@ -43,13 +43,13 @@ $dark-gradient: var(--dark-gradient);
         padding: 1rem 1.25rem;
         font-weight: 600;
 
-        &.gradient-primary { background: var(--primary-gradient); color: white; }
-        &.gradient-success { background: var(--success-gradient); color: white; }
-        &.gradient-info { background: var(--info-gradient); color: white; }
-        &.gradient-warning { background: var(--warning-gradient); color: white; }
-        &.gradient-danger { background: var(--danger-gradient); color: white; }
-        &.gradient-light { background: var(--light-gradient); color: #343a40; }
-        &.gradient-dark { background: var(--dark-gradient); color: white; }
+        &.bg-primary { background: var(--primary-color); color: white; }
+        &.bg-success { background: var(--success-color); color: white; }
+        &.bg-info { background: var(--info-color); color: white; }
+        &.bg-warning { background: var(--warning-color); color: white; }
+        &.bg-danger { background: var(--danger-color); color: white; }
+        &.bg-light { background: var(--light-color); color: #343a40; }
+        &.bg-dark { background: var(--dark-color); color: white; }
     }
 
     .card-body {

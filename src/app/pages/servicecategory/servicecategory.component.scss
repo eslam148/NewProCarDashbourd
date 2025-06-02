@@ -3,8 +3,8 @@
 }
 
 // Main container
-.bg-gradient-light {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+.bg-light {
+  background: #f8f9fa;
 }
 
 // Card styles
@@ -17,13 +17,13 @@
   }
 }
 
-// Card header gradients
-.bg-gradient-primary {
-  background: linear-gradient(135deg, var(--cui-primary) 0%, #0056b3 100%);
+// Card header colors
+.bg-primary {
+  background: var(--cui-primary);
 }
 
-.bg-gradient-success {
-  background: linear-gradient(135deg, var(--cui-success) 0%, #218838 100%);
+.bg-success {
+  background: var(--cui-success);
 }
 
 // Shadow hover effect

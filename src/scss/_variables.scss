@@ -41,9 +41,9 @@ $success-dark: color.scale($success, $lightness: -15%);
   --link-color: #{$primary};
   --link-hover-color: #{$primary-dark};
 
-  // Gradients
-  --primary-gradient: linear-gradient(135deg, #{$primary} 0%, #{$primary-dark} 100%);
-  --success-gradient: linear-gradient(135deg, #{$success} 0%, #{$success-dark} 100%);
+  // Solid colors (no gradients)
+  --primary-solid: #{$primary};
+  --success-solid: #{$success};
 
   // UI Components
   --header-bg: #{$white};

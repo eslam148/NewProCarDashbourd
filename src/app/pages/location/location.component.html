@@ -3,7 +3,7 @@
     <!-- Governorates Section -->
     <div class="col-md-6">
       <div class="card custom-card shadow">
-        <div class="card-header gradient-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
+        <div class="card-header bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center">
           <h4 class="mb-0 fw-bold">{{ 'location.governorates' | translate | async }}</h4>
           <button cButton color="light" class="rounded-pill px-3 py-1 fw-semibold btn-hover-effect" (click)="isAddingGovernorate = true" *ngIf="!isAddingGovernorate">
             <svg cIcon name="cilPlus" class="me-1"></svg> {{ 'location.addGovernorate' | translate | async }}
@@ -92,7 +92,7 @@
     <!-- Cities Section -->
     <div class="col-md-6">
       <div class="card custom-card shadow">
-        <div class="card-header gradient-info text-white rounded-top-4 d-flex justify-content-between align-items-center">
+        <div class="card-header bg-info text-white rounded-top-4 d-flex justify-content-between align-items-center">
           <h4 class="mb-0 fw-bold">{{ 'location.cities' | translate | async }}</h4>
           <button cButton color="light" class="rounded-pill px-3 py-1 fw-semibold btn-hover-effect" (click)="isAddingCity = true" *ngIf="!isAddingCity && !isEditingCity">
             <svg cIcon name="cilPlus" class="me-1"></svg> {{ 'location.addCity' | translate | async }}

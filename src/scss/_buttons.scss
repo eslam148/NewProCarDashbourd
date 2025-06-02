@@ -24,12 +24,12 @@
 
 /* Primary Button */
 .btn-primary {
-  background: linear-gradient(135deg, var(--cui-primary), var(--cui-primary-dark, #0954a5));
+  background: var(--cui-primary);
   color: white;
   border: none;
 
   &:hover, &:focus {
-    background: linear-gradient(135deg, var(--cui-primary-dark, #0954a5), var(--cui-primary-darker, #064383));
+    background: var(--cui-primary-dark, #0954a5);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
   }
@@ -41,11 +41,11 @@
 
 /* Secondary Button */
 .btn-secondary {
-  background: linear-gradient(135deg, var(--cui-secondary), var(--cui-secondary-dark, #5c636a));
+  background: var(--cui-secondary);
   color: white;
 
   &:hover, &:focus {
-    background: linear-gradient(135deg, var(--cui-secondary-dark, #5c636a), var(--cui-secondary-darker, #4d545a));
+    background: var(--cui-secondary-dark, #5c636a);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
   }
@@ -57,11 +57,11 @@
 
 /* Success Button */
 .btn-success {
-  background: linear-gradient(135deg, var(--cui-success), var(--cui-success-dark, #1a7d4b));
+  background: var(--cui-success);
   color: white;
 
   &:hover, &:focus {
-    background: linear-gradient(135deg, var(--cui-success-dark, #1a7d4b), var(--cui-success-darker, #146c40));
+    background: var(--cui-success-dark, #1a7d4b);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
   }
@@ -73,11 +73,11 @@
 
 /* Danger Button */
 .btn-danger {
-  background: linear-gradient(135deg, var(--cui-danger), var(--cui-danger-dark, #b82b34));
+  background: var(--cui-danger);
   color: white;
 
   &:hover, &:focus {
-    background: linear-gradient(135deg, var(--cui-danger-dark, #b82b34), var(--cui-danger-darker, #9e252d));
+    background: var(--cui-danger-dark, #b82b34);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
   }
@@ -89,11 +89,11 @@
 
 /* Warning Button */
 .btn-warning {
-  background: linear-gradient(135deg, var(--cui-warning), var(--cui-warning-dark, #cc9e00));
+  background: var(--cui-warning);
   color: var(--cui-body-color);
 
   &:hover, &:focus {
-    background: linear-gradient(135deg, var(--cui-warning-dark, #cc9e00), var(--cui-warning-darker, #b38b00));
+    background: var(--cui-warning-dark, #cc9e00);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
   }
@@ -105,11 +105,11 @@
 
 /* Info Button */
 .btn-info {
-  background: linear-gradient(135deg, var(--cui-info), var(--cui-info-dark, #0c85bb));
+  background: var(--cui-info);
   color: white;
 
   &:hover, &:focus {
-    background: linear-gradient(135deg, var(--cui-info-dark, #0c85bb), var(--cui-info-darker, #0a719f));
+    background: var(--cui-info-dark, #0c85bb);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12);
   }
@@ -121,11 +121,11 @@
 
 /* Light Button */
 .btn-light {
-  background: linear-gradient(135deg, var(--cui-light), var(--cui-light-dark, #ebebeb));
+  background: var(--cui-light);
   color: var(--cui-body-color);
 
   &:hover, &:focus {
-    background: linear-gradient(135deg, var(--cui-light-dark, #ebebeb), var(--cui-light-darker, #dadada));
+    background: var(--cui-light-dark, #ebebeb);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
   }
@@ -137,11 +137,11 @@
 
 /* Dark Button */
 .btn-dark {
-  background: linear-gradient(135deg, var(--cui-dark), var(--cui-dark-dark, #141619));
+  background: var(--cui-dark);
   color: white;
 
   &:hover, &:focus {
-    background: linear-gradient(135deg, var(--cui-dark-dark, #141619), var(--cui-dark-darker, #0a0c0d));
+    background: var(--cui-dark-dark, #141619);
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
   }
