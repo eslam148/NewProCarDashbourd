@@ -4,8 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
-import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, InputGroupComponent, InputGroupTextDirective, FormControlDirective, ButtonDirective } from '@coreui/angular';
+import { ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent, CardBodyComponent, InputGroupComponent, InputGroupTextDirective, FormControlDirective } from '@coreui/angular';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import { login } from '../../store/auth/auth.actions';
 import { selectAuthLoading, selectAuthError, selectIsAuthenticated } from '../../store/auth/auth.selectors';
 import { selectCurrentLanguage } from '../../store/translation/translation.selectors';
@@ -28,7 +29,7 @@ import { getMessaging, getToken, isSupported } from 'firebase/messaging';
     InputGroupTextDirective,
     IconDirective,
     FormControlDirective,
-    ButtonDirective,
+    ActionButtonComponent,
     TranslatePipe
   ],
   templateUrl: './main-login.component.html',

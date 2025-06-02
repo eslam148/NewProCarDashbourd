@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { PaginationModule } from '@coreui/angular';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { MapSelectorComponent } from '../../shared/components/map-selector/map-selector.component';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 
 @Component({
   selector: 'app-nurse',
@@ -21,7 +22,8 @@ import { MapSelectorComponent } from '../../shared/components/map-selector/map-s
     ReactiveFormsModule,
     PaginationModule,
     PaginationComponent,
-    MapSelectorComponent
+    MapSelectorComponent,
+    ActionButtonComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

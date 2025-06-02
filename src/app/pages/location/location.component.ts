@@ -30,6 +30,7 @@ import {
   cilUser
 } from '@coreui/icons';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import { TranslationService } from '../../services/translation.service';
 
 @Component({
@@ -44,6 +45,7 @@ import { TranslationService } from '../../services/translation.service';
     ButtonModule,
     IconModule,
     TranslatePipe,
+    ActionButtonComponent,
     CardModule,
     ModalModule
   ],

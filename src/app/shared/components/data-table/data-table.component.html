@@ -13,7 +13,7 @@
           <form [formGroup]="searchForm" class="d-flex" (ngSubmit)="onSearch()">
             <div class="input-group">
               <span class="input-group-text">
-                <svg cIcon name="cilMagnifyingGlass" width="16" height="16"></svg>
+                <i class="bi bi-search"></i>
               </span>
               <input
                 type="text"
@@ -21,28 +21,25 @@
                 formControlName="SearchKey"
                 [placeholder]="searchPlaceholder | translate | async"
               >
-              <button
-                cButton
+              <app-action-button
                 color="primary"
                 type="submit"
-              >
-                {{ 'common.search' | translate | async }}
-              </button>
+                icon="cilSearch"
+                text="common.search"
+              ></app-action-button>
             </div>
           </form>
         </ng-container>
 
         <!-- Create Button -->
         <ng-container *ngIf="showCreateButton">
-          <button
-            cButton
+          <app-action-button
             color="primary"
-            class="btn-icon-text"
-            (click)="onCreateClick()"
-          >
-            <svg cIcon name="cilPlus" width="16" height="16" class="me-2"></svg>
-            {{ createButtonText | translate | async }}
-          </button>
+            icon="cilPlus"
+            [text]="createButtonText"
+            shape="rounded-pill"
+            (clicked)="onCreateClick()"
+          ></app-action-button>
         </ng-container>
       </div>
     </div>
@@ -58,7 +55,7 @@
 
     <!-- Error State -->
     <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-      <svg cIcon name="cilWarning" class="me-2"></svg>
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
       {{ error }}
       <button type="button" class="btn-close" (click)="dismissError()"></button>
     </div>
@@ -72,7 +69,7 @@
 
       <!-- Default Empty State -->
       <div *ngIf="!emptyTemplate" class="text-center py-5">
-        <svg cIcon name="cilBan" class="text-muted mb-3" width="48" height="48"></svg>
+        <i class="bi bi-inbox text-muted mb-3" style="font-size: 3rem;"></i>
         <h5>{{ 'common.noResults' | translate | async }}</h5>
         <p class="text-muted">{{ 'common.tryDifferentSearch' | translate | async }}</p>
       </div>

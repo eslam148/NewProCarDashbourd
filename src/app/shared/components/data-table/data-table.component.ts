@@ -4,6 +4,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { IconModule } from '@coreui/icons-angular';
 import { TranslatePipe } from '../../../pipes/translate.pipe';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { ActionButtonComponent } from '../action-button/action-button.component';
 import { ButtonModule, CardModule, ModalModule, TooltipModule } from '@coreui/angular';
 
 @Component({
@@ -17,6 +18,7 @@ import { ButtonModule, CardModule, ModalModule, TooltipModule } from '@coreui/an
     IconModule,
     TranslatePipe,
     PaginationComponent,
+    ActionButtonComponent,
     ButtonModule,
     CardModule,
     ModalModule,

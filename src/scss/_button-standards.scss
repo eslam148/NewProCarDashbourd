@@ -1,7 +1,7 @@
-/* 
+/*
  * Button Standardization Guide
  * ============================
- * 
+ *
  * This file defines the standardized button colors and styles for the entire application.
  * All components should use the ActionButtonComponent or follow these standards.
  */
@@ -70,11 +70,11 @@
   --btn-height-sm: 32px;
   --btn-height-default: 38px;
   --btn-height-lg: 44px;
-  
+
   --btn-padding-sm: 0.375rem 1rem;
   --btn-padding-default: 0.5rem 1.25rem;
   --btn-padding-lg: 0.625rem 1.5rem;
-  
+
   --btn-font-size-sm: 0.85rem;
   --btn-font-size-default: 0.9rem;
   --btn-font-size-lg: 1rem;
@@ -99,37 +99,37 @@
   font-size: var(--btn-font-size-default);
   font-weight: 500;
   line-height: 1.5;
-  
+
   // Standard appearance
   border-radius: var(--btn-border-radius);
   border: none;
   transition: var(--btn-transition);
   box-shadow: var(--btn-box-shadow);
-  
+
   // Standard behavior
   display: inline-flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  
+
   // Hover effects
   &:hover:not(:disabled) {
     transform: var(--btn-transform-hover);
     box-shadow: var(--btn-box-shadow-hover);
   }
-  
+
   // Active effects
   &:active:not(:disabled) {
     transform: var(--btn-transform-active);
     box-shadow: var(--btn-box-shadow);
   }
-  
+
   // Focus effects
   &:focus {
     box-shadow: var(--btn-box-shadow-focus);
   }
-  
+
   // Disabled state
   &:disabled {
     opacity: 0.6;
@@ -137,11 +137,11 @@
     transform: none !important;
     box-shadow: var(--btn-box-shadow) !important;
   }
-  
+
   // Icon spacing
   svg, i {
     flex-shrink: 0;
-    
+
     &:not(:only-child) {
       margin-right: 0.5rem;
     }
@@ -166,17 +166,17 @@
   width: var(--btn-height-default);
   height: var(--btn-height-default);
   padding: 0;
-  
+
   &.btn-sm {
     width: var(--btn-height-sm);
     height: var(--btn-height-sm);
   }
-  
+
   &.btn-lg {
     width: var(--btn-height-lg);
     height: var(--btn-height-lg);
   }
-  
+
   svg, i {
     margin: 0 !important;
   }
@@ -200,29 +200,29 @@ html[lang="ar"] {
     min-height: 36px;
     padding: 0.375rem 1rem;
     font-size: 0.85rem;
-    
+
     &.btn-sm {
       min-height: 30px;
       padding: 0.25rem 0.75rem;
       font-size: 0.8rem;
     }
-    
+
     &.btn-lg {
       min-height: 40px;
       padding: 0.5rem 1.25rem;
       font-size: 0.9rem;
     }
   }
-  
+
   .btn-icon, .icon-only {
     width: 36px;
     height: 36px;
-    
+
     &.btn-sm {
       width: 30px;
       height: 30px;
     }
-    
+
     &.btn-lg {
       width: 40px;
       height: 40px;
@@ -230,27 +230,45 @@ html[lang="ar"] {
   }
 }
 
-/* 
+/*
  * Migration Guide for Developers:
  * ===============================
- * 
+ *
  * 1. Replace all direct CoreUI buttons with ActionButtonComponent
  * 2. Use standardized colors: primary, secondary, success, danger, warning, info, light, dark
- * 3. Use standardized icons from CoreUI icon set
+ * 3. Use standardized Bootstrap Icons (bi-*) instead of CoreUI icons
  * 4. Follow the color scheme defined in the README.md
  * 5. Remove custom button styles from individual components
- * 
+ *
  * Example Migration:
- * 
+ *
  * OLD:
  * <c-button color="primary" size="sm" (click)="edit()">Edit</c-button>
- * 
+ * <button class="btn btn-success" (click)="add()">Add</button>
+ *
  * NEW:
- * <app-action-button 
- *   color="primary" 
- *   size="sm" 
- *   icon="cilPencil" 
- *   text="common.edit" 
+ * <app-action-button
+ *   color="primary"
+ *   size="sm"
+ *   icon="cilPencil"
+ *   text="common.edit"
  *   (clicked)="edit()"
  * ></app-action-button>
+ *
+ * <app-action-button
+ *   color="primary"
+ *   icon="cilPlus"
+ *   text="common.add"
+ *   (clicked)="add()"
+ * ></app-action-button>
+ *
+ * STANDARDIZED BUTTON COLORS:
+ * - primary: #CD2C4E (ProCare brand red) - for Add, Edit, Save, Submit actions
+ * - secondary: #6c757d - for Cancel, Close actions
+ * - success: #40C5AA - for Confirm, Approve actions
+ * - danger: #dc3545 - for Delete, Remove actions
+ * - warning: #ffc107 - for Warning actions
+ * - info: #17a2b8 - for View, Details actions
+ * - light: #f8f9fa - for neutral actions on dark backgrounds
+ * - dark: #343a40 - for alternative primary actions
  */

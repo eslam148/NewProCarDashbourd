@@ -28,6 +28,7 @@ import {
 
 import { IconDirective } from '@coreui/icons-angular';
 import { LanguageSwitcherComponent } from '../../../components/language-switcher/language-switcher.component';
+import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-toggle.component';
 
 @Component({
     selector: 'app-default-header',
@@ -38,7 +39,7 @@ import { LanguageSwitcherComponent } from '../../../components/language-switcher
       ContainerComponent,
       HeaderTogglerDirective,
       SidebarToggleDirective,
- 
+
       HeaderNavComponent,
       NavItemComponent,
       NavLinkDirective,
@@ -55,6 +56,7 @@ import { LanguageSwitcherComponent } from '../../../components/language-switcher
       BadgeComponent,
       DropdownDividerDirective,
       LanguageSwitcherComponent,
+      ThemeToggleComponent,
       AsyncPipe,
       TranslatePipe
     ]

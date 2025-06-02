@@ -1,9 +1,12 @@
 <div class="admin-container" [dir]="direction">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Admins</h2>
-    <button class="btn btn-primary" (click)="toggleDirection()">
-      {{ direction === 'ltr' ? 'RTL' : 'LTR' }}
-    </button>
+    <app-action-button
+      color="primary"
+      icon="cilSwapHorizontal"
+      [text]="direction === 'ltr' ? 'RTL' : 'LTR'"
+      (clicked)="toggleDirection()"
+    ></app-action-button>
   </div>
 
   <div class="table-container">
@@ -24,8 +27,23 @@
               <td>{{ admin.name }}</td>
               <td>{{ admin.email }}</td>
               <td class="actions-cell">
-                <button class="btn btn-sm btn-primary rounded-pill px-3 me-2">Edit</button>
-                <button class="btn btn-sm btn-danger rounded-pill px-3">Delete</button>
+                <div class="d-flex gap-2">
+                  <app-action-button
+                    color="primary"
+                    size="sm"
+                    icon="cilPencil"
+                    text="common.edit"
+                    shape="rounded-pill"
+                  ></app-action-button>
+
+                  <app-action-button
+                    color="danger"
+                    size="sm"
+                    icon="cilTrash"
+                    text="common.delete"
+                    shape="rounded-pill"
+                  ></app-action-button>
+                </div>
               </td>
             </tr>
             <tr *ngIf="!admins?.items?.length" class="empty-row">

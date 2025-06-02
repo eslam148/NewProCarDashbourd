@@ -13,7 +13,7 @@
     (click)="onClick()"
   >
     <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-    <svg *ngIf="icon && !loading" cIcon [name]="icon" [ngClass]="{'me-2': !iconOnly && text}"></svg>
+    <i *ngIf="icon && !loading" [class]="getBootstrapIconClass()" [ngClass]="{'me-2': !iconOnly && text}"></i>
     <span *ngIf="text && !iconOnly">{{ text | translate | async }}</span>
   </button>
 </ng-container>
@@ -32,7 +32,7 @@
     (click)="onClick()"
   >
     <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-    <svg *ngIf="icon && !loading" cIcon [name]="icon" [ngClass]="{'me-2': !iconOnly && text}"></svg>
+    <i *ngIf="icon && !loading" [class]="getBootstrapIconClass()" [ngClass]="{'me-2': !iconOnly && text}"></i>
     <span *ngIf="text && !iconOnly">{{ text | translate | async }}</span>
   </button>
 </ng-container>

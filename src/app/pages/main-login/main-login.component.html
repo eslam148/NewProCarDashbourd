@@ -23,13 +23,13 @@
 
                 <!-- Error Message -->
                 <div *ngIf="error$ | async as error" class="alert alert-danger rounded-3 d-flex align-items-center" role="alert">
-                  <svg cIcon class="flex-shrink-0 me-2" name="cilBan"></svg>
+                  <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
                   <div>{{ error }}</div>
                 </div>
 
                 <c-input-group class="mb-3">
                   <span cInputGroupText class="bg-light border-end-0">
-                    <svg cIcon name="cilPhone"></svg>
+                    <i class="bi bi-telephone-fill"></i>
                   </span>
                   <input
                     cFormControl
@@ -47,7 +47,7 @@
 
                 <c-input-group class="mb-4">
                   <span cInputGroupText class="bg-light border-end-0">
-                    <svg cIcon name="cilLockLocked"></svg>
+                    <i class="bi bi-lock-fill"></i>
                   </span>
                   <input
                     cFormControl
@@ -66,21 +66,22 @@
 
                 <c-row>
                   <c-col xs="6">
-                    <button
-                      cButton
-                      class="px-4 py-2 rounded-pill fw-semibold"
+                    <app-action-button
                       color="primary"
                       type="submit"
-                      [disabled]="loginForm.invalid || (loading$ | async)"
-                    >
-                      <svg cIcon class="me-2" name="cilLockUnlocked"></svg>
-                      {{ 'auth.signIn' | translate | async }}
-                    </button>
+                      icon="cilLockUnlocked"
+                      text="auth.signIn"
+                      shape="rounded-pill"
+                      [disabled]="loginForm.invalid || !!(loading$ | async)"
+                    ></app-action-button>
                   </c-col>
                   <c-col class="text-end d-flex align-items-center justify-content-end" xs="6">
-                    <button cButton class="text-decoration-none" color="link" type="button">
-                      {{ 'auth.forgotPassword' | translate | async }}
-                    </button>
+                    <app-action-button
+                      color="secondary"
+                      variant="ghost"
+                      icon="cilQuestionCircle"
+                      text="auth.forgotPassword"
+                    ></app-action-button>
                   </c-col>
                 </c-row>
               </form>
@@ -91,19 +92,18 @@
               <c-card-body class="text-center d-flex flex-column justify-content-center h-100">
                 <div class="fade-in">
                   <div class="icon-container mx-auto mb-3 bg-white">
-                    <svg cIcon class="text-primary" name="cilUserFollow" size="xl"></svg>
+                    <i class="bi bi-person-plus-fill text-primary" style="font-size: 3rem;"></i>
                   </div>
                   <h2 class="fw-bold mb-3">{{ 'auth.signUp' | translate | async }}</h2>
                   <p class="lead mb-4 px-3">{{ 'auth.signUpMessage' | translate | async }}</p>
-                  <button
-                    [active]="true"
-                    cButton
-                    class="btn-lg mt-2 rounded-pill px-4 py-2 fw-semibold bg-white text-primary hover-lift"
+                  <app-action-button
+                    color="light"
+                    size="lg"
+                    icon="cilUserPlus"
+                    text="auth.registerNow"
+                    shape="rounded-pill"
                     routerLink="/register"
-                  >
-                    <svg cIcon class="me-2" name="cilUserPlus"></svg>
-                    {{ 'auth.registerNow' | translate | async }}
-                  </button>
+                  ></app-action-button>
                 </div>
               </c-card-body>
             </div>

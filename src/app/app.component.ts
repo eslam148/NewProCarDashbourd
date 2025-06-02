@@ -6,6 +6,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { delay, filter, map, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { checkAuth } from './store/auth/auth.actions';
+import { ThemeService } from './services/theme.service';
 
 import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit {
   readonly #router = inject(Router);
   readonly #titleService = inject(Title);
   readonly #store = inject(Store);
+  readonly #themeService = inject(ThemeService);
 
   readonly #colorModeService = inject(ColorModeService);
   readonly #iconSetService = inject(IconSetService);

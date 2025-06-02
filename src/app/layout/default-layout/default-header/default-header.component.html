@@ -35,47 +35,13 @@
 
     <c-header-nav class="d-none d-md-flex ms-auto">
       <a cNavLink class="d-flex align-items-center justify-content-center">
-        <!-- Direct SVG rendering for bell icon -->
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 512 512"
-          fill="currentColor"
-          style="visibility: visible !important; opacity: 1 !important; display: block !important;"
-          class="my-1"
-        >
-          <path d="M427.68 351.43C402 320 383.87 304 383.87 217.35 383.87 138 343.35 109.73 310 96c-4.43-1.82-8.6-6-9.95-10.55C294.2 65.54 277.8 48 256 48s-38.21 17.55-44 37.47c-1.35 4.6-5.52 8.71-9.95 10.53-33.39 13.75-73.87 41.92-73.87 121.35C128.13 304 110 320 84.32 351.43 73.68 364.45 83 384 101.61 384h308.88c18.51 0 27.77-19.61 17.19-32.57zM320 384v16a64 64 0 01-128 0v-16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-        </svg>
+        <i class="bi bi-bell-fill" style="font-size: 1.25rem;"></i>
       </a>
       <a cNavLink class="d-flex align-items-center justify-content-center">
-        <!-- Direct SVG rendering for list icon -->
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 512 512"
-          fill="currentColor"
-          style="visibility: visible !important; opacity: 1 !important; display: block !important;"
-          class="my-1"
-        >
-          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M160 144h288M160 256h288M160 368h288"/>
-          <circle cx="80" cy="144" r="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-          <circle cx="80" cy="256" r="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-          <circle cx="80" cy="368" r="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-        </svg>
+        <i class="bi bi-list-ul" style="font-size: 1.25rem;"></i>
       </a>
       <a cNavLink class="d-flex align-items-center justify-content-center">
-        <!-- Direct SVG rendering for envelope icon -->
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 512 512"
-          fill="currentColor"
-          style="visibility: visible !important; opacity: 1 !important; display: block !important;"
-          class="my-1"
-        >
-          <path d="M441.6 171.61L266.87 85.37a24.57 24.57 0 00-21.74 0L70.4 171.61A40 40 0 0048 207.39V392c0 22.09 18.14 40 40.52 40h335c22.38 0 40.52-17.91 40.52-40V207.39a40 40 0 00-22.44-35.78z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-          <path d="M397.33 368L268.07 267.46a24 24 0 00-29.47 0L109.33 368M309.33 295l136-103M61.33 192l139 105" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-        </svg>
+        <i class="bi bi-envelope-fill" style="font-size: 1.25rem;"></i>
       </a>
     </c-header-nav>
 
@@ -87,7 +53,7 @@
       <div class="nav-item py-1">
         <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
       </div>
-      <ng-container *ngTemplateOutlet="themeDropdown" />
+      <app-theme-toggle></app-theme-toggle>
       <div class="nav-item py-1">
         <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
       </div>
@@ -129,17 +95,7 @@
       @for (message of newMessages; track message.id) {
         <li>
           <a cDropdownItem [routerLink]="message.link">
-            <!-- Direct SVG for bell icon -->
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 512 512"
-              fill="currentColor"
-              class="me-2"
-              style="visibility: visible !important; opacity: 1 !important; display: block !important;"
-            >
-              <path d="M427.68 351.43C402 320 383.87 304 383.87 217.35 383.87 138 343.35 109.73 310 96c-4.43-1.82-8.6-6-9.95-10.55C294.2 65.54 277.8 48 256 48s-38.21 17.55-44 37.47c-1.35 4.6-5.52 8.71-9.95 10.53-33.39 13.75-73.87 41.92-73.87 121.35C128.13 304 110 320 84.32 351.43 73.68 364.45 83 384 101.61 384h308.88c18.51 0 27.77-19.61 17.19-32.57zM320 384v16a64 64 0 01-128 0v-16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-            </svg>
+            <i class="bi bi-bell-fill me-2"></i>
             {{ message.title | translate | async }}
             <c-badge class="ms-2 float-end" [color]="message.status">{{ message.time | translate | async }}</c-badge>
           </a>
@@ -152,34 +108,13 @@
       </li>
       <li>
         <a cDropdownItem routerLink="/profile">
-          <!-- Direct SVG for user icon -->
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 512 512"
-            fill="currentColor"
-            class="me-2"
-            style="visibility: visible !important; opacity: 1 !important; display: block !important;"
-          >
-            <path d="M258.9 48C141.92 46.42 46.42 141.92 48 258.9c1.56 112.19 92.91 203.54 205.1 205.1 117 1.6 212.48-93.9 210.88-210.88C462.44 140.91 371.09 49.56 258.9 48zm126.42 327.25a4 4 0 01-6.14-.32 124.27 124.27 0 00-32.35-29.59C321.37 329 289.11 320 256 320s-65.37 9-90.83 25.34a124.24 124.24 0 00-32.35 29.58 4 4 0 01-6.14.32A175.32 175.32 0 0180 259c-1.63-97.31 78.22-178.76 175.57-179S432 158.81 432 256a175.32 175.32 0 01-46.68 119.25z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-            <path d="M256 144c-19.72 0-37.55 7.39-50.22 20.82s-19 32-17.57 51.93C191.11 256 221.52 288 256 288s64.83-32 67.79-71.24c1.48-19.74-4.8-38.14-17.68-51.82C293.39 151.44 275.59 144 256 144z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-          </svg>
+          <i class="bi bi-person-fill me-2"></i>
           {{ 'common.profile' | translate | async }}
         </a>
       </li>
       <li>
         <a cDropdownItem routerLink="/settings">
-          <!-- Direct SVG for settings icon -->
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 512 512"
-            fill="currentColor"
-            class="me-2"
-            style="visibility: visible !important; opacity: 1 !important; display: block !important;"
-          >
-            <path d="M262.29 192.31a64 64 0 1057.4 57.4 64.13 64.13 0 00-57.4-57.4zM416.39 256a154.34 154.34 0 01-1.53 20.79l45.21 35.46a10.81 10.81 0 012.45 13.75l-42.77 74a10.81 10.81 0 01-13.14 4.59l-44.9-18.08a16.11 16.11 0 00-15.17 1.75A164.48 164.48 0 01325 400.8a15.94 15.94 0 00-8.82 12.14l-6.73 47.89a11.08 11.08 0 01-10.68 9.17h-85.54a11.11 11.11 0 01-10.69-8.87l-6.72-47.82a16.07 16.07 0 00-9-12.22 155.3 155.3 0 01-21.46-12.57 16 16 0 00-15.11-1.71l-44.89 18.07a10.81 10.81 0 01-13.14-4.58l-42.77-74a10.8 10.8 0 012.45-13.75l38.21-30a16.05 16.05 0 006-14.08c-.36-4.17-.58-8.33-.58-12.5s.21-8.27.58-12.35a16 16 0 00-6.07-13.94l-38.19-30A10.81 10.81 0 0149.48 186l42.77-74a10.81 10.81 0 0113.14-4.59l44.9 18.08a16.11 16.11 0 0015.17-1.75A164.48 164.48 0 01187 111.2a15.94 15.94 0 008.82-12.14l6.73-47.89A11.08 11.08 0 01213.23 42h85.54a11.11 11.11 0 0110.69 8.87l6.72 47.82a16.07 16.07 0 009 12.22 155.3 155.3 0 0121.46 12.57 16 16 0 0015.11 1.71l44.89-18.07a10.81 10.81 0 0113.14 4.58l42.77 74a10.8 10.8 0 01-2.45 13.75l-38.21 30a16.05 16.05 0 00-6.05 14.08c.33 4.14.55 8.3.55 12.47z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-          </svg>
+          <i class="bi bi-gear-fill me-2"></i>
           {{ 'common.settings' | translate | async }}
         </a>
       </li>
@@ -188,17 +123,7 @@
       </li>
       <li>
         <a cDropdownItem (click)="onLogout()">
-          <!-- Direct SVG for logout icon -->
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 512 512"
-            fill="currentColor"
-            class="me-2"
-            style="visibility: visible !important; opacity: 1 !important; display: block !important;"
-          >
-            <path d="M304 336v40a40 40 0 01-40 40H104a40 40 0 01-40-40V136a40 40 0 0140-40h152c22.09 0 48 17.91 48 40v40M368 336l80-80-80-80M176 256h256" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/>
-          </svg>
+          <i class="bi bi-box-arrow-right me-2"></i>
           {{ 'common.logout' | translate | async }}
         </a>
       </li>

@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 import { selectAdmins, selectAdminLoading } from '../../../store/admin/admin.selectors';
 import { loadAdmins } from '../../../store/admin/admin.actions';
 import { AdminsDto } from '../../../Models/DTOs/AdminsDto';
+import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
 import { PaginationModule } from '@coreui/angular';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-admins',
   standalone: true,
-  imports: [CommonModule, PaginationModule, PaginationComponent],
+  imports: [CommonModule, ActionButtonComponent, PaginationModule, PaginationComponent],
   templateUrl: './admins.component.html',
   styleUrl: './admins.component.scss'
 })

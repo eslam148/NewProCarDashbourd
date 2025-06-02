@@ -14,11 +14,11 @@
     <div class="card-body p-4">
       <!-- Feedback Messages -->
       <div *ngIf="successMessage" class="alert alert-success rounded-3 d-flex align-items-center mb-4">
-        <c-icon name="cilCheckAlt" class="me-2 flex-shrink-0"></c-icon>
+        <i class="bi bi-check-circle-fill me-2 flex-shrink-0"></i>
         <div>{{ successMessage | translate | async }}</div>
       </div>
       <div *ngIf="errorMessage" class="alert alert-danger rounded-3 d-flex align-items-center mb-4">
-        <c-icon name="cilBan" class="me-2 flex-shrink-0"></c-icon>
+        <i class="bi bi-exclamation-triangle-fill me-2 flex-shrink-0"></i>
         <div>{{ errorMessage | translate | async }}</div>
       </div>
 
@@ -119,7 +119,7 @@
               <tr *ngIf="specialties.length === 0" class="empty-row">
                 <td colspan="5" class="text-center p-4">
                   <div class="empty-state">
-                    <c-icon name="cilMedicalCross" size="3xl" class="mb-3"></c-icon>
+                    <i class="bi bi-heart-pulse mb-3" style="font-size: 4rem;"></i>
                     <h5>{{ 'specialty.noData' | translate | async }}</h5>
                     <p class="mb-0">{{ 'specialty.addSpecialtyToStart' | translate | async }}</p>
                   </div>
@@ -137,7 +137,7 @@
     <c-modal-header class="bg-light rounded-top">
       <div class="d-flex align-items-center">
         <div class="modal-icon-container bg-danger-subtle rounded-circle p-2 me-2">
-          <c-icon name="cilTrash" class="text-danger"></c-icon>
+          <i class="bi bi-trash-fill text-danger"></i>
         </div>
         <h5 cModalTitle class="mb-0 fw-bold">{{ 'specialty.delete' | translate | async }}</h5>
       </div>
@@ -145,7 +145,7 @@
     </c-modal-header>
     <c-modal-body class="p-4">
       <div class="alert alert-warning">
-        <c-icon name="cilWarning" class="me-2"></c-icon>
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
         <span>{{ 'specialty.confirmDelete' | translate | async }}</span>
       </div>
     </c-modal-body>

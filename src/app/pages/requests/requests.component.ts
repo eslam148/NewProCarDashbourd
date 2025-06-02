@@ -5,6 +5,7 @@ import { GetMobileRequestDto } from '../../Models/DTOs/GetMobileRequestDto';
 import { RequestSearchDto } from '../../Models/DTOs/RequestSearchDto';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import * as L from 'leaflet';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { RouterModule } from '@angular/router';
@@ -13,7 +14,7 @@ import { fixLeafletIcons } from '../../leaflet-fix';
 @Component({
   selector: 'app-requests',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, TranslatePipe, PaginationComponent, RouterModule],
+  imports: [ReactiveFormsModule, CommonModule, TranslatePipe, ActionButtonComponent, PaginationComponent, RouterModule],
   providers: [DatePipe, DecimalPipe],
   templateUrl: './requests.component.html',
   styleUrls: ['./requests.component.scss']

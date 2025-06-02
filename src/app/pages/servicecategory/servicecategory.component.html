@@ -5,9 +5,15 @@
       <div class="card shadow-lg rounded-4 h-100 border-0 custom-table-card">
         <div class="card-header bg-primary text-white rounded-top-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center p-3">
           <h4 class="mb-2 mb-md-0 fw-bold">{{ 'serviceCategory.title' | translate | async }}</h4>
-          <button cButton color="light" (click)="showCategoryForm = true" *ngIf="!showCategoryForm" class="mt-2 mt-md-0 rounded-pill px-3 py-1 fs-6 fw-semibold btn-hover-effect" aria-label="Add New Category">
-            <i cIcon name="cilPlus" class="me-1"></i> {{ 'serviceCategory.add' | translate | async }}
-          </button>
+          <app-action-button
+            *ngIf="!showCategoryForm"
+            color="light"
+            icon="cilPlus"
+            text="serviceCategory.add"
+            shape="rounded-pill"
+            size="sm"
+            (clicked)="showCategoryForm = true"
+          ></app-action-button>
         </div>
         <div class="card-body p-4">
           <!-- Add/Edit Category Form -->
@@ -43,14 +49,22 @@
               </div>
             </div>
             <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch mt-3">
-              <button cButton color="primary" type="submit" [disabled]="form.invalid" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2 btn-hover-effect">
-                <i class="me-2" [ngClass]="isEditMode ? 'cil-pencil' : 'cil-plus'"></i>
-                {{ isEditMode ? ('common.update' | translate | async) : ('common.add' | translate | async) }}
-              </button>
-              <button cButton color="secondary" type="button" (click)="cancelCategoryForm()" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2 btn-hover-effect">
-                <i cIcon name="cilX" class="me-2"></i>
-                {{ 'common.cancel' | translate | async }}
-              </button>
+              <app-action-button
+                color="primary"
+                type="submit"
+                [icon]="isEditMode ? 'cilPencil' : 'cilPlus'"
+                [text]="isEditMode ? 'common.update' : 'common.add'"
+                shape="rounded-pill"
+                [disabled]="form.invalid"
+              ></app-action-button>
+
+              <app-action-button
+                color="secondary"
+                icon="cilX"
+                text="common.cancel"
+                shape="rounded-pill"
+                (clicked)="cancelCategoryForm()"
+              ></app-action-button>
             </div>
           </form>
 
@@ -58,7 +72,7 @@
           <div class="search-container mb-4" *ngIf="!showCategoryForm">
             <div class="input-group">
               <span class="input-group-text bg-transparent border-end-0">
-                <i cIcon name="cilSearch"></i>
+                <i class="bi bi-search"></i>
               </span>
               <input
                 type="text"
@@ -67,9 +81,12 @@
                 [(ngModel)]="searchKey"
                 (keyup.enter)="onSearch()"
               >
-              <button class="btn btn-primary rounded-end" (click)="onSearch()">
-                {{ 'common.search' | translate | async }}
-              </button>
+              <app-action-button
+                color="primary"
+                icon="cilSearch"
+                text="common.search"
+                (clicked)="onSearch()"
+              ></app-action-button>
             </div>
           </div>
 
@@ -83,7 +100,7 @@
                    [class.selected-item]="selectedCategoryId === category.id"
                    style="cursor:pointer;">
                 <div class="category-icon me-3 d-flex align-items-center justify-content-center rounded-circle">
-                  <i cIcon name="cilFolder" size="lg"></i>
+                  <i class="bi bi-folder-fill" style="font-size: 1.5rem;"></i>
                 </div>
                 <div>
                   <h5 class="mb-0 fw-bold">{{ category.nameEn }}</h5>
@@ -91,19 +108,38 @@
                 </div>
               </div>
               <div class="d-flex flex-row gap-2 align-items-center justify-content-end mt-3 mt-md-0">
-                <button cButton color="info" *ngIf="category.id != null" (click)="selectCategory(category.id)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="View Subcategories">
-                  <i cIcon name="cilList" class="me-1"></i> {{ 'serviceCategory.viewSubCategories' | translate | async }}
-                </button>
-                <button cButton color="primary" (click)="editCategory(category)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="Edit Category">
-                  <i cIcon name="cilPencil" class="me-1"></i> {{ 'common.edit' | translate | async }}
-                </button>
-                <button cButton color="danger" *ngIf="category.id != null" (click)="openDeleteModal(category.id)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="Delete Category">
-                  <i cIcon name="cilTrash" class="me-1"></i> {{ 'common.delete' | translate | async }}
-                </button>
+                <app-action-button
+                  *ngIf="category.id != null"
+                  color="info"
+                  icon="cilList"
+                  text="serviceCategory.viewSubCategories"
+                  shape="rounded-pill"
+                  size="sm"
+                  (clicked)="selectCategory(category.id)"
+                ></app-action-button>
+
+                <app-action-button
+                  color="primary"
+                  icon="cilPencil"
+                  text="common.edit"
+                  shape="rounded-pill"
+                  size="sm"
+                  (clicked)="editCategory(category)"
+                ></app-action-button>
+
+                <app-action-button
+                  *ngIf="category.id != null"
+                  color="danger"
+                  icon="cilTrash"
+                  text="common.delete"
+                  shape="rounded-pill"
+                  size="sm"
+                  (clicked)="openDeleteModal(category.id)"
+                ></app-action-button>
               </div>
             </div>
             <div *ngIf="(categories$ | async)?.length === 0" class="empty-state p-4 text-center text-muted bg-white rounded-3 shadow-sm border-0">
-              <i cIcon name="cilFolder" size="3xl" class="mb-3"></i>
+              <i class="bi bi-folder2-open mb-3" style="font-size: 4rem;"></i>
               <h5>{{ 'serviceCategory.empty' | translate | async }}</h5>
               <p class="mb-0">{{ 'serviceCategory.emptyDescription' | translate | async }}</p>
             </div>
@@ -139,9 +175,15 @@
       <div class="card shadow-lg rounded-4 h-100 border-0 custom-table-card animated fadeIn">
         <div class="card-header bg-success text-white rounded-top-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center p-3">
           <h4 class="mb-2 mb-md-0 fw-bold">{{ 'serviceCategory.subCategories' | translate | async }}</h4>
-          <button cButton color="light" (click)="showSubCategoryForm = true" *ngIf="!showSubCategoryForm" class="mt-2 mt-md-0 rounded-pill px-3 py-1 fs-6 fw-semibold btn-hover-effect" aria-label="Add Subcategory">
-            <i cIcon name="cilPlus" class="me-1"></i> {{ 'serviceCategory.addSubCategory' | translate | async }}
-          </button>
+          <app-action-button
+            *ngIf="!showSubCategoryForm"
+            color="light"
+            icon="cilPlus"
+            text="serviceCategory.addSubCategory"
+            shape="rounded-pill"
+            size="sm"
+            (clicked)="showSubCategoryForm = true"
+          ></app-action-button>
         </div>
         <div class="card-body p-4">
           <!-- Add/Edit Subcategory Form -->
@@ -180,17 +222,21 @@
                 <div class="input-group">
                   <input type="file" class="form-control" (change)="onSubCategoryFileSelected($event)" accept="image/*" id="subCategoryIcon">
                   <label class="input-group-text" for="subCategoryIcon">
-                    <i cIcon name="cilCloudUpload"></i>
+                    <i class="bi bi-cloud-upload-fill"></i>
                   </label>
                 </div>
                 <div *ngIf="subCategoryIconPreview" class="mt-3 preview-container d-flex flex-column align-items-center">
                   <div class="preview-image-container rounded-4 mb-2 border p-2">
                     <img [src]="subCategoryIconPreview" alt="Preview" class="preview-image">
                   </div>
-                  <button cButton color="danger" size="sm" class="rounded-pill fw-bold px-3 py-1 btn-hover-effect" (click)="removeSubCategoryIcon()">
-                    <i cIcon name="cilTrash" class="me-1"></i>
-                    {{ 'serviceCategory.iconRemove' | translate | async }}
-                  </button>
+                  <app-action-button
+                    color="danger"
+                    size="sm"
+                    icon="cilTrash"
+                    text="serviceCategory.iconRemove"
+                    shape="rounded-pill"
+                    (clicked)="removeSubCategoryIcon()"
+                  ></app-action-button>
                 </div>
               </div>
               <div class="col-12 mb-3">
@@ -203,14 +249,22 @@
               </div>
             </div>
             <div class="d-flex flex-column flex-md-row gap-2 align-items-stretch mt-3">
-              <button cButton color="success" type="submit" [disabled]="subCategoryForm.invalid" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2 btn-hover-effect">
-                <i class="me-2" [ngClass]="isEditSubMode ? 'cil-pencil' : 'cil-plus'"></i>
-                {{ isEditSubMode ? ('common.update' | translate | async) : ('common.add' | translate | async) }}
-              </button>
-              <button cButton color="secondary" type="button" (click)="cancelSubCategoryForm()" class="w-100 w-md-auto rounded-pill fw-bold px-4 py-2 btn-hover-effect">
-                <i cIcon name="cilX" class="me-2"></i>
-                {{ 'common.cancel' | translate | async }}
-              </button>
+              <app-action-button
+                color="success"
+                type="submit"
+                [icon]="isEditSubMode ? 'cilPencil' : 'cilPlus'"
+                [text]="isEditSubMode ? 'common.update' : 'common.add'"
+                shape="rounded-pill"
+                [disabled]="subCategoryForm.invalid"
+              ></app-action-button>
+
+              <app-action-button
+                color="secondary"
+                icon="cilX"
+                text="common.cancel"
+                shape="rounded-pill"
+                (clicked)="cancelSubCategoryForm()"
+              ></app-action-button>
             </div>
           </form>
 
@@ -220,27 +274,39 @@
               <div class="d-flex align-items-center">
                 <div class="subcategory-icon me-3 d-flex align-items-center justify-content-center rounded-circle">
                   <img *ngIf="sub.icon" [src]="getIconUrl(sub.icon)" alt="Icon" class="subcategory-icon-img">
-                  <i *ngIf="!sub.icon" cIcon name="cilLayers" size="lg"></i>
+                  <i *ngIf="!sub.icon" class="bi bi-layers-fill" style="font-size: 1.5rem;"></i>
                 </div>
                 <div>
                   <h5 class="mb-0 fw-bold">{{ sub.nameEn }}</h5>
                   <p class="text-muted small mb-0">{{ sub.nameAr }}</p>
                   <span *ngIf="sub.fromCallCenter" class="badge bg-info rounded-pill mt-1">
-                    <i cIcon name="cilPhone" class="me-1"></i> Call Center
+                    <i class="bi bi-telephone-fill me-1"></i> Call Center
                   </span>
                 </div>
               </div>
               <div class="d-flex flex-row gap-2 align-items-center justify-content-end mt-3 mt-md-0">
-                <button cButton color="primary" (click)="editSubCategory(sub)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="Edit Subcategory">
-                  <i cIcon name="cilPencil" class="me-1"></i> {{ 'common.edit' | translate | async }}
-                </button>
-                <button cButton color="danger" *ngIf="sub.id != null" (click)="openDeleteSubCategoryModal(sub.id)" class="rounded-pill px-3 py-1 btn-hover-effect" aria-label="Delete Subcategory">
-                  <i cIcon name="cilTrash" class="me-1"></i> {{ 'common.delete' | translate | async }}
-                </button>
+                <app-action-button
+                  color="primary"
+                  icon="cilPencil"
+                  text="common.edit"
+                  shape="rounded-pill"
+                  size="sm"
+                  (clicked)="editSubCategory(sub)"
+                ></app-action-button>
+
+                <app-action-button
+                  *ngIf="sub.id != null"
+                  color="danger"
+                  icon="cilTrash"
+                  text="common.delete"
+                  shape="rounded-pill"
+                  size="sm"
+                  (clicked)="openDeleteSubCategoryModal(sub.id)"
+                ></app-action-button>
               </div>
             </div>
             <div *ngIf="(getSubCategories(selectedCategoryId) | async)?.length === 0" class="empty-state p-4 text-center text-muted bg-white rounded-3 shadow-sm border-0">
-              <i cIcon name="cilLayers" size="3xl" class="mb-3"></i>
+              <i class="bi bi-layers mb-3" style="font-size: 4rem;"></i>
               <h5>{{ 'serviceCategory.noSubCategories' | translate | async }}</h5>
               <p class="mb-0">{{ 'serviceCategory.noSubCategoriesDescription' | translate | async }}</p>
             </div>
@@ -255,7 +321,7 @@
     <c-modal-header class="bg-light rounded-top">
       <div class="d-flex align-items-center">
         <div class="modal-icon-container bg-danger-subtle rounded-circle p-2 me-2">
-          <i cIcon name="cilTrash" class="text-danger"></i>
+          <i class="bi bi-trash-fill text-danger"></i>
         </div>
         <h5 cModalTitle class="mb-0 fw-bold">{{ 'serviceCategory.deleteTitle' | translate | async }}</h5>
       </div>
@@ -263,19 +329,26 @@
     </c-modal-header>
     <c-modal-body class="p-4">
       <div class="alert alert-warning">
-        <i cIcon name="cilWarning" class="me-2"></i>
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
         <span>{{ 'serviceCategory.deleteConfirmation' | translate | async }}</span>
       </div>
     </c-modal-body>
     <c-modal-footer class="border-top-0">
-      <button cButton color="secondary" (click)="closeDeleteModal()" class="rounded-pill px-4 py-2">
-        <i cIcon name="cilX" class="me-1"></i>
-        {{ 'common.cancel' | translate | async }}
-      </button>
-      <button cButton color="danger" (click)="confirmDelete()" class="rounded-pill px-4 py-2">
-        <i cIcon name="cilTrash" class="me-1"></i>
-        {{ 'common.delete' | translate | async }}
-      </button>
+      <app-action-button
+        color="secondary"
+        icon="cilX"
+        text="common.cancel"
+        shape="rounded-pill"
+        (clicked)="closeDeleteModal()"
+      ></app-action-button>
+
+      <app-action-button
+        color="danger"
+        icon="cilTrash"
+        text="common.delete"
+        shape="rounded-pill"
+        (clicked)="confirmDelete()"
+      ></app-action-button>
     </c-modal-footer>
   </c-modal>
 
@@ -284,7 +357,7 @@
     <c-modal-header class="bg-light rounded-top">
       <div class="d-flex align-items-center">
         <div class="modal-icon-container bg-danger-subtle rounded-circle p-2 me-2">
-          <i cIcon name="cilTrash" class="text-danger"></i>
+          <i class="bi bi-trash-fill text-danger"></i>
         </div>
         <h5 cModalTitle class="mb-0 fw-bold">{{ 'serviceCategory.deleteSubCategoryTitle' | translate | async }}</h5>
       </div>
@@ -292,19 +365,26 @@
     </c-modal-header>
     <c-modal-body class="p-4">
       <div class="alert alert-warning">
-        <i cIcon name="cilWarning" class="me-2"></i>
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
         <span>{{ 'serviceCategory.deleteConfirmation' | translate | async }}</span>
       </div>
     </c-modal-body>
     <c-modal-footer class="border-top-0">
-      <button cButton color="secondary" (click)="closeDeleteSubCategoryModal()" class="rounded-pill px-4 py-2">
-        <i cIcon name="cilX" class="me-1"></i>
-        {{ 'common.cancel' | translate | async }}
-      </button>
-      <button cButton color="danger" (click)="confirmDeleteSubCategory()" class="rounded-pill px-4 py-2">
-        <i cIcon name="cilTrash" class="me-1"></i>
-        {{ 'common.delete' | translate | async }}
-      </button>
+      <app-action-button
+        color="secondary"
+        icon="cilX"
+        text="common.cancel"
+        shape="rounded-pill"
+        (clicked)="closeDeleteSubCategoryModal()"
+      ></app-action-button>
+
+      <app-action-button
+        color="danger"
+        icon="cilTrash"
+        text="common.delete"
+        shape="rounded-pill"
+        (clicked)="confirmDeleteSubCategory()"
+      ></app-action-button>
     </c-modal-footer>
   </c-modal>
 </div>

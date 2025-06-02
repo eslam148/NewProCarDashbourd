@@ -8,9 +8,28 @@
       {{ 'requests.to' | translate | async }}:
       <input type="date" formControlName="toDate">
     </label>
-    <button type="submit">{{ 'requests.filter' | translate | async }}</button>
-    <button type="button" (click)="toggleRequestType(false)" [disabled]="!showPrevious">{{ 'requests.current' | translate | async }}</button>
-    <button type="button" (click)="toggleRequestType(true)" [disabled]="showPrevious">{{ 'requests.previous' | translate | async }}</button>
+    <app-action-button
+      type="submit"
+      color="primary"
+      icon="cilFilter"
+      text="requests.filter"
+    ></app-action-button>
+
+    <app-action-button
+      color="info"
+      icon="cilClock"
+      text="requests.current"
+      [disabled]="!showPrevious"
+      (clicked)="toggleRequestType(false)"
+    ></app-action-button>
+
+    <app-action-button
+      color="secondary"
+      icon="cilHistory"
+      text="requests.previous"
+      [disabled]="showPrevious"
+      (clicked)="toggleRequestType(true)"
+    ></app-action-button>
   </form>
 
   <div *ngIf="loading" class="loading">{{ 'requests.loading' | translate | async }}</div>
@@ -50,9 +69,14 @@
               <td>{{ req.totalPrice | number:'1.2-2' }}</td>
               <td>{{ req.createdAt | date:'short' }}</td>
               <td class="actions-cell">
-                <button type="button" class="btn btn-sm btn-primary rounded-pill px-3" (click)="showDetails(req.id)">
-                  {{ 'requests.details' | translate | async }}
-                </button>
+                <app-action-button
+                  color="primary"
+                  size="sm"
+                  icon="cilEye"
+                  text="requests.details"
+                  shape="rounded-pill"
+                  (clicked)="showDetails(req.id)"
+                ></app-action-button>
               </td>
             </tr>
             <tr *ngIf="requests.length === 0" class="empty-row">
@@ -83,7 +107,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{ 'requests.requestDetails' | translate | async }}</h5>
-          <button type="button" class="btn-close" (click)="closeDetails()"></button>
+          <app-action-button
+            color="secondary"
+            icon="cilX"
+            [iconOnly]="true"
+            (clicked)="closeDetails()"
+          ></app-action-button>
         </div>
         <div class="modal-body">
           <div *ngIf="loadingDetails" class="text-center my-3">
@@ -122,7 +151,12 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="closeDetails()">{{ 'common.close' | translate | async }}</button>
+          <app-action-button
+            color="primary"
+            icon="cilX"
+            text="common.close"
+            (clicked)="closeDetails()"
+          ></app-action-button>
         </div>
       </div>
     </div>

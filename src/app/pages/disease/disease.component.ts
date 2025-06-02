@@ -34,6 +34,7 @@ import { Status } from '../../Enums/Status.enum';
     IconModule,
     TooltipModule,
     PaginationComponent,
+    ActionButtonComponent,
     CardModule,
     GridModule,
     CoreUITableModule,

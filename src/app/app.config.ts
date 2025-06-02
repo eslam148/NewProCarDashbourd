@@ -28,6 +28,7 @@ import { CityEffects } from './store/city/city.effects';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { SidebarNavHelper } from '@coreui/angular';
 import { TranslationService } from './services/translation.service';
+import { ThemeService } from './services/theme.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -72,6 +73,7 @@ export const appConfig: ApplicationConfig = {
     ),
     IconSetService,
     SidebarNavHelper,
-    TranslationService
+    TranslationService,
+    ThemeService
   ]
 };

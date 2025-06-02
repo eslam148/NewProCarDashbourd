@@ -29,6 +29,7 @@ import * as ServiceCatalogActions from '../../store/service-catalog/service-cata
 import { selectAllSubCategories, selectSubCategoryLoading, selectSubCategoryError } from '../../store/sub-category/sub-category.selectors';
 import * as SubCategoryActions from '../../store/sub-category/sub-category.actions';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import { GenericResponse } from '../../Models/Responses/GenericResponse';
 import { ServiceCategoryService } from '../../services/service-category.service';
 import { SubCategoryService } from '../../services/sub-category.service';
@@ -57,7 +58,8 @@ import { SubCategoryService } from '../../services/sub-category.service';
     IconModule,
     BadgeModule,
     PaginationModule,
-    TranslatePipe
+    TranslatePipe,
+    ActionButtonComponent
   ],
 })
 export class ServicecategoryComponent implements OnInit {
