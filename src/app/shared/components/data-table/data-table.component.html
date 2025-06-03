@@ -108,14 +108,23 @@
     </div>
 
     <!-- Pagination -->
-    <div *ngIf="!loading && items.length > 0 && totalItems > pageSize" class="d-flex justify-content-center mt-4">
+    <!-- <div *ngIf="!loading && items.length > 0 && totalItems > pageSize" class="d-flex justify-content-center mt-4"> -->
       <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [layout]="'simple'"
+        [showInfo]="true"
+        [size]="'sm'"
+        (pageChange)="onPageChangeEvent($event)"
+      ></app-pagination>
+      <!-- <app-pagination
         [currentPage]="currentPage"
         [totalItems]="totalItems"
         [pageSize]="pageSize"
         (pageChange)="onPageChangeEvent($event)"
         size="sm"
       ></app-pagination>
-    </div>
+    </div> -->
   </div>
 </div>

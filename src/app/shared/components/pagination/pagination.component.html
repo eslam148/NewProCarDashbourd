@@ -1,41 +1,128 @@
-<nav aria-label="Page navigation">
-  <ul class="pagination" [class.pagination-sm]="size === 'sm'" [class.pagination-lg]="size === 'lg'">
-    <!-- First page button -->
-    <li class="page-item prev" [class.disabled]="currentPage === 1 || disabled">
-      <a class="page-link" href="javascript:void(0)" (click)="changePage(1)" [attr.aria-disabled]="currentPage === 1">
-        ««
-      </a>
-    </li>
+<!-- Default Layout: Info + Full Pagination -->
+<div *ngIf="layout === 'default'" class="pagination-wrapper">
+  <!-- Pagination Info -->
+  <div *ngIf="showInfo && totalItems > 0" class="pagination-info">
+    <span>{{ 'common.showing' | translate }} {{ startItem }} {{ 'common.to' | translate }} {{ endItem }} {{ 'common.of' | translate }} {{ totalItems }} {{ 'common.entries' | translate }}</span>
+  </div>
 
-    <!-- Previous page button -->
-    <li class="page-item prev" [class.disabled]="currentPage === 1 || disabled">
-      <a class="page-link" href="javascript:void(0)" (click)="changePage(currentPage - 1)" [attr.aria-disabled]="currentPage === 1">
-        «
-      </a>
-    </li>
-
-    <!-- Page number buttons -->
-    <ng-container *ngFor="let page of pages">
-      <li *ngIf="page !== '...'" class="page-item" [class.active]="page === currentPage" [class.disabled]="disabled">
-        <a class="page-link" href="javascript:void(0)" (click)="changePage(page)">{{ page }}</a>
+  <!-- Pagination Controls -->
+  <nav aria-label="Page navigation" *ngIf="totalPages > 1">
+    <ul class="pagination" [class.pagination-sm]="size === 'sm'" [class.pagination-lg]="size === 'lg'">
+      <!-- First page button -->
+      <li class="page-item prev"
+          [class.disabled]="currentPage === 1 || disabled"
+          [class.active]="currentPage > 1 && !disabled">
+        <a class="page-link" href="javascript:void(0)" (click)="changePage(1)" [attr.aria-disabled]="currentPage === 1">
+          <i class="fas fa-angle-double-left"></i>
+        </a>
       </li>
-      <li *ngIf="page === '...'" class="page-item disabled">
-        <span class="page-link">{{ page }}</span>
+
+      <!-- Previous page button -->
+      <li class="page-item prev"
+          [class.disabled]="!hasPreviousPage || disabled"
+          [class.active]="hasPreviousPage && !disabled">
+        <a class="page-link" href="javascript:void(0)" (click)="changePage(currentPage - 1)" [attr.aria-disabled]="!hasPreviousPage">
+          <i class="fas fa-angle-left"></i>
+        </a>
       </li>
-    </ng-container>
 
-    <!-- Next page button -->
-    <li class="page-item next" [class.disabled]="currentPage === totalPages || disabled">
-      <a class="page-link" href="javascript:void(0)" (click)="changePage(currentPage + 1)" [attr.aria-disabled]="currentPage === totalPages">
-        »
-      </a>
-    </li>
+      <!-- Page number buttons -->
+      <ng-container *ngFor="let page of pages">
+        <li *ngIf="page !== '...'" class="page-item" [class.active]="page === currentPage" [class.disabled]="disabled">
+          <a class="page-link" href="javascript:void(0)" (click)="changePage(page)">{{ page }}</a>
+        </li>
+        <li *ngIf="page === '...'" class="page-item disabled">
+          <span class="page-link">{{ page }}</span>
+        </li>
+      </ng-container>
 
-    <!-- Last page button -->
-    <li class="page-item next" [class.disabled]="currentPage === totalPages || disabled">
-      <a class="page-link" href="javascript:void(0)" (click)="changePage(totalPages)" [attr.aria-disabled]="currentPage === totalPages">
-        »»
-      </a>
-    </li>
-  </ul>
-</nav>
+      <!-- Next page button -->
+      <li class="page-item next"
+          [class.disabled]="!hasNextPage || disabled"
+          [class.active]="hasNextPage && !disabled">
+        <a class="page-link" href="javascript:void(0)" (click)="changePage(currentPage + 1)" [attr.aria-disabled]="!hasNextPage">
+          <i class="fas fa-angle-right"></i>
+        </a>
+      </li>
+
+      <!-- Last page button -->
+      <li class="page-item next"
+          [class.disabled]="currentPage === totalPages || disabled"
+          [class.active]="currentPage < totalPages && !disabled">
+        <a class="page-link" href="javascript:void(0)" (click)="changePage(totalPages)" [attr.aria-disabled]="currentPage === totalPages">
+          <i class="fas fa-angle-double-right"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- Simple Layout: Info + Previous/Next only -->
+<div *ngIf="layout === 'simple'" class="pagination-wrapper simple-layout">
+  <!-- Pagination Info -->
+  <div *ngIf="showInfo && totalItems > 0" class="pagination-info">
+    <span>{{ 'common.showing' | translate }} {{ startItem }} {{ 'common.to' | translate }} {{ endItem }} {{ 'common.of' | translate }} {{ totalItems }} {{ 'common.entries' | translate }}</span>
+  </div>
+
+  <!-- Simple Controls -->
+  <div class="simple-pagination-controls" *ngIf="totalPages > 1">
+    <!-- Next button comes first in RTL -->
+    <button
+      *ngIf="isRTL"
+      type="button"
+      class="btn btn-outline-secondary btn-sm"
+      [class.active]="hasNextPage && !disabled"
+      [disabled]="!hasNextPage || disabled"
+      (click)="nextPage()">
+      <i class="fas fa-chevron-right me-1"></i>
+      {{ 'common.next' | translate }}
+    </button>
+
+    <!-- Previous button comes first in LTR -->
+    <button
+      *ngIf="!isRTL"
+      type="button"
+      class="btn btn-outline-secondary btn-sm"
+      [class.active]="hasPreviousPage && !disabled"
+      [disabled]="!hasPreviousPage || disabled"
+      (click)="previousPage()">
+      <i class="fas fa-chevron-left me-1"></i>
+      {{ 'common.previous' | translate }}
+    </button>
+
+    <span class="page-info mx-3">
+      {{ 'common.page' | translate }} {{ currentPage }} {{ 'common.of' | translate }} {{ totalPages }}
+    </span>
+
+    <!-- Previous button comes last in RTL -->
+    <button
+      *ngIf="isRTL"
+      type="button"
+      class="btn btn-outline-secondary btn-sm"
+      [class.active]="hasPreviousPage && !disabled"
+      [disabled]="!hasPreviousPage || disabled"
+      (click)="previousPage()">
+      {{ 'common.previous' | translate }}
+      <i class="fas fa-chevron-left ms-1"></i>
+    </button>
+
+    <!-- Next button comes last in LTR -->
+    <button
+      *ngIf="!isRTL"
+      type="button"
+      class="btn btn-outline-secondary btn-sm"
+      [class.active]="hasNextPage && !disabled"
+      [disabled]="!hasNextPage || disabled"
+      (click)="nextPage()">
+      {{ 'common.next' | translate }}
+      <i class="fas fa-chevron-right ms-1"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Info Only Layout: Just the pagination information -->
+<div *ngIf="layout === 'info-only'" class="pagination-wrapper info-only">
+  <div *ngIf="totalItems > 0" class="pagination-info">
+    <span>{{ 'common.showing' | translate }} {{ startItem }} {{ 'common.to' | translate }} {{ endItem }} {{ 'common.of' | translate }} {{ totalItems }} {{ 'common.entries' | translate }}</span>
+  </div>
+</div>

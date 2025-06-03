@@ -33,6 +33,7 @@ import {
 } from '@coreui/angular';
 import { ActionButtonComponent } from '../../shared/components';
 import { MapSelectorComponent } from '../../shared/components/map-selector/map-selector.component';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -52,9 +53,9 @@ import { TranslateService } from '@ngx-translate/core';
   TranslatePipe,
     FormControlDirective,
     FormSelectDirective,
- 
- 
- 
+
+
+
     AlertComponent,
     TableDirective,
     CardBodyComponent,
@@ -62,7 +63,8 @@ import { TranslateService } from '@ngx-translate/core';
     FormLabelDirective,
     ButtonGroupModule,
     ActionButtonComponent,
-    MapSelectorComponent
+    MapSelectorComponent,
+    PaginationComponent
   ],
   templateUrl: './pharmacy.component.html',
   styleUrl: './pharmacy.component.scss'
@@ -338,7 +340,7 @@ export class PharmacyComponent implements OnInit {
       if (this.isEditing) {
         this.pharmacyService.update(pharmacyData).subscribe({
           next: (response) => {
-            if (response.status === 'Success') {
+            if (response.status === 0) {
               this.translate.get('PHARMACY.MESSAGES.UPDATE_SUCCESS').subscribe((msg: string) => {
                 this.showAlertMessage(msg, 'success');
               });
@@ -386,7 +388,7 @@ export class PharmacyComponent implements OnInit {
       } else {
         this.pharmacyService.add(pharmacyData).subscribe({
           next: (response) => {
-            if (response.status === 'Success') {
+            if (response.status === 0) {
               this.translate.get('PHARMACY.MESSAGES.ADD_SUCCESS').subscribe((msg: string) => {
                 this.showAlertMessage(msg, 'success');
               });

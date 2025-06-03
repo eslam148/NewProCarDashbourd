@@ -144,9 +144,17 @@
               <p class="mb-0">{{ 'serviceCategory.emptyDescription' | translate | async }}</p>
             </div>
           </div>
-
+  <app-pagination
+        [currentPage]="currentPage"
+        [totalItems]="totalItems$ | async"
+        [pageSize]="pageSize"
+        [layout]="'simple'"
+        [showInfo]="true"
+        [size]="'sm'"
+        (pageChange)="onPageChange($event)"
+      ></app-pagination>
           <!-- Pagination -->
-          <div class="d-flex justify-content-center mt-4" *ngIf="!showCategoryForm">
+          <!-- <div class="d-flex justify-content-center mt-4" *ngIf="!showCategoryForm">
             <c-pagination
               [activePage]="currentPage"
               [pages]="getPagesCount(totalItems$ | async)"
@@ -165,7 +173,7 @@
                 <span aria-hidden="true">&raquo;</span>
               </c-pagination-item>
             </c-pagination>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

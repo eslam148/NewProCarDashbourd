@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-pagination',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './pagination.component.html'
+  imports: [CommonModule, TranslateModule],
+  templateUrl: './pagination.component.html',
+  styleUrls: ['./pagination.component.css']
 })
 export class PaginationComponent implements OnChanges {
   @Input() currentPage = 1;
@@ -14,6 +16,8 @@ export class PaginationComponent implements OnChanges {
   @Input() maxVisiblePages = 5;
   @Input() disabled = false;
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
+  @Input() showInfo = true; // Show pagination info (e.g., "Showing 1 to 10 of 25 entries")
+  @Input() layout: 'default' | 'simple' | 'info-only' = 'default'; // Layout options
 
   @Output() pageChange = new EventEmitter<number>();
 
@@ -88,5 +92,41 @@ export class PaginationComponent implements OnChanges {
     }
 
     this.pageChange.emit(page);
+  }
+
+  // Helper methods for pagination info
+  get startItem(): number {
+    return (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get endItem(): number {
+    return Math.min(this.currentPage * this.pageSize, this.totalItems);
+  }
+
+  get hasPreviousPage(): boolean {
+    return this.currentPage > 1;
+  }
+
+  get hasNextPage(): boolean {
+    return this.currentPage < this.totalPages;
+  }
+
+  previousPage(): void {
+    if (this.hasPreviousPage) {
+      this.changePage(this.currentPage - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.hasNextPage) {
+      this.changePage(this.currentPage + 1);
+    }
+  }
+
+  // RTL Detection
+  get isRTL(): boolean {
+    return document.documentElement.dir === 'rtl' ||
+           document.body.dir === 'rtl' ||
+           getComputedStyle(document.documentElement).direction === 'rtl';
   }
 }

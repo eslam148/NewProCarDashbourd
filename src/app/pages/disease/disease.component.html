@@ -126,26 +126,16 @@
           </tbody>
         </table>
 
-        <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-          <div>
-            <span class="me-2">{{ 'common.showing' | translate | async }}</span>
-            <span class="fw-bold">{{ (currentPage - 1) * pageSize + 1 }}</span>
-            <span class="mx-1">{{ 'common.to' | translate | async }}</span>
-            <span class="fw-bold">{{ Math.min(currentPage * pageSize, totalItems) }}</span>
-            <span class="mx-1">{{ 'common.of' | translate | async }}</span>
-            <span class="fw-bold">{{ totalItems }}</span>
-            <span>{{ 'common.entries' | translate | async }}</span>
-          </div>
-
-          <app-pagination
-            [currentPage]="currentPage"
-            [totalItems]="totalItems"
-            [pageSize]="pageSize"
-            (pageChange)="onPageChange($event)"
-            size="sm"
-          ></app-pagination>
-        </div>
+        <!-- Standardized Pagination -->
+        <app-pagination
+          [currentPage]="currentPage"
+          [totalItems]="totalItems"
+          [pageSize]="pageSize"
+          [layout]="'simple'"
+          [showInfo]="true"
+          [size]="'sm'"
+          (pageChange)="onPageChange($event)"
+        ></app-pagination>
       }
     </c-card-body>
   </c-card>

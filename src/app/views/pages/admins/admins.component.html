@@ -55,13 +55,15 @@
     </div>
   </div>
 
-  <div class="d-flex justify-content-center mt-4">
-    <app-pagination
-      [currentPage]="currentPage"
-      [totalItems]="totalItems"
-      [pageSize]="pageSize"
-      (pageChange)="onPageChange($event)"
-      [maxVisiblePages]="5"
-    ></app-pagination>
-  </div>
+  <!-- Standardized Pagination -->
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalItems]="totalItems"
+    [pageSize]="pageSize"
+    [layout]="'default'"
+    [showInfo]="true"
+    [size]="'md'"
+    [maxVisiblePages]="5"
+    (pageChange)="onPageChange($event)"
+  ></app-pagination>
 </div>

@@ -87,14 +87,16 @@
       </div>
     </div>
 
-    <div class="pagination-container">
-      <app-pagination
-        [currentPage]="pageNumber"
-        [totalItems]="totalCount"
-        [pageSize]="pageSize"
-        (pageChange)="onPageChange($event)"
-      ></app-pagination>
-    </div>
+    <!-- Standardized Pagination -->
+    <app-pagination
+      [currentPage]="pageNumber"
+      [totalItems]="totalCount"
+      [pageSize]="pageSize"
+      [layout]="'default'"
+      [showInfo]="true"
+      [size]="'md'"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
   </div>
 
   <!-- Modal for details -->
