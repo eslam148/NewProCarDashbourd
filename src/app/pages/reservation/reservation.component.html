@@ -1,0 +1,430 @@
+<div class="container-fluid">
+  <!-- Page Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="page-title">
+        <i class="fas fa-calendar-check me-2"></i>
+        {{ 'RESERVATION.TITLE' | translate | async }}
+      </h2>
+      <p class="text-muted">{{ 'RESERVATION.SUBTITLE' | translate | async  }}</p>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="row mb-3" *ngIf="error || success">
+    <div class="col-12">
+      <c-alert
+        *ngIf="error"
+        color="danger"
+        [dismissible]="true"
+        (alertChange)="clearMessages()">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error | translate }}
+      </c-alert>
+
+      <c-alert
+        *ngIf="success"
+        color="success"
+        [dismissible]="true"
+        (alertChange)="clearMessages()">
+        <i class="fas fa-check-circle me-2"></i>
+        {{ success | translate }}
+      </c-alert>
+    </div>
+  </div>
+
+  <!-- Simple Filter Form like requests.component -->
+  <form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="filter-form">
+    <label>
+      {{ 'RESERVATION.FILTERS.SEARCH' | translate | async }}:
+      <input
+        type="text"
+        formControlName="searchText"
+        [placeholder]="'RESERVATION.FILTERS.SEARCH_PLACEHOLDER' | translate | async">
+    </label>
+
+    <label>
+      {{ 'RESERVATION.FILTERS.STATUS' | translate | async }}:
+      <select formControlName="status">
+        <option value="0">{{ 'RESERVATION.FILTERS.ALL_STATUS' | translate | async }}</option>
+        <option *ngFor="let status of statusOptions" [value]="status.value+1">
+          {{ status.label | translate }}
+        </option>
+      </select>
+    </label>
+
+    <label>
+      {{ 'RESERVATION.FILTERS.FROM_DATE' | translate | async }}:
+      <input type="date" formControlName="fromDate">
+    </label>
+
+    <label>
+      {{ 'RESERVATION.FILTERS.TO_DATE' | translate | async }}:
+      <input type="date" formControlName="toDate">
+    </label>
+
+    <app-action-button
+      type="submit"
+      color="primary"
+      icon="cilFilter"
+      text="RESERVATION.BUTTONS.SEARCH"
+      [disabled]="isLoading"
+    ></app-action-button>
+
+    <app-action-button
+      color="secondary"
+      icon="cilReload"
+      text="RESERVATION.BUTTONS.RESET"
+      [disabled]="isLoading"
+      (clicked)="resetFilters()"
+    ></app-action-button>
+  </form>
+
+  <!-- Reservations Table Card -->
+  <c-card>
+    <c-card-header class="d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        <i class="fas fa-list me-2"></i>
+        {{ 'RESERVATION.TABLE.TITLE' | translate | async }}
+        <span class="badge bg-primary ms-2">{{ totalItems }}</span>
+      </h5>
+    </c-card-header>
+    <c-card-body>
+      <!-- Loading Spinner -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <c-spinner color="primary"></c-spinner>
+        <p class="mt-2 text-muted">{{ 'common.loading' | translate | async }}</p>
+      </div>
+
+      <!-- Reservations Table -->
+      <div *ngIf="!isLoading" class="table-responsive">
+        <table cTable hover class="table-striped">
+          <thead>
+            <tr>
+              <th>{{ 'RESERVATION.TABLE.ID' | translate | async }}</th>
+              <th>{{ 'RESERVATION.TABLE.PATIENT_NAME' | translate | async }}</th>
+              <th>{{ 'RESERVATION.TABLE.PHONE' | translate | async }}</th>
+              <th>{{ 'RESERVATION.TABLE.DATE' | translate | async }}</th>
+              <th>{{ 'RESERVATION.TABLE.TIME' | translate | async }}</th>
+              <th>{{ 'RESERVATION.TABLE.STATUS' | translate | async }}</th>
+              <th>{{ 'RESERVATION.TABLE.LOCATION' | translate | async }}</th>
+              <th>{{ 'RESERVATION.TABLE.ACTIONS' | translate | async }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reservation of reservations; trackBy: trackByReservationId">
+              <td>{{ reservation.id }}</td>
+              <td>
+                <strong>{{ reservation.patientName }}</strong>
+              </td>
+              <td>
+                <i class="fas fa-phone me-1 text-muted"></i>
+                {{ reservation.patientPhone }}
+              </td>
+              <td>
+                <i class="fas fa-calendar me-1 text-muted"></i>
+                {{ formatDate(reservation.date) }}
+              </td>
+              <td>
+                <i class="fas fa-clock me-1 text-muted"></i>
+                {{ formatTime(reservation.time) }}
+              </td>
+              <td>
+                <span [class]="getStatusBadgeClass(reservation.status)">
+                  {{ reservation.status }}
+                </span>
+              </td>
+              <td>
+                <i class="fas fa-map-marker-alt me-1 text-muted"></i>
+                {{ reservation.cityName }}, {{ reservation.governorateName }}
+              </td>
+              <td>
+                <div class="btn-group" role="group">
+                  <!-- View Details -->
+                  <button
+                    cButton
+                    size="sm"
+                    color="info"
+                    variant="outline"
+                    (click)="viewDetails(reservation)"
+                    [title]="'RESERVATION.BUTTONS.VIEW_DETAILS' | translate | async">
+                    <i class="fas fa-eye"></i>
+                  </button>
+
+                  <!-- Complete -->
+                  <button
+                    *ngIf="reservation.status.toLowerCase() === 'new'"
+                    cButton
+                    size="sm"
+                    color="success"
+                    variant="outline"
+                    (click)="showConfirmation('complete', reservation.id)"
+                    [title]="'RESERVATION.BUTTONS.COMPLETE' | translate | async">
+                    <i class="fas fa-check"></i>
+                  </button>
+
+                  <!-- Cancel -->
+                  <button
+                    *ngIf="reservation.status.toLowerCase() !== 'cancelled' && reservation.status.toLowerCase() !== 'completed'"
+                    cButton
+                    size="sm"
+                    color="warning"
+                    variant="outline"
+                    (click)="showConfirmation('cancel', reservation.id)"
+                    [title]="'RESERVATION.BUTTONS.CANCEL' | translate | async">
+                    <i class="fas fa-times"></i>
+                  </button>
+
+                  <!-- Delete -->
+                  <button
+                    cButton
+                    size="sm"
+                    color="danger"
+                    variant="outline"
+                    (click)="showConfirmation('delete', reservation.id)"
+                    [title]="'RESERVATION.BUTTONS.DELETE' | translate | async">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- No Data Message -->
+        <div *ngIf="reservations.length === 0" class="text-center py-5">
+          <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+          <h5 class="text-muted">{{ 'RESERVATION.NO_DATA.TITLE' | translate | async }}</h5>
+          <p class="text-muted">{{ 'RESERVATION.NO_DATA.MESSAGE' | translate | async }}</p>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <app-pagination
+        *ngIf="!isLoading && totalPages > 1"
+        [currentPage]="currentPage"
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [layout]="'simple'"
+        [showInfo]="true"
+        [size]="'md'"
+        (pageChange)="onPageChange($event)"
+      ></app-pagination>
+    </c-card-body>
+  </c-card>
+</div>
+
+<!-- Professional Details Modal -->
+<c-modal
+  [visible]="showDetailsModal"
+  (visibleChange)="showDetailsModal = $event"
+  size="lg"
+  class="reservation-details-modal">
+
+  <!-- Enhanced Modal Header -->
+  <c-modal-header class="modal-header-professional">
+    <div class="header-content">
+      <div class="header-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="header-text">
+        <h4 cModalTitle class="modal-title-main">
+          {{ 'RESERVATION.DETAILS.TITLE' | translate | async }}
+        </h4>
+        <p class="modal-subtitle" *ngIf="selectedReservation">
+          {{ 'RESERVATION.DETAILS.SUBTITLE' | translate | async }} #{{ selectedReservation.id }}
+        </p>
+      </div>
+    </div>
+    <div class="status-indicator" *ngIf="selectedReservation">
+      <span [class]="getStatusBadgeClass(selectedReservation.status)" class="status-badge-large">
+        <i class="fas fa-circle me-1"></i>
+        {{ selectedReservation.status }}
+      </span>
+    </div>
+  </c-modal-header>
+
+  <!-- Enhanced Modal Body -->
+  <c-modal-body class="modal-body-professional" *ngIf="selectedReservation">
+
+    <!-- Patient Information Section -->
+    <div class="info-section">
+      <div class="section-header">
+        <i class="fas fa-user-circle section-icon"></i>
+        <h5 class="section-title">{{ 'RESERVATION.DETAILS.PATIENT_INFO' | translate | async }}</h5>
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">
+                <i class="fas fa-user text-primary"></i>
+                {{ 'RESERVATION.DETAILS.PATIENT_NAME' | translate | async}}
+              </div>
+              <div class="info-value">{{ selectedReservation.patientName }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">
+                <i class="fas fa-phone text-success"></i>
+                {{ 'RESERVATION.DETAILS.PHONE' | translate | async }}
+              </div>
+              <div class="info-value">
+                <a href="tel:{{ selectedReservation.patientPhone }}" class="phone-link">
+                  {{ selectedReservation.patientPhone }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointment Information Section -->
+    <div class="info-section">
+      <div class="section-header">
+        <i class="fas fa-calendar-alt section-icon"></i>
+        <h5 class="section-title">{{ 'RESERVATION.DETAILS.APPOINTMENT_INFO' | translate | async }}</h5>
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">
+                <i class="fas fa-calendar text-info"></i>
+                {{ 'RESERVATION.DETAILS.DATE' | translate | async }}
+              </div>
+              <div class="info-value">{{ formatDate(selectedReservation.date) }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">
+                <i class="fas fa-clock text-warning"></i>
+                {{ 'RESERVATION.DETAILS.TIME' | translate | async }}
+              </div>
+              <div class="info-value">{{ formatTime(selectedReservation.time) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location Information Section -->
+    <div class="info-section">
+      <div class="section-header">
+        <i class="fas fa-map-marker-alt section-icon"></i>
+        <h5 class="section-title">{{ 'RESERVATION.DETAILS.LOCATION_INFO' | translate | async }}</h5>
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">
+                <i class="fas fa-map text-danger"></i>
+                {{ 'RESERVATION.DETAILS.GOVERNORATE' | translate | async }}
+              </div>
+              <div class="info-value">{{ selectedReservation.governorateName }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-item">
+              <div class="info-label">
+                <i class="fas fa-building text-secondary"></i>
+                {{ 'RESERVATION.DETAILS.CITY' | translate | async }}
+              </div>
+              <div class="info-value">{{ selectedReservation.cityName }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Information Section -->
+    <div class="info-section" *ngIf="selectedReservation.addresNotes || selectedReservation.note">
+      <div class="section-header">
+        <i class="fas fa-sticky-note section-icon"></i>
+        <h5 class="section-title">{{ 'RESERVATION.DETAILS.ADDITIONAL_INFO' | translate | async }}</h5>
+      </div>
+      <div class="section-content">
+        <div class="row g-3">
+          <div class="col-12" *ngIf="selectedReservation.addresNotes">
+            <div class="info-item">
+              <div class="info-label">
+                <i class="fas fa-map-pin text-info"></i>
+                {{ 'RESERVATION.DETAILS.ADDRESS_NOTES' | translate | async }}
+              </div>
+              <div class="info-value notes-text">{{ selectedReservation.addresNotes }}</div>
+            </div>
+          </div>
+          <div class="col-12" *ngIf="selectedReservation.note">
+            <div class="info-item">
+              <div class="info-label">
+                <i class="fas fa-comment text-primary"></i>
+                {{ 'RESERVATION.DETAILS.NOTES' | translate | async }}
+              </div>
+              <div class="info-value notes-text">{{ selectedReservation.note }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </c-modal-body>
+
+  <!-- Enhanced Modal Footer -->
+  <c-modal-footer class="modal-footer-professional">
+    <div class="footer-actions">
+      <button cButton color="block" variant="outline" (click)="closeDetailsModal()" class="btn-close-modal">
+        <i class="fas fa-times me-2"></i>
+        {{ 'common.close' | translate | async }}
+      </button>
+       
+    </div>
+  </c-modal-footer>
+</c-modal>
+
+<!-- Confirmation Modal -->
+<c-modal
+  [visible]="showConfirmModal"
+  (visibleChange)="showConfirmModal = $event">
+  <c-modal-header>
+    <h4 cModalTitle>
+      <i class="fas fa-question-circle me-2"></i>
+      {{ 'RESERVATION.CONFIRM.TITLE' | translate | async }}
+    </h4>
+  </c-modal-header>
+  <c-modal-body>
+    <div class="text-center">
+      <i
+        class="fas fa-3x mb-3"
+        [class.fa-check-circle]="confirmAction === 'complete'"
+        [class.text-success]="confirmAction === 'complete'"
+        [class.fa-times-circle]="confirmAction === 'cancel'"
+        [class.text-warning]="confirmAction === 'cancel'"
+        [class.fa-trash]="confirmAction === 'delete'"
+        [class.text-danger]="confirmAction === 'delete'">
+      </i>
+      <h5>
+        {{ 'RESERVATION.CONFIRM.' + (confirmAction?.toUpperCase() || '') + '_TITLE' | translate | async }}
+      </h5>
+      <p class="text-muted">
+        {{ 'RESERVATION.CONFIRM.' + (confirmAction?.toUpperCase() || '') + '_MESSAGE' | translate | async }}
+      </p>
+    </div>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="closeConfirmModal()" [disabled]="isLoadingAction">
+      {{ 'common.cancel' | translate | async }}
+    </button>
+    <button
+      cButton
+      [color]="confirmAction === 'delete' ? 'danger' : (confirmAction === 'cancel' ? 'warning' : 'success')"
+      (click)="confirmActionHandler()"
+      [disabled]="isLoadingAction">
+      <c-spinner *ngIf="isLoadingAction" size="sm" class="me-1"></c-spinner>
+      {{ 'common.confirm' | translate | async }}
+    </button>
+  </c-modal-footer>
+</c-modal>

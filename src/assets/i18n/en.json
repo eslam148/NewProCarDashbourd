@@ -40,11 +40,12 @@
     "actions": "Actions",
     "preview": "Preview",
     "remove": "Remove",
+    "close": "Close",
+    "confirm": "Confirm",
+    "reset": "Reset",
     "uploadIcon": "Upload Icon",
     "update": "Update",
     "add": "Add",
-    "close": "Close",
-    "confirm": "Confirm",
     "back": "Back",
     "finish": "Finish",
     "account": "Account",
@@ -470,6 +471,129 @@
         "UPDATE": "Error updating pharmacy",
         "DELETE": "Error deleting pharmacy"
       }
+    }
+  },
+  "RESERVATION": {
+    "TITLE": "Reservations Management",
+    "SUBTITLE": "Manage patient reservations and appointments",
+    "FILTERS": {
+      "TITLE": "Search & Filter",
+      "SEARCH": "Search",
+      "SEARCH_PLACEHOLDER": "Search by patient name or phone",
+      "STATUS": "Status",
+      "ALL_STATUS": "All Status",
+      "FROM_DATE": "From Date",
+      "TO_DATE": "To Date"
+    },
+    "TABLE": {
+      "TITLE": "Reservations List",
+      "ID": "ID",
+      "PATIENT_NAME": "Patient Name",
+      "PHONE": "Phone",
+      "DATE": "Date",
+      "TIME": "Time",
+      "STATUS": "Status",
+      "LOCATION": "Location",
+      "ACTIONS": "Actions"
+    },
+    "STATUS": {
+      "NEW": "New",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "BUTTONS": {
+      "SEARCH": "Search",
+      "RESET": "Reset",
+      "CLEAR": "Clear",
+      "VIEW_DETAILS": "View Details",
+      "COMPLETE": "Complete",
+      "CANCEL": "Cancel",
+      "DELETE": "Delete",
+      "PRINT": "Print"
+    },
+    "DETAILS": {
+      "TITLE": "Reservation Details",
+      "SUBTITLE": "Detailed information for reservation",
+      "ID": "Reservation ID",
+      "PATIENT_NAME": "Patient Name",
+      "PHONE": "Phone Number",
+      "DATE": "Appointment Date",
+      "TIME": "Appointment Time",
+      "STATUS": "Status",
+      "GOVERNORATE": "Governorate",
+      "CITY": "City",
+      "ADDRESS_NOTES": "Address Notes",
+      "NOTES": "Notes",
+      "PATIENT_INFO": "Patient Information",
+      "APPOINTMENT_INFO": "Appointment Information",
+      "LOCATION_INFO": "Location Information",
+      "ADDITIONAL_INFO": "Additional Information"
+    },
+    "CONFIRM": {
+      "TITLE": "Confirm Action",
+      "COMPLETE_TITLE": "Complete Reservation",
+      "COMPLETE_MESSAGE": "Are you sure you want to mark this reservation as completed?",
+      "CANCEL_TITLE": "Cancel Reservation",
+      "CANCEL_MESSAGE": "Are you sure you want to cancel this reservation?",
+      "DELETE_TITLE": "Delete Reservation",
+      "DELETE_MESSAGE": "Are you sure you want to delete this reservation? This action cannot be undone."
+    },
+    "MESSAGES": {
+      "COMPLETED_SUCCESS": "Reservation completed successfully",
+      "CANCELLED_SUCCESS": "Reservation cancelled successfully",
+      "DELETED_SUCCESS": "Reservation deleted successfully",
+      "LOAD_ERROR": "Error loading reservations",
+      "ACTION_ERROR": "Error performing action"
+    },
+    "NO_DATA": {
+      "TITLE": "No Reservations Found",
+      "MESSAGE": "No reservations match your current filters. Try adjusting your search criteria."
+    }
+  },
+  "REPORTS": {
+    "TITLE": "Medical Reports",
+    "SUBTITLE": "Manage patient medical reports and health records",
+    "FILTERS": {
+      "FROM_DATE": "From Date",
+      "TO_DATE": "To Date"
+    },
+    "BUTTONS": {
+      "ADD_REPORT": "Add Report",
+      "SEARCH": "Search",
+      "RESET": "Reset",
+      "VIEW_DETAILS": "View Details",
+      "PATIENT_REPORTS": "Patient Reports"
+    },
+    "TABLE": {
+      "TITLE": "Reports List",
+      "PATIENT_NAME": "Patient Name",
+      "PATIENT_PHONE": "Patient Phone",
+      "NURSE_NAME": "Nurse Name",
+      "CREATED_AT": "Created Date",
+      "DISEASES": "Diseases",
+      "ACTIONS": "Actions"
+    },
+    "DETAILS": {
+      "TITLE": "Report Details",
+      "SUBTITLE": "Detailed medical report information",
+      "PATIENT_INFO": "Patient Information",
+      "NURSE_INFO": "Nurse Information",
+      "MEDICAL_INFO": "Medical Information",
+      "DATE_INFO": "Date Information",
+      "PATIENT_NAME": "Patient Name",
+      "PATIENT_PHONE": "Patient Phone",
+      "NURSE_NAME": "Nurse Name",
+      "NURSE_PHONE": "Nurse Phone",
+      "DRUGS": "Medications",
+      "DISEASES": "Diseases",
+      "NOTES": "Notes",
+      "CREATED_DATE": "Created Date",
+      "CREATED_TIME": "Created Time"
+    },
+    "NO_DATA": {
+      "TITLE": "No Reports Found",
+      "MESSAGE": "No medical reports available. Add a new report to get started."
     }
   }
 }

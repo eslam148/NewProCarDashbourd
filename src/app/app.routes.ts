@@ -79,6 +79,20 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'reservation',
+        loadComponent: () => import('./pages/reservation/reservation.component').then(m => m.ReservationComponent),
+        data: {
+          title: 'Reservations'
+        }
+      },
+      {
+        path: 'reports',
+        loadComponent: () => import('./pages/reports/reports.component').then(m => m.ReportsComponent),
+        data: {
+          title: 'Reports'
+        }
+      },
+      {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
       },

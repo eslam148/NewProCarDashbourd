@@ -68,6 +68,18 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-people' },
     badge: { color: 'info', text: 'NEW' }
   },
+  {
+    name: 'RESERVATION.TITLE',
+    url: '/reservation',
+    iconComponent: { name: 'cil-calendar-check' },
+    badge: { color: 'success', text: 'NEW' }
+  },
+  {
+    name: 'REPORTS.TITLE',
+    url: '/reports',
+    iconComponent: { name: 'cil-file-medical' },
+    badge: { color: 'warning', text: 'NEW' }
+  },
 
   {
     title: true,

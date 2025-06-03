@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { PharmacyService } from '../../services/pharmacy.service';
 import { GovernorateService } from '../../services/governorate.service';
 import { CityService } from '../../services/city.service';
-import { PharmacyModel, GetAllPharmaciesRequest, PharmacyResponseModel } from '../../Models/DTOs/Pharmacy';
+import { GetAllPharmaciesRequest, PharmacyResponseModel } from '../../Models/DTOs/Pharmacy';
 import { GovernorateDto } from '../../Models/DTOs/GovernorateDto';
 import { CityDto } from '../../Models/DTOs/CityDto';
 
@@ -21,10 +21,6 @@ import {
   ButtonGroupModule,
   FormControlDirective,
   FormSelectDirective,
-  ModalBodyComponent,
-  ModalFooterComponent,
-  ModalHeaderComponent,
-  ModalTitleDirective,
   AlertComponent,
   TableDirective,
   CardBodyComponent,

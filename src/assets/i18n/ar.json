@@ -471,5 +471,122 @@
         "DELETE": "خطأ في حذف الصيدلية"
       }
     }
+  },
+  "RESERVATION": {
+    "TITLE": "إدارة الحجوزات",
+    "SUBTITLE": "إدارة حجوزات المرضى والمواعيد",
+    "FILTERS": {
+      "TITLE": "البحث والفلترة",
+      "SEARCH": "البحث",
+      "SEARCH_PLACEHOLDER": "البحث باسم المريض أو رقم الهاتف",
+      "STATUS": "الحالة",
+      "ALL_STATUS": "جميع الحالات",
+      "FROM_DATE": "من تاريخ",
+      "TO_DATE": "إلى تاريخ"
+    },
+    "TABLE": {
+      "TITLE": "قائمة الحجوزات",
+      "ID": "الرقم التعريفي",
+      "PATIENT_NAME": "اسم المريض",
+      "PHONE": "الهاتف",
+      "DATE": "التاريخ",
+      "TIME": "الوقت",
+      "STATUS": "الحالة",
+      "LOCATION": "الموقع",
+      "ACTIONS": "الإجراءات"
+    },
+    "BUTTONS": {
+      "SEARCH": "بحث",
+      "RESET": "إعادة تعيين",
+      "CLEAR": "مسح",
+      "VIEW_DETAILS": "عرض التفاصيل",
+      "COMPLETE": "إكمال",
+      "CANCEL": "إلغاء",
+      "DELETE": "حذف",
+      "PRINT": "طباعة"
+    },
+    "DETAILS": {
+      "TITLE": "تفاصيل الحجز",
+      "SUBTITLE": "معلومات تفصيلية للحجز",
+      "ID": "رقم الحجز",
+      "PATIENT_NAME": "اسم المريض",
+      "PHONE": "رقم الهاتف",
+      "DATE": "تاريخ الموعد",
+      "TIME": "وقت الموعد",
+      "STATUS": "الحالة",
+      "GOVERNORATE": "المحافظة",
+      "CITY": "المدينة",
+      "ADDRESS_NOTES": "ملاحظات العنوان",
+      "NOTES": "ملاحظات",
+      "PATIENT_INFO": "معلومات المريض",
+      "APPOINTMENT_INFO": "معلومات الموعد",
+      "LOCATION_INFO": "معلومات الموقع",
+      "ADDITIONAL_INFO": "معلومات إضافية"
+    },
+    "CONFIRM": {
+      "TITLE": "تأكيد الإجراء",
+      "COMPLETE_TITLE": "إكمال الحجز",
+      "COMPLETE_MESSAGE": "هل أنت متأكد من تمييز هذا الحجز كمكتمل؟",
+      "CANCEL_TITLE": "إلغاء الحجز",
+      "CANCEL_MESSAGE": "هل أنت متأكد من إلغاء هذا الحجز؟",
+      "DELETE_TITLE": "حذف الحجز",
+      "DELETE_MESSAGE": "هل أنت متأكد من حذف هذا الحجز؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "MESSAGES": {
+      "COMPLETED_SUCCESS": "تم إكمال الحجز بنجاح",
+      "CANCELLED_SUCCESS": "تم إلغاء الحجز بنجاح",
+      "DELETED_SUCCESS": "تم حذف الحجز بنجاح",
+      "LOAD_ERROR": "خطأ في تحميل الحجوزات",
+      "ACTION_ERROR": "خطأ في تنفيذ الإجراء"
+    },
+    "NO_DATA": {
+      "TITLE": "لا توجد حجوزات",
+      "MESSAGE": "لا توجد حجوزات تطابق معايير البحث الحالية. جرب تعديل معايير البحث."
+    }
+  },
+  "REPORTS": {
+    "TITLE": "التقارير الطبية",
+    "SUBTITLE": "إدارة التقارير الطبية للمرضى والسجلات الصحية",
+    "FILTERS": {
+      "FROM_DATE": "من تاريخ",
+      "TO_DATE": "إلى تاريخ"
+    },
+    "BUTTONS": {
+      "ADD_REPORT": "إضافة تقرير",
+      "SEARCH": "بحث",
+      "RESET": "إعادة تعيين",
+      "VIEW_DETAILS": "عرض التفاصيل",
+      "PATIENT_REPORTS": "تقارير المريض"
+    },
+    "TABLE": {
+      "TITLE": "قائمة التقارير",
+      "PATIENT_NAME": "اسم المريض",
+      "PATIENT_PHONE": "هاتف المريض",
+      "NURSE_NAME": "اسم الممرضة",
+      "CREATED_AT": "تاريخ الإنشاء",
+      "DISEASES": "الأمراض",
+      "ACTIONS": "الإجراءات"
+    },
+    "DETAILS": {
+      "TITLE": "تفاصيل التقرير",
+      "SUBTITLE": "معلومات تفصيلية للتقرير الطبي",
+      "PATIENT_INFO": "معلومات المريض",
+      "NURSE_INFO": "معلومات الممرضة",
+      "MEDICAL_INFO": "المعلومات الطبية",
+      "DATE_INFO": "معلومات التاريخ",
+      "PATIENT_NAME": "اسم المريض",
+      "PATIENT_PHONE": "هاتف المريض",
+      "NURSE_NAME": "اسم الممرضة",
+      "NURSE_PHONE": "هاتف الممرضة",
+      "DRUGS": "الأدوية",
+      "DISEASES": "الأمراض",
+      "NOTES": "الملاحظات",
+      "CREATED_DATE": "تاريخ الإنشاء",
+      "CREATED_TIME": "وقت الإنشاء"
+    },
+    "NO_DATA": {
+      "TITLE": "لا توجد تقارير",
+      "MESSAGE": "لا توجد تقارير طبية متاحة. أضف تقرير جديد للبدء."
+    }
   }
 }
