@@ -22,7 +22,7 @@ import {
 } from '@coreui/angular';
 
 // Models and Services
-import { ReportModel, ReportFilterModel, AddOrUpdateReportModel } from '../../models/report.model';
+import { ReportModel, ReportFilterModel, AddOrUpdateReportModel } from '../../Models/report.model';
 import { ReportService } from '../../services/report.service';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { IconDirective } from '@coreui/icons-angular';

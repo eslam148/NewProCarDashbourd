@@ -7,7 +7,7 @@ import {
   AddOrUpdateReportModel,
   ReportResponseModel,
   PatientReportResponseModel
-} from '../models/report.model';
+} from '../Models/report.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
