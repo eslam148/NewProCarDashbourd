@@ -1,115 +1,172 @@
-<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
-  <c-container breakpoint="md">
-    <c-row class="justify-content-center">
-      <c-col lg="10" xl="8">
-        <c-card-group class="shadow-lg overflow-hidden rounded-4">
-          <c-card class="p-4 border-0">
-            <c-card-body>
-              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="fade-in">
-                <div class="text-center mb-4">
-                  <div class="icon-container mx-auto mb-3">
-                    <svg cIcon name="cilUser" size="xl"></svg>
-                  </div>
-                  <h1 class="fw-bold">{{ 'auth.login' | translate | async }}</h1>
-                  <p class="text-muted">{{ 'auth.signInMessage' | translate | async }}</p>
+<!-- Modern Login Page -->
+<div class="login-container">
+  <!-- Background Elements -->
+  <div class="background-elements">
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="login-content">
+    <c-container>
+      <c-row class="justify-content-center align-items-center min-vh-100">
+        <c-col lg="5" md="7" sm="9" xs="11">
+
+          <!-- Login Card -->
+          <div class="login-card">
+
+            <!-- Header Section -->
+            <div class="login-header">
+              <div class="logo-container">
+                <div class="logo-icon">
+                  <svg cIcon name="cilMedicalCross" size="xxl"></svg>
                 </div>
+              </div>
+              <h1 class="login-title">{{ 'auth.login' | translate | async }}</h1>
+              <p class="login-subtitle">{{ 'auth.signInMessage' | translate | async }}</p>
+            </div>
+
+            <!-- Form Section -->
+            <div class="login-form-container">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
 
                 <!-- Loading Spinner -->
-                <div *ngIf="loading$ | async" class="text-center mb-3">
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">{{ 'common.loading' | translate | async }}</span>
+                <div *ngIf="loading$ | async" class="loading-container">
+                  <div class="modern-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring"></div>
+                  </div>
+                  <p class="loading-text">{{ 'common.loading' | translate | async }}</p>
+                </div>
+
+                <!-- Enhanced Error Messages -->
+                <div *ngIf="loginError" class="error-alert">
+                  <div class="error-icon">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                  </div>
+                  <div class="error-content">
+                    <h6 class="error-title">{{ 'auth.loginError' | translate | async }}</h6>
+                    <p class="error-message">{{ loginError }}</p>
                   </div>
                 </div>
 
-                <!-- Error Message -->
-                <div *ngIf="error$ | async as error" class="alert alert-danger rounded-3 d-flex align-items-center" role="alert">
-                  <i class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"></i>
-                  <div>{{ error }}</div>
+                <div *ngIf="phoneError" class="error-alert phone-error">
+                  <div class="error-icon">
+                    <i class="bi bi-telephone-x-fill"></i>
+                  </div>
+                  <div class="error-content">
+                    <h6 class="error-title">{{ 'validation.phoneError' | translate | async }}</h6>
+                    <p class="error-message">{{ phoneError }}</p>
+                  </div>
                 </div>
 
-                <c-input-group class="mb-3">
-                  <span cInputGroupText class="bg-light border-end-0">
+                <!-- Phone Number Field -->
+                <div class="form-group">
+                  <label class="form-label">
                     <i class="bi bi-telephone-fill"></i>
-                  </span>
-                  <input
-                    cFormControl
-                    formControlName="phonenumber"
-                    class="rounded-end border-start-0 ps-0 form-control"
-                    [placeholder]="'auth.phoneNumber' | translate | async"
-                    autocomplete="tel"
-                    [ngClass]="{'is-invalid': loginForm.get('phonenumber')?.invalid && loginForm.get('phonenumber')?.touched}"
-                  />
-                  <div *ngIf="loginForm.get('phonenumber')?.invalid && loginForm.get('phonenumber')?.touched" class="invalid-feedback">
-                    <div *ngIf="loginForm.get('phonenumber')?.errors?.['required']">{{ 'validation.required' | translate | async }}</div>
-                    <div *ngIf="loginForm.get('phonenumber')?.errors?.['pattern']">{{ 'validation.egyptPhone' | translate | async }}</div>
+                    {{ 'auth.phoneNumber' | translate | async }}
+                  </label>
+                  <div class="input-wrapper">
+                    <input
+                      cFormControl
+                      formControlName="phonenumber"
+                      class="modern-input"
+                      [placeholder]="'auth.phoneNumberPlaceholder' | translate | async"
+                      autocomplete="tel"
+                      [ngClass]="{'error': hasFieldError('phonenumber')}"
+                    />
+                    <div class="input-focus-border"></div>
                   </div>
-                </c-input-group>
-
-                <c-input-group class="mb-4">
-                  <span cInputGroupText class="bg-light border-end-0">
-                    <i class="bi bi-lock-fill"></i>
-                  </span>
-                  <input
-                    cFormControl
-                    type="password"
-                    formControlName="password"
-                    class="rounded-end border-start-0 ps-0 form-control"
-                    [placeholder]="'auth.password' | translate | async"
-                    autocomplete="current-password"
-                    [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
-                  />
-                  <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="invalid-feedback">
-                    <div *ngIf="loginForm.get('password')?.errors?.['required']">{{ 'validation.required' | translate | async }}</div>
-                    <div *ngIf="loginForm.get('password')?.errors?.['minlength']">{{ ('validation.minLength' | translate | async)?.replace('{0}', '6') }}</div>
+                  <div *ngIf="getFieldError('phonenumber')" class="field-error">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <span>{{ getFieldError('phonenumber') }}</span>
                   </div>
-                </c-input-group>
-
-                <c-row>
-                  <c-col xs="6">
-                    <app-action-button
-                      color="primary"
-                      type="submit"
-                      icon="cilLockUnlocked"
-                      text="auth.signIn"
-                      shape="rounded-pill"
-                      [disabled]="loginForm.invalid || !!(loading$ | async)"
-                    ></app-action-button>
-                  </c-col>
-                  <c-col class="text-end d-flex align-items-center justify-content-end" xs="6">
-                    <app-action-button
-                      color="secondary"
-                      variant="ghost"
-                      icon="cilQuestionCircle"
-                      text="auth.forgotPassword"
-                    ></app-action-button>
-                  </c-col>
-                </c-row>
-              </form>
-            </c-card-body>
-          </c-card>
-          <c-card [ngStyle]="{'minWidth.%': 44}" class="text-white border-0 overflow-hidden">
-            <div class="bg-primary h-100 py-5">
-              <c-card-body class="text-center d-flex flex-column justify-content-center h-100">
-                <div class="fade-in">
-                  <div class="icon-container mx-auto mb-3 bg-white">
-                    <i class="bi bi-person-plus-fill text-primary" style="font-size: 3rem;"></i>
-                  </div>
-                  <h2 class="fw-bold mb-3">{{ 'auth.signUp' | translate | async }}</h2>
-                  <p class="lead mb-4 px-3">{{ 'auth.signUpMessage' | translate | async }}</p>
-                  <app-action-button
-                    color="light"
-                    size="lg"
-                    icon="cilUserPlus"
-                    text="auth.registerNow"
-                    shape="rounded-pill"
-                    routerLink="/register"
-                  ></app-action-button>
                 </div>
-              </c-card-body>
+
+                <!-- Password Field with Visibility Toggle -->
+                <div class="form-group">
+                  <label class="form-label">
+                    <i class="bi bi-lock-fill"></i>
+                    {{ 'auth.password' | translate | async }}
+                  </label>
+                  <div class="input-wrapper password-wrapper">
+                    <input
+                      cFormControl
+                      [type]="showPassword ? 'text' : 'password'"
+                      formControlName="password"
+                      class="modern-input password-input"
+                      [placeholder]="'auth.passwordPlaceholder' | translate | async"
+                      autocomplete="current-password"
+                      [ngClass]="{'error': hasFieldError('password')}"
+                    />
+                    <button
+                      type="button"
+                      class="password-toggle-btn"
+                      (click)="togglePasswordVisibility()"
+                      [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                      tabindex="-1">
+                      <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                    </button>
+                    <div class="input-focus-border"></div>
+                  </div>
+                  <div *ngIf="getFieldError('password')" class="field-error">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <span>{{ getFieldError('password') }}</span>
+                  </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="form-options">
+                  <label class="remember-checkbox">
+                    <input type="checkbox" class="checkbox-input">
+                    <span class="checkbox-custom"></span>
+                    <span class="checkbox-label">{{ 'auth.rememberMe' | translate | async }}</span>
+                  </label>
+                  <button type="button" class="forgot-password-link">
+                    {{ 'auth.forgotPassword' | translate | async }}
+                  </button>
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                  type="submit"
+                  class="login-button"
+                  [disabled]="loginForm.invalid || !!(loading$ | async)"
+                  [ngClass]="{'loading': loading$ | async}">
+                  <span class="button-content">
+                    <i class="bi bi-box-arrow-in-right button-icon"></i>
+                    <span class="button-text">{{ 'auth.signIn' | translate | async }}</span>
+                  </span>
+                  <div class="button-loader">
+                    <div class="loader-ring"></div>
+                  </div>
+                </button>
+
+              </form>
             </div>
-          </c-card>
-        </c-card-group>
-      </c-col>
-    </c-row>
-  </c-container>
+
+            <!-- Footer Section -->
+            <div class="login-footer">
+              <div class="divider">
+                <span class="divider-text">{{ 'auth.secureLogin' | translate | async }}</span>
+              </div>
+              <div class="security-badges">
+                <div class="security-badge">
+                  <i class="bi bi-shield-check"></i>
+                  <span>{{ 'auth.secureConnection' | translate | async }}</span>
+                </div>
+                <div class="security-badge">
+                  <i class="bi bi-lock-fill"></i>
+                  <span>{{ 'auth.dataProtection' | translate | async }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </c-col>
+      </c-row>
+    </c-container>
+  </div>
 </div>

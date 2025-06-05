@@ -48,7 +48,7 @@ export class ReportService {
   getReportByPatientId(patientId: string): Observable<PatientReportResponseModel> {
     const headers = this.getHeaders();
     return this.http.get<PatientReportResponseModel>(
-      `${this.apiUrl}/GetReportByPatientId/${patientId}`,
+      `${this.apiUrl}/Admin/GettById/${patientId}`,
       { headers }
     );
   }

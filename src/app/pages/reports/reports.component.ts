@@ -36,7 +36,7 @@ import { ActionButtonComponent } from '../../shared/components';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-   
+
     CardComponent,
     CardBodyComponent,
     CardHeaderComponent,
@@ -84,6 +84,7 @@ export class ReportsComponent implements OnInit {
   showPatientReportsModal = false;
   reportForm!: FormGroup;
   patientReports: ReportModel[] = [];
+  selectedPatientName = '';
   isEditMode = false;
 
   constructor(
@@ -265,13 +266,18 @@ export class ReportsComponent implements OnInit {
   /**
    * View patient reports
    */
-  viewPatientReports(patientId: string): void {
+  viewPatientReports(patientId: string, patientName?: string): void {
     this.isLoading = true;
+    this.selectedPatientName = patientName || 'Unknown Patient';
 
     this.reportService.getReportByPatientId(patientId).subscribe({
       next: (response) => {
         if (response.status === 0) {
-          this.patientReports = response.data;
+          this.patientReports = response.data || [];
+          this.showPatientReportsModal = true;
+        } else if (response.status === 1 && response.message === 'No Data Founds!') {
+          // Handle case when no reports found for patient
+          this.patientReports = [];
           this.showPatientReportsModal = true;
         } else {
           this.error = response.message || 'Failed to load patient reports';

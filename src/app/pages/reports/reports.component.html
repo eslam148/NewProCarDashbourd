@@ -10,14 +10,7 @@
         {{ 'REPORTS.SUBTITLE' | translate | async }}
       </p>
     </div>
-    <div>
-      <app-action-button
-        color="primary"
-        icon="cilPlus"
-        text="REPORTS.BUTTONS.ADD_REPORT"
-        (clicked)="openAddModal()"
-      ></app-action-button>
-    </div>
+
   </div>
 
   <!-- Filter Form -->
@@ -138,7 +131,7 @@
                     color="primary"
                     variant="outline"
                     size="sm"
-                    (click)="viewPatientReports(report.patientId)"
+                    (click)="viewPatientReports(report.patientId, report.patientName)"
                     title="{{ 'REPORTS.BUTTONS.PATIENT_REPORTS' | translate | async }}">
                     <i class="fas fa-file-medical-alt"></i>
                   </button>
@@ -342,7 +335,160 @@
 
   <c-modal-footer class="modal-footer-professional">
     <div class="footer-actions">
-      <button cButton color="light" variant="outline" (click)="closeDetailsModal()" class="btn-close-modal">
+      <button cButton color="light" style="color: black;" variant="outline" (click)="closeDetailsModal()" class="btn-close-modal">
+        <i class="fas fa-times me-2"></i>
+        {{ 'common.close' | translate | async }}
+      </button>
+    </div>
+  </c-modal-footer>
+</c-modal>
+
+<!-- Patient Reports Modal -->
+<c-modal
+  [visible]="showPatientReportsModal"
+  (visibleChange)="showPatientReportsModal = $event"
+  size="xl"
+  class="patient-reports-modal">
+
+  <c-modal-header class="modal-header-professional">
+    <div class="header-content">
+      <div class="header-icon">
+        <i class="fas fa-user-medical"></i>
+      </div>
+      <div class="header-text">
+        <h4 cModalTitle class="modal-title-main">
+          {{ 'REPORTS.PATIENT_REPORTS.TITLE' | translate | async }}
+        </h4>
+        <p class="modal-subtitle">
+          {{ 'REPORTS.PATIENT_REPORTS.SUBTITLE' | translate  | async}} - {{ selectedPatientName }}
+        </p>
+      </div>
+    </div>
+  </c-modal-header>
+
+  <c-modal-body class="modal-body-professional">
+
+    <!-- Loading State -->
+    <div class="text-center my-4" *ngIf="isLoading">
+      <c-spinner></c-spinner>
+      <p class="mt-2">{{ 'common.loading' | translate | async }}</p>
+    </div>
+
+    <!-- No Reports Found -->
+    <div *ngIf="!isLoading && patientReports.length === 0" class="no-reports-container">
+      <div class="no-reports-content">
+        <div class="no-reports-icon">
+          <i class="fas fa-file-medical-alt"></i>
+        </div>
+        <h4 class="no-reports-title">
+          {{ 'REPORTS.PATIENT_REPORTS.NO_REPORTS.TITLE' | translate | async }}
+        </h4>
+        <p class="no-reports-message">
+          {{ 'REPORTS.PATIENT_REPORTS.NO_REPORTS.MESSAGE' | translate | async }}
+          <strong>{{ selectedPatientName }}</strong>
+        </p>
+
+
+      </div>
+    </div>
+
+    <!-- Reports List -->
+    <div *ngIf="!isLoading && patientReports.length > 0" class="patient-reports-list">
+      <div class="reports-header">
+        <h5 class="reports-count">
+          <i class="fas fa-file-medical me-2"></i>
+          {{ 'REPORTS.PATIENT_REPORTS.FOUND_REPORTS' | translate | async }}
+          <span class="badge bg-primary ms-2">{{ patientReports.length }}</span>
+        </h5>
+      </div>
+
+      <div class="reports-grid">
+        <div
+          *ngFor="let report of patientReports; trackBy: trackByReportId"
+          class="report-card">
+
+          <div class="report-card-header">
+            <div class="report-date">
+              <i class="fas fa-calendar text-primary me-2"></i>
+              <strong>{{ formatDate(report.createdAt) }}</strong>
+              <small class="text-muted ms-2">{{ formatTime(report.createdAt) }}</small>
+            </div>
+            <button
+              cButton
+              color="info"
+              variant="outline"
+              size="sm"
+              (click)="viewDetails(report)"
+              class="btn-view-details">
+              <i class="fas fa-eye me-1"></i>
+              {{ 'REPORTS.BUTTONS.VIEW_DETAILS' | translate | async }}
+            </button>
+          </div>
+
+          <div class="report-card-body">
+            <div class="report-info-row">
+              <div class="info-item">
+                <span class="info-label">
+                  <i class="fas fa-user-nurse text-info me-1"></i>
+                  {{ 'REPORTS.DETAILS.NURSE_NAME' | translate | async }}:
+                </span>
+                <span class="info-value">{{ report.nurseName }}</span>
+              </div>
+            </div>
+
+            <div class="report-info-row" *ngIf="report.drugs">
+              <div class="info-item">
+                <span class="info-label">
+                  <i class="fas fa-pills text-warning me-1"></i>
+                  {{ 'REPORTS.DETAILS.DRUGS' | translate | async }}:
+                </span>
+                <span class="info-value">{{ report.drugs }}</span>
+              </div>
+            </div>
+
+            <div class="report-info-row" *ngIf="report.diseases && report.diseases.length > 0">
+              <div class="info-item">
+                <span class="info-label">
+                  <i class="fas fa-disease text-danger me-1"></i>
+                  {{ 'REPORTS.DETAILS.DISEASES' | translate | async }}:
+                </span>
+                <div class="diseases-badges">
+                  <span
+                    *ngFor="let disease of report.diseases"
+                    class="badge bg-secondary me-1 mb-1">
+                    {{ disease.name }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="report-info-row" *ngIf="report.notes">
+              <div class="info-item">
+                <span class="info-label">
+                  <i class="fas fa-comment text-primary me-1"></i>
+                  {{ 'REPORTS.DETAILS.NOTES' | translate | async }}:
+                </span>
+                <span class="info-value notes-preview">{{ report.notes }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </c-modal-body>
+
+  <c-modal-footer class="modal-footer-professional">
+    <div class="footer-actions">
+
+      <button
+        cButton
+        color="light"
+        variant="outline"
+        (click)="closePatientReportsModal()"
+        class="btn-close-modal "
+        style="color: black;"
+        >
         <i class="fas fa-times me-2"></i>
         {{ 'common.close' | translate | async }}
       </button>

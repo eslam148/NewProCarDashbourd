@@ -134,13 +134,19 @@
     "confirmDelete": "Are you sure you want to delete this item?"
   },
   "auth": {
-    "login": "Login",
+    "login": "Sign In",
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "phoneNumber": "Phone Number",
+    "phoneNumberPlaceholder": "Enter your phone number",
     "password": "Password",
+    "passwordPlaceholder": "Enter your password",
     "forgotPassword": "Forgot Password?",
     "rememberMe": "Remember Me",
+    "loginError": "Login Failed",
+    "secureLogin": "Secure Login",
+    "secureConnection": "Secure Connection",
+    "dataProtection": "Data Protection",
     "signInMessage": "Sign In to your account",
     "signUpMessage": "Create a new account to get started with our platform. Join us today and experience the benefits of our services.",
     "registerNow": "Register Now!"
@@ -150,7 +156,8 @@
     "email": "Please enter a valid email address",
     "minLength": "Minimum length is {0} characters",
     "maxLength": "Maximum length is {0} characters",
-    "egyptPhone": "Please enter a valid Egyptian phone number (e.g., 01012345678)"
+    "egyptPhone": "Please enter a valid Egyptian phone number (e.g., 01012345678)",
+    "phoneError": "Phone Number Error"
   },
   "admin": {
     "title": "Admins Management",
@@ -594,6 +601,23 @@
     "NO_DATA": {
       "TITLE": "No Reports Found",
       "MESSAGE": "No medical reports available. Add a new report to get started."
+    },
+    "PATIENT_REPORTS": {
+      "TITLE": "Patient Medical Reports",
+      "SUBTITLE": "All medical reports for patient",
+      "FOUND_REPORTS": "Found Reports",
+      "ADD_NEW_REPORT": "Add New Report",
+      "NO_REPORTS": {
+        "TITLE": "No Medical Reports Found",
+        "MESSAGE": "No medical reports have been created for patient",
+        "SUGGESTIONS": {
+          "TITLE": "What you can do:",
+          "ITEM1": "Create a new medical report for this patient",
+          "ITEM2": "Check if the patient has reports under a different name",
+          "ITEM3": "Contact the medical team for more information"
+        },
+        "ADD_REPORT": "Create First Report"
+      }
     }
   }
 }
