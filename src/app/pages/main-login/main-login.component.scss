@@ -19,6 +19,51 @@
   justify-content: center;
 }
 
+// ===== LANGUAGE TOGGLE =====
+.language-toggle {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10;
+}
+
+.lang-switch-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  i {
+    font-size: 1.1rem;
+  }
+
+  .lang-text {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+}
+
 // ===== BACKGROUND ELEMENTS =====
 .background-elements {
   position: absolute;
@@ -552,29 +597,24 @@
   font-weight: 500;
 }
 
-.security-badges {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
 
-.security-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #718096;
-  font-size: 0.75rem;
-  font-weight: 500;
-
-  i {
-    color: var(--theme-primary, #CD2C4E);
-    font-size: 0.9rem;
-  }
-}
 
 // ===== RESPONSIVE DESIGN =====
 @media (max-width: 768px) {
+  .language-toggle {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .lang-switch-btn {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.85rem;
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
   .login-card {
     padding: 1.5rem 1.25rem;
     margin: 1rem;
@@ -613,14 +653,6 @@
     align-items: flex-start;
     gap: 0.75rem;
   }
-
-  .security-badges {
-    gap: 1rem;
-  }
-
-  .security-badge {
-    font-size: 0.7rem;
-  }
 }
 
 @media (max-width: 480px) {
@@ -655,6 +687,17 @@
 [data-coreui-theme="dark"] {
   .login-container {
     background: linear-gradient(135deg, var(--theme-bg-primary, #1a1d23) 0%, var(--theme-bg-secondary, #2d3748) 100%);
+  }
+
+  .lang-switch-btn {
+    background: rgba(var(--theme-bg-tertiary, 55, 65, 81), 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--theme-text-primary, #f7fafc);
+
+    &:hover {
+      background: rgba(var(--theme-bg-tertiary, 55, 65, 81), 0.95);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
   }
 
   .login-card {
@@ -732,14 +775,6 @@
   .divider-text {
     background: rgba(var(--theme-bg-secondary, 45, 55, 72), 0.95);
     color: var(--theme-text-muted, #a0aec0);
-  }
-
-  .security-badge {
-    color: var(--theme-text-muted, #a0aec0);
-
-    i {
-      color: var(--theme-primary, #CD2C4E);
-    }
   }
 
   .error-alert {

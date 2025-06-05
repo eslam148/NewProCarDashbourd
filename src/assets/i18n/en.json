@@ -14,7 +14,7 @@
     "create": "Create",
     "loading": "Loading...",
     "noData": "No Data",
-    "error": "Error",
+    "error": "An unexpected error occurred. Please try again.",
     "success": "Success",
     "warning": "Warning",
     "info": "Information",
@@ -52,6 +52,7 @@
     "toggleSidebar": "Toggle sidebar navigation",
     "openUserMenu": "Open user menu",
     "userAvatar": "User avatar",
+    "switchLanguage": "Switch Language",
     "openThemePicker": "Open theme picker",
     "messages": {
       "updates": "Updates",
@@ -147,6 +148,8 @@
     "secureLogin": "Secure Login",
     "secureConnection": "Secure Connection",
     "dataProtection": "Data Protection",
+    "invalidCredentials": "Phone number or password is wrong",
+    "loginFailed": "Login failed. Please try again.",
     "signInMessage": "Sign In to your account",
     "signUpMessage": "Create a new account to get started with our platform. Join us today and experience the benefits of our services.",
     "registerNow": "Register Now!"
@@ -157,7 +160,10 @@
     "minLength": "Minimum length is {0} characters",
     "maxLength": "Maximum length is {0} characters",
     "egyptPhone": "Please enter a valid Egyptian phone number (e.g., 01012345678)",
-    "phoneError": "Phone Number Error"
+    "phoneError": "Phone Number Error",
+    "passwordMinLength": "Password must be at least 6 characters long",
+    "phoneRequired": "Phone number is required",
+    "passwordRequired": "Password is required"
   },
   "admin": {
     "title": "Admins Management",

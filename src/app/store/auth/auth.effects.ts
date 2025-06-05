@@ -57,19 +57,46 @@ export class AuthEffects {
         };
         return this.authService.Login(loginDto).pipe(
           map(response => {
+            console.log('Full API Response:', response);
+
+            // Check if response indicates an error (status = 1 usually means error)
+            if (response?.status === 1) {
+              // This is an error response, throw it to be caught by catchError
+              throw response;
+            }
+
+            // Check for successful response with valid data
             if (!response?.data) {
               throw new Error('Invalid response format');
             }
 
-            console.log(response.data);
+            // Check if token is null in successful response (invalid credentials)
+            if (response.data.token === null) {
+              throw {
+                status: 1,
+                message: response.message || 'Phone number or password is wrong.',
+                data: response.data
+              };
+            }
+
+            console.log('Login successful:', response.data);
             return loginSuccess({
               response: response.data
             });
           }),
           catchError(error => {
             console.error('Login error:', error);
+
+            // Handle API error responses
+            if (error?.status === 1) {
+              return of(loginFailure({
+                error: error
+              }));
+            }
+
+            // Handle HTTP errors
             return of(loginFailure({
-              error: error?.error?.message || 'An error occurred during login'
+              error: error?.error || error?.message || 'An error occurred during login'
             }));
           })
         );

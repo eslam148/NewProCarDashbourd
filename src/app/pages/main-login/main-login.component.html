@@ -1,5 +1,19 @@
 <!-- Modern Login Page -->
 <div class="login-container">
+  <!-- Language Toggle -->
+  <div class="language-toggle">
+    <button
+      type="button"
+      class="lang-switch-btn"
+      (click)="toggleLanguage()"
+      [attr.aria-label]="'common.switchLanguage' | translate | async">
+      <i class="bi bi-translate"></i>
+      <span class="lang-text">
+        {{ currentLanguage === 'en' ? 'العربية' : 'English' }}
+      </span>
+    </button>
+  </div>
+
   <!-- Background Elements -->
   <div class="background-elements">
     <div class="bg-shape shape-1"></div>
@@ -41,7 +55,7 @@
                   <p class="loading-text">{{ 'common.loading' | translate | async }}</p>
                 </div>
 
-                <!-- Enhanced Error Messages -->
+                <!-- Enhanced Error Messages with Translation -->
                 <div *ngIf="loginError" class="error-alert">
                   <div class="error-icon">
                     <i class="bi bi-exclamation-triangle-fill"></i>
@@ -151,16 +165,6 @@
             <div class="login-footer">
               <div class="divider">
                 <span class="divider-text">{{ 'auth.secureLogin' | translate | async }}</span>
-              </div>
-              <div class="security-badges">
-                <div class="security-badge">
-                  <i class="bi bi-shield-check"></i>
-                  <span>{{ 'auth.secureConnection' | translate | async }}</span>
-                </div>
-                <div class="security-badge">
-                  <i class="bi bi-lock-fill"></i>
-                  <span>{{ 'auth.dataProtection' | translate | async }}</span>
-                </div>
               </div>
             </div>
 

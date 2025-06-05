@@ -9,7 +9,8 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 import { login } from '../../store/auth/auth.actions';
 import { selectAuthLoading, selectAuthError, selectIsAuthenticated } from '../../store/auth/auth.selectors';
 import { selectCurrentLanguage } from '../../store/translation/translation.selectors';
-import { Subject, takeUntil, Observable } from 'rxjs';
+import { TranslationService } from '../../services/translation.service';
+import { Subject, takeUntil, Observable, take } from 'rxjs';
 import { getMessaging, getToken, isSupported } from 'firebase/messaging';
 @Component({
   selector: 'app-main-login',
@@ -42,6 +43,9 @@ export class MainLoginComponent implements OnInit, OnDestroy {
   loginError: string | null = null;
   phoneError: string | null = null;
 
+  // Current language for toggle
+  currentLanguage: string = 'en';
+
   // Egyptian phone number pattern
   private readonly EGYPT_PHONE_PATTERN = /^01[0125][0-9]{8}$/;
   private deviceToken: string = '';
@@ -49,7 +53,8 @@ export class MainLoginComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private store: Store,
-    private router: Router
+    private router: Router,
+    private translationService: TranslationService
   ) {
     this.loginForm = this.fb.group({
       phonenumber: ['', [
@@ -81,6 +86,13 @@ export class MainLoginComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((error: any) => {
         this.handleLoginError(error);
+      });
+
+    // Track current language
+    this.currentLang$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((lang: string) => {
+        this.currentLanguage = lang;
       });
 
      //  this.getFcmToken();
@@ -134,7 +146,7 @@ private async getFcmToken() {
   }
 
   /**
-   * Enhanced error handling for API responses
+   * Enhanced error handling for API responses with translation support
    */
   private handleLoginError(error: any): void {
     if (!error) {
@@ -143,23 +155,39 @@ private async getFcmToken() {
       return;
     }
 
-    // Handle specific API response format: {"status": 1, "message": "Invalid phone number or password.", "loginStatus": 2}
-    if (error.status === 1) {
-      switch (error.loginStatus) {
+    // Handle specific API response format:
+    // {"status": 1, "message": "Invalid phone number or password.", "data": {"token": null, "loginStatus": 2}}
+    if (error.status === 1 && error.data) {
+      // Check if token is null - this indicates invalid credentials
+      if (error.data.token === null) {
+        this.loginError = error.message || 'Phone number or password is wrong.';
+        this.phoneError = null;
+        return;
+      }
+
+      switch (error.data.loginStatus) {
         case 2:
-          // Invalid credentials
-          this.loginError = error.message || 'Invalid phone number or password.';
+          // Invalid credentials - use the message from API response
+          this.loginError = error.message || 'Phone number or password is wrong.';
+          this.phoneError = null;
           break;
         case 1:
           // Phone number format error
           this.phoneError = 'Please enter a valid Egyptian phone number.';
+          this.loginError = null;
           break;
         default:
           this.loginError = error.message || 'Login failed. Please try again.';
+          this.phoneError = null;
       }
+    } else if (error.status === 1) {
+      // Fallback for status 1 without data object
+      this.loginError = error.message || 'Phone number or password is wrong.';
+      this.phoneError = null;
     } else {
       // Generic error handling
       this.loginError = error.message || error || 'An unexpected error occurred. Please try again.';
+      this.phoneError = null;
     }
   }
 
@@ -188,5 +216,21 @@ private async getFcmToken() {
   hasFieldError(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
     return !!(field && field.invalid && field.touched);
+  }
+
+  /**
+   * Toggle language between English and Arabic
+   */
+  toggleLanguage(): void {
+    // Use the tracked current language to avoid subscription issues
+    const newLang = this.currentLanguage === 'en' ? 'ar' : 'en';
+    this.translationService.setLanguage(newLang);
+  }
+
+  /**
+   * Get current language for display
+   */
+  getCurrentLanguageDisplay(): Observable<string> {
+    return this.currentLang$;
   }
 }
