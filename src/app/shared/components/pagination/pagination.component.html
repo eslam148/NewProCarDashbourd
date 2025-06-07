@@ -2,7 +2,7 @@
 <div *ngIf="layout === 'default'" class="pagination-wrapper">
   <!-- Pagination Info -->
   <div *ngIf="showInfo && totalItems > 0" class="pagination-info">
-    <span>{{ 'common.showing' | translate }} {{ startItem }} {{ 'common.to' | translate }} {{ endItem }} {{ 'common.of' | translate }} {{ totalItems }} {{ 'common.entries' | translate }}</span>
+    <span>{{ 'common.showing' | translate | async }} {{ startItem }} {{ 'common.to' | translate  | async}} {{ endItem }} {{ 'common.of' | translate  | async }} {{ totalItems }} {{ 'common.entries' | translate  | async }}</span>
   </div>
 
   <!-- Pagination Controls -->
@@ -61,7 +61,7 @@
 <div *ngIf="layout === 'simple'" class="pagination-wrapper simple-layout">
   <!-- Pagination Info -->
   <div *ngIf="showInfo && totalItems > 0" class="pagination-info">
-    <span>{{ 'common.showing' | translate }} {{ startItem }} {{ 'common.to' | translate }} {{ endItem }} {{ 'common.of' | translate }} {{ totalItems }} {{ 'common.entries' | translate }}</span>
+    <span>{{ 'common.showing' | translate | async }} {{ startItem }} {{ 'common.to' | translate | async }} {{ endItem }} {{ 'common.of' | translate | async }} {{ totalItems }} {{ 'common.entries' | translate | async }}</span>
   </div>
 
   <!-- Simple Controls -->
@@ -75,7 +75,7 @@
       [disabled]="!hasNextPage || disabled"
       (click)="nextPage()">
       <i class="fas fa-chevron-right me-1"></i>
-      {{ 'common.next' | translate }}
+      {{ 'common.next' | translate | async }}
     </button>
 
     <!-- Previous button comes first in LTR -->
@@ -87,11 +87,11 @@
       [disabled]="!hasPreviousPage || disabled"
       (click)="previousPage()">
       <i class="fas fa-chevron-left me-1"></i>
-      {{ 'common.previous' | translate }}
+      {{ 'common.previous' | translate | async }}
     </button>
 
     <span class="page-info mx-3">
-      {{ 'common.page' | translate }} {{ currentPage }} {{ 'common.of' | translate }} {{ totalPages }}
+      {{ 'common.page' | translate | async }} {{ currentPage }} {{ 'common.of' | translate | async }} {{ totalPages }}
     </span>
 
     <!-- Previous button comes last in RTL -->
@@ -102,7 +102,7 @@
       [class.active]="hasPreviousPage && !disabled"
       [disabled]="!hasPreviousPage || disabled"
       (click)="previousPage()">
-      {{ 'common.previous' | translate }}
+      {{ 'common.previous' | translate | async }}
       <i class="fas fa-chevron-left ms-1"></i>
     </button>
 
@@ -114,7 +114,7 @@
       [class.active]="hasNextPage && !disabled"
       [disabled]="!hasNextPage || disabled"
       (click)="nextPage()">
-      {{ 'common.next' | translate }}
+      {{ 'common.next' | translate | async }}
       <i class="fas fa-chevron-right ms-1"></i>
     </button>
   </div>
@@ -123,6 +123,6 @@
 <!-- Info Only Layout: Just the pagination information -->
 <div *ngIf="layout === 'info-only'" class="pagination-wrapper info-only">
   <div *ngIf="totalItems > 0" class="pagination-info">
-    <span>{{ 'common.showing' | translate }} {{ startItem }} {{ 'common.to' | translate }} {{ endItem }} {{ 'common.of' | translate }} {{ totalItems }} {{ 'common.entries' | translate }}</span>
+    <span>{{ 'common.showing' | translate | async }} {{ startItem }} {{ 'common.to' | translate | async }} {{ endItem }} {{ 'common.of' | translate | async }} {{ totalItems }} {{ 'common.entries' | translate | async }}</span>
   </div>
 </div>

@@ -30,17 +30,27 @@ export class AuthEffects {
   }
 
   private checkStoredAuth() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || localStorage.getItem('authToken');
     const userData = localStorage.getItem('user');
+
+    console.log('Checking stored auth:', { hasToken: !!token, hasUserData: !!userData });
 
     if (token && userData) {
       try {
         const parsedUser = JSON.parse(userData);
+        console.log('Found valid stored auth data:', parsedUser);
         this.store.dispatch(checkAuthSuccess({ response: parsedUser }));
       } catch (error) {
         console.error('Error parsing stored auth data:', error);
+        // Clear corrupted data
+        localStorage.removeItem('token');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
         this.store.dispatch(checkAuthFailure());
       }
+    } else {
+      console.log('No valid auth data found');
+      this.store.dispatch(checkAuthFailure());
     }
   }
 
@@ -109,10 +119,18 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(loginSuccess),
         tap(({ response }) => {
+          console.log('Login success effect triggered:', response);
           if (response?.token) {
+            // Store auth data
             localStorage.setItem('token', response.token);
+            localStorage.setItem('authToken', response.token);
             localStorage.setItem('user', JSON.stringify(response));
+
+            console.log('Auth data stored, navigating to dashboard');
+            // Navigate to dashboard
             this.router.navigate(['/dashboard']);
+          } else {
+            console.error('No token in response:', response);
           }
         })
       ),
@@ -125,9 +143,22 @@ export class AuthEffects {
       tap(() => console.log('Logout action triggered')),
       mergeMap(() => {
         console.log('Clearing auth data');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        return of(logoutSuccess());
+
+        // Clear local storage immediately
+
+
+        // Call logout API
+        return this.authService.Logout().pipe(
+          map((response: any) => {
+            console.log('Logout API response:', response);
+            return logoutSuccess();
+          }),
+          catchError((error: any) => {
+            console.error('Logout API error:', error);
+            // Even if API fails, we still consider logout successful locally
+            return of(logoutSuccess());
+          })
+        );
       })
     )
   );
@@ -137,6 +168,9 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(logoutSuccess),
         tap(() => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
           console.log('Logout success, navigating to login');
           this.router.navigate(['/login']);
         })
@@ -148,20 +182,29 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(checkAuth),
       mergeMap(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token') || localStorage.getItem('authToken');
         const userData = localStorage.getItem('user');
+
+        console.log('CheckAuth effect triggered:', { hasToken: !!token, hasUserData: !!userData });
 
         if (token && userData) {
           try {
             const parsedUser = JSON.parse(userData);
+            console.log('Auth check successful:', parsedUser);
             return of(checkAuthSuccess({
               response: parsedUser
             }));
           } catch (error) {
             console.error('Error parsing user data:', error);
+            // Clear corrupted data
+            localStorage.removeItem('token');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
             return of(checkAuthFailure());
           }
         }
+
+        console.log('Auth check failed - no valid data');
         return of(checkAuthFailure());
       })
     )

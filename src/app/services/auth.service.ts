@@ -15,4 +15,11 @@ export class AuthService {
   Login(loginDto: LoginDto): Observable<GenericResponse<LoginResponse>> {
     return this.http.post<GenericResponse<LoginResponse>>(`${this.apiUrl}/api/Auth/Login`, loginDto);
   }
+  Logout(): Observable<GenericResponse<any>> {
+    const token:string =  localStorage.getItem('token') || '';
+
+    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Auth/Logout`, "aa",
+      { headers: { 'Authorization': `Bearer ${token}` } }
+    );
+  }
 }

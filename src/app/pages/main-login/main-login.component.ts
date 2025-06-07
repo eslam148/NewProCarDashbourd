@@ -12,6 +12,7 @@ import { selectCurrentLanguage } from '../../store/translation/translation.selec
 import { TranslationService } from '../../services/translation.service';
 import { Subject, takeUntil, Observable, take } from 'rxjs';
 import { getMessaging, getToken, isSupported } from 'firebase/messaging';
+import { NotificationService } from 'src/app/services/Notification.service';
 @Component({
   selector: 'app-main-login',
   standalone: true,
@@ -54,7 +55,8 @@ export class MainLoginComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private store: Store,
     private router: Router,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    private NotificationService : NotificationService
   ) {
     this.loginForm = this.fb.group({
       phonenumber: ['', [
@@ -95,25 +97,36 @@ export class MainLoginComponent implements OnInit, OnDestroy {
         this.currentLanguage = lang;
       });
 
-     //  this.getFcmToken();
-  }
-private async getFcmToken() {
-    try {
-      const supported = await isSupported();
-      if (supported) {
-        const messaging = getMessaging();
-        const token = await getToken(messaging, {
-          vapidKey: 'YOUR_VAPID_KEY' // Replace with your actual VAPID key
-        });
-        this.deviceToken = token || '';
-        console.log('FCM Token:', this.deviceToken);
-      } else {
-        console.log('Firebase messaging is not supported in this browser');
-        this.deviceToken = '';
+    // Request FCM token immediately
+    this.requestFcmToken();
+
+    // Subscribe to token updates
+    this.NotificationService.currentToken$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(token => {
+      if (token) {
+        this.deviceToken = token;
+        console.log('FCM Token updated:', this.deviceToken);
       }
+    });
+
+    // Message handling
+    this.NotificationService.message$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(payload => {
+      if (payload) {
+        console.log('FCM Message received:', payload);
+      }
+    });
+  }
+
+  async requestFcmToken() {
+    try {
+      console.log('Requesting FCM token...');
+      await this.NotificationService.requestPermission();
+      this.NotificationService.listen();
     } catch (error) {
-      console.error('Error getting FCM token:', error);
-      this.deviceToken = '';
+      console.error('Error requesting FCM token:', error);
     }
   }
   ngOnDestroy() {
@@ -125,7 +138,7 @@ private async getFcmToken() {
     // Clear previous errors
     this.loginError = null;
     this.phoneError = null;
-
+    console.log('Device Token:', this.deviceToken);
     if (this.loginForm.valid) {
       const { phonenumber, password } = this.loginForm.value;
       this.store.dispatch(login({ phonenumber, password,deviceToken:this.deviceToken }));

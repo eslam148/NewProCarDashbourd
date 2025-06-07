@@ -355,7 +355,8 @@
     "updateSuccess": "Nurse updated successfully",
     "addSuccess": "Nurse added successfully",
     "deleteSuccess": "Nurse deleted successfully",
-    "location": "Location on Map"
+    "location": "Location on Map",
+    "add":"Add Nurse"
   },
   "map": {
     "instructions": "Click on the map to select a location or drag the marker to adjust position",

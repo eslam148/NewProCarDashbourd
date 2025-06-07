@@ -6,7 +6,7 @@
     <app-action-button
       color="primary"
       icon="cilPlus"
-      text="nurse.add"
+      text="nurse.add" 
       shape="rounded-pill"
       (clicked)="showAddForm()"
     ></app-action-button>
@@ -214,7 +214,7 @@
     [currentPage]="pageNumber"
     [totalItems]="totalCount"
     [pageSize]="pageSize"
-    [layout]="'default'"
+    [layout]="'simple'"
     [showInfo]="true"
     [size]="'md'"
     (pageChange)="onPageChange($event)"
