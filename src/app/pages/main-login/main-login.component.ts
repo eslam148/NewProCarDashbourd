@@ -98,20 +98,51 @@ export class MainLoginComponent implements OnInit, OnDestroy {
         this.currentLanguage = lang;
       });
 
-         this.NotificationService.currentToken$.subscribe(token => {
-      this.deviceToken = token || '';
-    });
- this.enableNotifications();
-    this.NotificationService.message$.subscribe(payload => {
-      if (payload) {
-        this.message = payload.notification || payload;
-      }
-    });
+    // Initialize Firebase messaging
+    this.initializeFirebaseMessaging();
 
+    // Subscribe to FCM token updates
+    this.NotificationService.currentToken$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(token => {
+        this.deviceToken = token || '';
+        console.log('FCM token updated in login:', this.deviceToken);
+      });
+
+    // Subscribe to Firebase messages
+    this.NotificationService.message$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(payload => {
+        if (payload) {
+          this.message = payload.notification || payload;
+          console.log('Firebase message received in login:', payload);
+        }
+      });
   }
- enableNotifications() {
+
+  /**
+   * Initialize Firebase messaging with full setup
+   */
+  private async initializeFirebaseMessaging() {
+    try {
+      console.log('Initializing Firebase messaging in login component...');
+      await this.NotificationService.initializeFirebaseMessaging();
+      console.log('Firebase messaging initialized successfully in login');
+    } catch (error) {
+      console.error('Error initializing Firebase messaging in login:', error);
+    }
+  }
+
+  /**
+   * Enable notifications (legacy method - kept for compatibility)
+   */
+  enableNotifications() {
     this.NotificationService.requestPermission();
   }
+
+  /**
+   * Request FCM token (legacy method - kept for compatibility)
+   */
   async requestFcmToken() {
     try {
       console.log('Requesting FCM token...');

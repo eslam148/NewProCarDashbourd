@@ -64,6 +64,7 @@
     "markAllRead": "Mark All Read",
     "noNotifications": "No notifications",
     "viewAll": "View All",
+    "loading": "Loading...",
     "notificationTypes": {
       "newRequest": "New Request",
       "requestAccepted": "Request Accepted",

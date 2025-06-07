@@ -38,20 +38,17 @@
         <button
           [caret]="false"
           cDropdownToggle
-          class="position-relative py-0 d-flex align-items-center justify-content-center"
+          class="notification-bell-btn position-relative py-0 d-flex align-items-center justify-content-center border-0 bg-transparent"
           style="width: 40px; height: 40px;"
           [attr.aria-label]="'common.notifications' | translate | async"
         >
-          <i class="bi bi-bell-fill" style="font-size: 1.25rem;"></i>
-          <c-badge *ngIf="unreadCount > 0"
-                   color="danger"
-                   position="top-end"
-                   shape="rounded-pill"
-                   size="sm">
+          <i class="bi bi-bell-fill" style="font-size: 1.25rem; color: var(--cui-body-color);"></i>
+          <span *ngIf="unreadCount > 0"
+                class="notification-badge badge rounded-pill bg-danger text-white">
             {{ unreadCount > 99 ? '99+' : unreadCount }}
-          </c-badge>
+          </span>
         </button>
-        <ul cDropdownMenu class="pt-0 notification-dropdown" style="width: 320px; max-height: 400px; overflow-y: auto;">
+        <ul cDropdownMenu class="pt-0 notification-dropdown">
           <li>
             <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2 d-flex justify-content-between">
               <span>{{ 'common.notifications' | translate | async }}</span>
@@ -63,27 +60,50 @@
             </h6>
           </li>
 
-          <ng-container *ngIf="notifications.length === 0">
-            <li class="text-center py-3">
-              <span class="text-body-secondary">{{ 'common.noNotifications' | translate | async }}</span>
+          <!-- Loading state -->
+          <ng-container *ngIf="loading">
+            <li class="loading-state">
+              <div class="d-flex flex-column align-items-center">
+                <div class="spinner-border text-primary mb-2" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="text-body-secondary">{{ 'common.loading' | translate | async }}</span>
+              </div>
             </li>
           </ng-container>
 
-          <ng-container *ngFor="let notification of notifications">
+          <!-- Empty state -->
+          <ng-container *ngIf="!loading && notifications.length === 0">
+            <li class="text-center py-4">
+              <div class="d-flex flex-column align-items-center">
+                <i class="bi bi-bell-slash text-muted mb-2" style="font-size: 2rem;"></i>
+                <span class="text-body-secondary">{{ 'common.noNotifications' | translate | async }}</span>
+              </div>
+            </li>
+          </ng-container>
+
+          <ng-container *ngFor="let notification of notifications; let i = index">
             <li>
               <a cDropdownItem
                  [ngClass]="{'bg-light': !notification.isRead}"
-                 (click)="markAsRead(notification)">
-                <div class="d-flex align-items-center">
+                 (click)="markAsRead(notification)"
+                 class="notification-item">
+                <div class="d-flex align-items-start">
                   <div class="me-3">
                     <i [class]="'bi bi-' + notification.icon"
-                       [ngClass]="'text-' + notification.color"
-                       style="font-size: 1.25rem;"></i>
+                       [ngClass]="'text-' + notification.color"></i>
                   </div>
                   <div class="flex-grow-1">
-                    <div class="fw-semibold">{{ notification.title }}</div>
-                    <div class="small text-body-secondary" *ngIf="notification.body">{{ notification.body }}</div>
+                    <div class="fw-semibold" [title]="notification.title">
+                      {{ notification.title }}
+                    </div>
+                    <div class="small text-body-secondary"
+                         *ngIf="notification.body"
+                         [title]="notification.body">
+                      {{ notification.body }}
+                    </div>
                     <div class="small text-body-secondary">
+                      <i class="bi bi-clock me-1"></i>
                       {{ notification.time | date:'short' }}
                     </div>
                   </div>
@@ -96,10 +116,11 @@
           </ng-container>
 
           <li *ngIf="notifications.length > 0">
-            <hr cDropdownDivider />
+            <hr cDropdownDivider class="my-0" />
           </li>
           <li>
-            <a cDropdownItem routerLink="/notifications" class="text-center">
+            <a cDropdownItem routerLink="/notifications" class="text-center view-all-link">
+              <i class="bi bi-arrow-right-circle me-2"></i>
               <strong>{{ 'common.viewAll' | translate | async }}</strong>
             </a>
           </li>

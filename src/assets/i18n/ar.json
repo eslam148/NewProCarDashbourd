@@ -55,6 +55,7 @@
     "markAllRead": "تحديد الكل كمقروء",
     "noNotifications": "لا توجد إشعارات",
     "viewAll": "عرض الكل",
+    "loading": "جاري التحميل...",
     "notificationTypes": {
       "newRequest": "طلب جديد",
       "requestAccepted": "تم قبول الطلب",

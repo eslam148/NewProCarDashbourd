@@ -1,14 +1,13 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { getMessaging, getToken, isSupported, Messaging, onMessage } from 'firebase/messaging';
-import { mergeMapTo } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 
 import { initializeApp } from 'firebase/app';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, take, map, catchError } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import {
   NotificationDto,
   NotificationListRequest,
@@ -105,15 +104,196 @@ export class NotificationService {
     if (!isPlatformBrowser(this.platformId)) return;
     if (!this.messaging) {
       console.warn('Messaging not initialized yet.');
-
       return;
     }
 
     onMessage(this.messaging, (payload) => {
-      console.log('Message received: ', payload);
-      alert("New Notification")
+      console.log('Firebase message received: ', payload);
+
+      // Handle the incoming notification
+      this.handleIncomingNotification(payload);
+
+      // Emit the message for other components to listen
       this.message$.next(payload);
     });
+  }
+
+  /**
+   * Handle incoming Firebase notification
+   */
+  private handleIncomingNotification(payload: any): void {
+    try {
+      // Extract notification data
+      const notificationData = {
+        title: payload.notification?.title || payload.data?.title || 'New Notification',
+        body: payload.notification?.body || payload.data?.body || '',
+        type: payload.data?.type ? parseInt(payload.data.type) : NotificationType.NewRequest,
+        requestId: payload.data?.requestId || null,
+        reservationId: payload.data?.reservationId || null,
+        timestamp: new Date()
+      };
+
+      console.log('Processed notification data:', notificationData);
+
+      // Show browser notification if permission granted
+      this.showBrowserNotification(notificationData);
+
+      // Add to local notifications list
+      this.addNotificationToList(notificationData);
+
+      // Refresh notifications from API to get the latest data
+      this.loadNotifications();
+
+    } catch (error) {
+      console.error('Error handling incoming notification:', error);
+    }
+  }
+
+  /**
+   * Show browser notification
+   */
+  private showBrowserNotification(notificationData: any): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Check if browser notifications are supported and permitted
+    if ('Notification' in window && Notification.permission === 'granted') {
+      const notification = new Notification(notificationData.title, {
+        body: notificationData.body,
+        icon: '/assets/icons/icon-192x192.png', // Use existing app icon
+        tag: `notification-${notificationData.type}`,
+        requireInteraction: false,
+        silent: false
+      });
+
+      // Handle notification click
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+
+        // Navigate to appropriate page based on notification type
+        this.handleNotificationClick(notificationData);
+      };
+
+      // Auto close after 5 seconds
+      setTimeout(() => {
+        notification.close();
+      }, 5000);
+    }
+  }
+
+  /**
+   * Handle notification click navigation
+   */
+  private handleNotificationClick(notificationData: any): void {
+    // You can inject Router here if needed for navigation
+    console.log('Notification clicked:', notificationData);
+
+    // Example navigation logic based on notification type
+    switch (notificationData.type) {
+      case NotificationType.NewRequest:
+        // Navigate to requests page
+        window.location.href = '/requests';
+        break;
+      case NotificationType.RequestAccepted:
+      case NotificationType.RequestRejected:
+      case NotificationType.RequestCancelled:
+      case NotificationType.RequestCompleted:
+        // Navigate to specific request
+        if (notificationData.requestId) {
+          window.location.href = `/requests/${notificationData.requestId}`;
+        }
+        break;
+      case NotificationType.NewReservation:
+        // Navigate to reservations page
+        if (notificationData.reservationId) {
+          window.location.href = `/reservations/${notificationData.reservationId}`;
+        } else {
+          window.location.href = '/reservations';
+        }
+        break;
+      default:
+        // Navigate to notifications page
+        window.location.href = '/notifications';
+        break;
+    }
+  }
+
+  /**
+   * Add notification to local list
+   */
+  private addNotificationToList(notificationData: any): void {
+    const newNotification: NotificationDisplayItem = {
+      id: Date.now(), // Temporary ID until we get real ID from API
+      title: notificationData.title,
+      body: notificationData.body,
+      time: notificationData.timestamp,
+      type: notificationData.type,
+      isRead: false,
+      icon: this.getIconForType(notificationData.type),
+      color: this.getColorForType(notificationData.type),
+      requestId: notificationData.requestId,
+      reservationId: notificationData.reservationId
+    };
+
+    // Add to beginning of notifications array
+    const currentNotifications = this.notifications$.value;
+    const updatedNotifications = [newNotification, ...currentNotifications];
+
+    // Limit to 50 notifications to prevent memory issues
+    if (updatedNotifications.length > 50) {
+      updatedNotifications.splice(50);
+    }
+
+    this.notifications$.next(updatedNotifications);
+    this.updateUnreadCount(updatedNotifications);
+  }
+
+  /**
+   * Request browser notification permission
+   */
+  async requestNotificationPermission(): Promise<boolean> {
+    if (!isPlatformBrowser(this.platformId)) return false;
+
+    if (!('Notification' in window)) {
+      console.warn('This browser does not support notifications');
+      return false;
+    }
+
+    if (Notification.permission === 'granted') {
+      return true;
+    }
+
+    if (Notification.permission === 'denied') {
+      console.warn('Notification permission denied');
+      return false;
+    }
+
+    // Request permission
+    const permission = await Notification.requestPermission();
+    return permission === 'granted';
+  }
+
+  /**
+   * Initialize Firebase messaging with full setup
+   */
+  async initializeFirebaseMessaging(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      // Request notification permission first
+      const notificationPermission = await this.requestNotificationPermission();
+      console.log('Browser notification permission:', notificationPermission);
+
+      // Request FCM permission and token
+      await this.requestPermission();
+
+      // Start listening for messages
+      this.listen();
+
+      console.log('Firebase messaging initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Firebase messaging:', error);
+    }
   }
 
   // Add this method to get token as a Promise

@@ -127,6 +127,9 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
   sidebarId = input('sidebar1');
 
   ngOnInit() {
+    // Initialize Firebase messaging
+    this.initializeFirebaseMessaging();
+
     // Load real notifications from API
     this.loadNotifications();
 
@@ -149,8 +152,19 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
       .pipe(takeUntil(this.destroy$))
       .subscribe(payload => {
         if (payload) {
-          // When a new Firebase notification arrives, reload notifications from API
-          this.loadNotifications();
+          console.log('New Firebase notification received in header:', payload);
+          // Notifications are automatically updated by the service
+          // No need to manually reload here as the service handles it
+        }
+      });
+
+    // Subscribe to Firebase token updates
+    this.#notificationService.currentToken$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(token => {
+        if (token) {
+          console.log('FCM token received in header:', token);
+          // You can send this token to your backend if needed
         }
       });
   }
@@ -180,6 +194,15 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
     setTimeout(() => {
       this.loading = false;
     }, 1000);
+  }
+
+  private async initializeFirebaseMessaging() {
+    try {
+      await this.#notificationService.initializeFirebaseMessaging();
+      console.log('Firebase messaging initialized in header component');
+    } catch (error) {
+      console.error('Error initializing Firebase messaging in header:', error);
+    }
   }
 
   // Removed old mock notification methods - now using real API data
