@@ -30,6 +30,13 @@ import { SidebarNavHelper } from '@coreui/angular';
 import { TranslationService } from './services/translation.service';
 import { ThemeService } from './services/theme.service';
 
+import { initializeApp } from 'firebase/app';
+import { getMessaging } from 'firebase/messaging';
+import { firebaseConfig } from './firebase-config';
+
+import { provideFirebaseApp } from '@angular/fire/app';
+import { provideMessaging } from '@angular/fire/messaging';
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -59,6 +66,8 @@ export const appConfig: ApplicationConfig = {
       CityEffects
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
+     provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideMessaging(() => getMessaging()),
     provideAnimations(),
     importProvidersFrom(
       TranslateModule.forRoot({
@@ -76,4 +85,5 @@ export const appConfig: ApplicationConfig = {
     TranslationService,
     ThemeService
   ]
+  
 };

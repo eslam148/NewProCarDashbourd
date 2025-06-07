@@ -1,15 +1,18 @@
-import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { getMessaging, getToken, isSupported, Messaging, onMessage } from 'firebase/messaging';
-import { BehaviorSubject } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { mergeMapTo } from 'rxjs/operators';
+
+import { environment } from '../../environments/environment';
+
 import { initializeApp } from 'firebase/app';
+import { isPlatformBrowser } from '@angular/common';
+import { BehaviorSubject } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-
   private messaging: any;
   messaging2?: Messaging;
   public currentToken$ = new BehaviorSubject<string | null>(null);
@@ -65,4 +68,6 @@ export class NotificationService {
       this.message$.next(payload);
     });
   }
+  //  constructor(private afMessaging: AngularFireMessaging) { }
+
 }

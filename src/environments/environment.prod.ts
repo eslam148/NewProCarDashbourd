@@ -20,7 +20,6 @@ export const environment = {
     enableAnalytics: true,
     enableChat: false
   },
-
   firebaseConfig: {
         apiKey: "AIzaSyDqu_FG2UAVffwZsErtaA7mS6ylDgU8xEs",
         authDomain: "procare-85759.firebaseapp.com",

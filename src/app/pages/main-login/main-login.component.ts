@@ -50,7 +50,8 @@ export class MainLoginComponent implements OnInit, OnDestroy {
   // Egyptian phone number pattern
   private readonly EGYPT_PHONE_PATTERN = /^01[0125][0-9]{8}$/;
   private deviceToken: string = '';
-
+  token: string | null = null;
+  message: any;
   constructor(
     private fb: FormBuilder,
     private store: Store,
@@ -97,29 +98,20 @@ export class MainLoginComponent implements OnInit, OnDestroy {
         this.currentLanguage = lang;
       });
 
-    // Request FCM token immediately
-    this.requestFcmToken();
-
-    // Subscribe to token updates
-    this.NotificationService.currentToken$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(token => {
-      if (token) {
-        this.deviceToken = token;
-        console.log('FCM Token updated:', this.deviceToken);
-      }
+         this.NotificationService.currentToken$.subscribe(token => {
+      this.deviceToken = token || '';
     });
-
-    // Message handling
-    this.NotificationService.message$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(payload => {
+ this.enableNotifications();
+    this.NotificationService.message$.subscribe(payload => {
       if (payload) {
-        console.log('FCM Message received:', payload);
+        this.message = payload.notification || payload;
       }
     });
-  }
 
+  }
+ enableNotifications() {
+    this.NotificationService.requestPermission();
+  }
   async requestFcmToken() {
     try {
       console.log('Requesting FCM token...');
@@ -136,6 +128,10 @@ export class MainLoginComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     // Clear previous errors
+      this.enableNotifications()
+
+    console.log('Device Token:', this.token);
+
     this.loginError = null;
     this.phoneError = null;
     console.log('Device Token:', this.deviceToken);
