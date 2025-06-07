@@ -12,7 +12,7 @@ import { selectCurrentLanguage } from '../../store/translation/translation.selec
 import { TranslationService } from '../../services/translation.service';
 import { Subject, takeUntil, Observable, take } from 'rxjs';
 import { getMessaging, getToken, isSupported } from 'firebase/messaging';
-import { NotificationService } from 'src/app/services/Notification.service';
+import { NotificationService } from '../../services/Notification.service';
 @Component({
   selector: 'app-main-login',
   standalone: true,

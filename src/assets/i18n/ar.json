@@ -51,12 +51,17 @@
       "tasks": "المهام",
       "comments": "التعليقات"
     },
-    "notifications": {
-      "newUser": "مستخدم جديد مسجل",
-      "userDeleted": "تم حذف المستخدم",
-      "salesReport": "تقرير المبيعات جاهز",
-      "newClient": "عميل جديد",
-      "serverOverload": "الخادم مثقل"
+    "notifications": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "noNotifications": "لا توجد إشعارات",
+    "viewAll": "عرض الكل",
+    "notificationTypes": {
+      "newRequest": "طلب جديد",
+      "requestAccepted": "تم قبول الطلب",
+      "requestRejected": "تم رفض الطلب",
+      "requestCancelled": "تم إلغاء الطلب",
+      "requestCompleted": "تم إكمال الطلب",
+      "newReservation": "حجز جديد"
     },
     "status": {
       "cpuUsage": "استخدام المعالج",
@@ -124,6 +129,11 @@
     "links": "روابط",
     "docs": "التوثيق",
     "confirmDelete": "هل أنت متأكد من حذف هذا العنصر؟"
+  },
+  "theme": {
+    "light": "فاتح",
+    "dark": "داكن",
+    "auto": "تلقائي"
   },
   "auth": {
     "login": "تسجيل الدخول",

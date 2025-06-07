@@ -60,12 +60,17 @@
       "tasks": "Tasks",
       "comments": "Comments"
     },
-    "notifications": {
-      "newUser": "New user registered",
-      "userDeleted": "User deleted",
-      "salesReport": "Sales report is ready",
-      "newClient": "New client",
-      "serverOverload": "Server overloaded"
+    "notifications": "Notifications",
+    "markAllRead": "Mark All Read",
+    "noNotifications": "No notifications",
+    "viewAll": "View All",
+    "notificationTypes": {
+      "newRequest": "New Request",
+      "requestAccepted": "Request Accepted",
+      "requestRejected": "Request Rejected",
+      "requestCancelled": "Request Cancelled",
+      "requestCompleted": "Request Completed",
+      "newReservation": "New Reservation"
     },
     "status": {
       "cpuUsage": "CPU Usage",
@@ -133,6 +138,11 @@
     "links": "Links",
     "docs": "Docs",
     "confirmDelete": "Are you sure you want to delete this item?"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "auto": "Auto"
   },
   "auth": {
     "login": "Sign In",

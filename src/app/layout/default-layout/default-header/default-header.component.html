@@ -34,9 +34,78 @@
     </c-header-nav>
 
     <c-header-nav class="d-none d-md-flex ms-auto">
-      <a cNavLink class="d-flex align-items-center justify-content-center">
-        <i class="bi bi-bell-fill" style="font-size: 1.25rem;"></i>
-      </a>
+      <c-dropdown alignment="end" variant="nav-item">
+        <button
+          [caret]="false"
+          cDropdownToggle
+          class="position-relative py-0 d-flex align-items-center justify-content-center"
+          style="width: 40px; height: 40px;"
+          [attr.aria-label]="'common.notifications' | translate | async"
+        >
+          <i class="bi bi-bell-fill" style="font-size: 1.25rem;"></i>
+          <c-badge *ngIf="unreadCount > 0"
+                   color="danger"
+                   position="top-end"
+                   shape="rounded-pill"
+                   size="sm">
+            {{ unreadCount > 99 ? '99+' : unreadCount }}
+          </c-badge>
+        </button>
+        <ul cDropdownMenu class="pt-0 notification-dropdown" style="width: 320px; max-height: 400px; overflow-y: auto;">
+          <li>
+            <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2 d-flex justify-content-between">
+              <span>{{ 'common.notifications' | translate | async }}</span>
+              <button *ngIf="unreadCount > 0"
+                      class="btn btn-link btn-sm p-0 text-decoration-none"
+                      (click)="markAllAsRead()">
+                {{ 'common.markAllRead' | translate | async }}
+              </button>
+            </h6>
+          </li>
+
+          <ng-container *ngIf="notifications.length === 0">
+            <li class="text-center py-3">
+              <span class="text-body-secondary">{{ 'common.noNotifications' | translate | async }}</span>
+            </li>
+          </ng-container>
+
+          <ng-container *ngFor="let notification of notifications">
+            <li>
+              <a cDropdownItem
+                 [ngClass]="{'bg-light': !notification.isRead}"
+                 (click)="markAsRead(notification)">
+                <div class="d-flex align-items-center">
+                  <div class="me-3">
+                    <i [class]="'bi bi-' + notification.icon"
+                       [ngClass]="'text-' + notification.color"
+                       style="font-size: 1.25rem;"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="fw-semibold">{{ notification.title }}</div>
+                    <div class="small text-body-secondary" *ngIf="notification.body">{{ notification.body }}</div>
+                    <div class="small text-body-secondary">
+                      {{ notification.time | date:'short' }}
+                    </div>
+                  </div>
+                  <div *ngIf="!notification.isRead" class="ms-2">
+                    <c-badge color="info" size="sm" shape="rounded-pill"></c-badge>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ng-container>
+
+          <li *ngIf="notifications.length > 0">
+            <hr cDropdownDivider />
+          </li>
+          <li>
+            <a cDropdownItem routerLink="/notifications" class="text-center">
+              <strong>{{ 'common.viewAll' | translate | async }}</strong>
+            </a>
+          </li>
+        </ul>
+      </c-dropdown>
+
       <a cNavLink class="d-flex align-items-center justify-content-center">
         <i class="bi bi-list-ul" style="font-size: 1.25rem;"></i>
       </a>

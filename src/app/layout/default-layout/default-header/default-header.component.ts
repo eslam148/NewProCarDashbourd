@@ -1,10 +1,12 @@
-import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { NgTemplateOutlet, AsyncPipe, NgIf, NgClass, NgForOf, DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { logout } from '../../../store/auth/auth.actions';
 import { TranslatePipe } from '../../../pipes/translate.pipe';
 import { TranslationService } from '../../../services/translation.service';
+import { NotificationService } from '../../../services/Notification.service';
+import { Subject, takeUntil } from 'rxjs';
 
 import {
   AvatarComponent,
@@ -58,13 +60,24 @@ import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-tog
       LanguageSwitcherComponent,
       ThemeToggleComponent,
       AsyncPipe,
-      TranslatePipe
+      TranslatePipe,
+      NgIf,
+      NgClass,
+      NgForOf,
+      DatePipe
     ]
 })
-export class DefaultHeaderComponent extends HeaderComponent {
+export class DefaultHeaderComponent extends HeaderComponent implements OnInit, OnDestroy {
   readonly #colorModeService = inject(ColorModeService);
   readonly #store = inject(Store);
+  readonly #notificationService = inject(NotificationService);
   readonly colorMode = this.#colorModeService.colorMode;
+
+  // Notification properties
+  unreadCount = 0;
+  notifications: any[] = [];
+  private destroy$ = new Subject<void>();
+  loading = false;
 
   readonly colorModes = [
     { name: 'light', text: 'Light', icon: 'cilSun' },
@@ -113,7 +126,61 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   sidebarId = input('sidebar1');
 
+  ngOnInit() {
+    // Load real notifications from API
+    this.loadNotifications();
+
+    // Subscribe to notification updates from API
+    this.#notificationService.notifications$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(notifications => {
+        this.notifications = notifications;
+      });
+
+    // Subscribe to unread count updates
+    this.#notificationService.unreadCount$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(count => {
+        this.unreadCount = count;
+      });
+
+    // Subscribe to Firebase notification updates (for real-time notifications)
+    this.#notificationService.message$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(payload => {
+        if (payload) {
+          // When a new Firebase notification arrives, reload notifications from API
+          this.loadNotifications();
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   onLogout() {
     this.#store.dispatch(logout());
   }
+
+  // Notification methods
+  markAllAsRead() {
+    this.#notificationService.markAllAsRead();
+  }
+
+  markAsRead(notification: any) {
+    this.#notificationService.markAsRead(notification.id);
+  }
+
+  private loadNotifications() {
+    this.loading = true;
+    this.#notificationService.loadNotifications();
+    // Loading state will be updated when notifications are received
+    setTimeout(() => {
+      this.loading = false;
+    }, 1000);
+  }
+
+  // Removed old mock notification methods - now using real API data
 }
