@@ -166,6 +166,15 @@
                   shape="rounded-pill"
                   (clicked)="openDeleteModal(nurse.id)"
                 ></app-action-button>
+
+                <app-action-button
+                  color="info"
+                  size="sm"
+                  icon="cilCommentBubble"
+                  text="nurse.reviews" 
+                  shape="rounded-pill"
+                  (clicked)="openReviewsModal(nurse.id)"
+                ></app-action-button>
               </div>
             </td>
           </tr>
@@ -219,4 +228,42 @@
     [size]="'md'"
     (pageChange)="onPageChange($event)"
   ></app-pagination>
+</div>
+
+<!-- Reviews Modal -->
+<div class="modal fade show" tabindex="-1"
+     [ngStyle]="{display: isReviewsModalOpen ? 'block' : 'none', background: 'rgba(0,0,0,0.4)'}"
+     style="z-index: 2050; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">{{ 'nurse.reviewsFor' | translate | async }} {{ selectedNurseName }}</h5>
+        <button type="button" class="btn-close" (click)="closeReviewsModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="selectedNurseReviews.length > 0; else noReviews">
+          <ul class="list-group">
+            <li *ngFor="let review of selectedNurseReviews" class="list-group-item">
+              <div class="d-flex w-100 justify-content-between">
+                <h6 class="mb-1">{{ review.patientName }}</h6>
+                <small>{{ 'nurse.rating' | translate | async }}: {{ review.rating }}/5</small>
+              </div>
+              <p class="mb-1">{{ review.comment }}</p>
+            </li>
+          </ul>
+        </div>
+        <ng-template #noReviews>
+          <p>{{ 'nurse.noReviews' | translate | async }}</p>
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <app-action-button
+          color="secondary"
+          icon="cilX"
+          text="common.close"
+          (clicked)="closeReviewsModal()"
+        ></app-action-button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -432,7 +432,11 @@
     "addSuccess": "Nurse added successfully",
     "deleteSuccess": "Nurse deleted successfully",
     "location": "Location on Map",
-    "add":"Add Nurse"
+    "add":"Add Nurse",
+    "reviews": "Reviews",
+    "reviewsFor": "Reviews for",
+    "rating": "Rating",
+    "noReviews": "No reviews available for this nurse yet."
   },
   "map": {
     "instructions": "Click on the map to select a location or drag the marker to adjust position",

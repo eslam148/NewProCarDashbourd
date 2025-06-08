@@ -14,4 +14,13 @@ export interface NurseDto {
   latitude: string;
   longitude: string;
   licenseNumber: string;
+  reviews:ReviewDto[];
 }
+export interface ReviewDto{
+  id:number;
+  comment: string ;
+  rating: number ;
+  patientName:string;
+  createdAt: Date;
+}
+ 

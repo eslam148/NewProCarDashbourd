@@ -1,7 +1,7 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NurseService } from '../../services/nurse.service';
-import { NurseDto } from '../../Models/DTOs/NurseDto';
+import { NurseDto, ReviewDto } from '../../Models/DTOs/NurseDto';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
 import { CommonModule } from '@angular/common';
@@ -38,6 +38,9 @@ export class NurseComponent implements OnInit, AfterViewInit {
   errorMessage = '';
   isDeleteModalOpen = false;
   nurseIdToDelete: string | null = null;
+  isReviewsModalOpen = false;
+  selectedNurseReviews: ReviewDto[] = []; // Replace 'any' with a proper Review DTO if available
+  selectedNurseName: string = '';
   selectedImageFile: File | null = null;
   pageNumber = 1;
   pageSize = 10;
@@ -85,6 +88,8 @@ export class NurseComponent implements OnInit, AfterViewInit {
     this.nurseService.getAllNurses({ pageNumber: this.pageNumber, pageSize: this.pageSize, searchKey: '', cityId: 0 }).subscribe({
       next: (res) => {
         this.nurses = res.data.items;
+        console.log('Nurses loaded:',  this.nurses);
+
         this.totalCount = res.data.totalCount;
       },
       error: (error) => {
@@ -233,6 +238,24 @@ export class NurseComponent implements OnInit, AfterViewInit {
   openDeleteModal(id: string) {
     this.nurseIdToDelete = id;
     this.isDeleteModalOpen = true;
+  }
+
+  openReviewsModal(nurseId: string) {
+    // TODO: Fetch reviews for the nurse with nurseId
+    // For now, using placeholder data
+    const nurse = this.nurses.find(n => n.id === nurseId);
+    if (nurse) {
+      this.selectedNurseName = `${nurse.firstName} ${nurse.lastName}`;
+      // Simulate fetching reviews
+      this.selectedNurseReviews =  nurse.reviews;
+      this.isReviewsModalOpen = true;
+    }
+  }
+
+  closeReviewsModal() {
+    this.isReviewsModalOpen = false;
+    this.selectedNurseReviews = [];
+    this.selectedNurseName = '';
   }
 
   closeDeleteModal() {
