@@ -102,9 +102,9 @@
                          [title]="notification.body">
                       {{ notification.body }}
                     </div>
-                    <div class="small text-body-secondary">
+                    <div class="small text-body-secondary d-flex justify-content-end">
                       <i class="bi bi-clock me-1"></i>
-                      {{ notification.time | date:'short' }}
+                      {{ formatTime(notification.time) }}
                     </div>
                   </div>
                   <div *ngIf="!notification.isRead" class="ms-2">

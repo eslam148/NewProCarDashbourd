@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 // CoreUI imports
 import {
@@ -71,7 +71,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   error: string | null = null;
 
   // Filters and search
-  searchTerm = '';
   selectedTypeFilter: NotificationType | 'all' = 'all';
   selectedStatusFilter: 'all' | 'read' | 'unread' = 'all';
 
@@ -99,6 +98,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     { label: 'Notifications', active: true }
   ];
 
+  // Add currentLanguage property - public so it can be accessed from template
+  currentLanguage: string = 'en';
+
   constructor(
     private notificationService: NotificationService,
     private translationService: TranslationService
@@ -116,8 +118,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   private initializeComponent(): void {
-    // Initialize search with debounce
-    this.setupSearchDebounce();
+    // Empty function - no search to initialize
   }
 
   private setupSubscriptions(): void {
@@ -139,35 +140,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           this.loadNotifications();
         }
       });
-  }
 
-  private setupSearchDebounce(): void {
-    const searchSubject = new Subject<string>();
-
-    searchSubject
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(() => {
-        this.applyFilters();
+    // Subscribe to language changes
+   this.translationService.getCurrentLang()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(lang => {
+        this.currentLanguage = lang;
+        // Refresh notifications to update time formatting
+        this.loadNotifications();
       });
-
-    // This will be called when search input changes
-    this.onSearchChange = (term: string) => {
-      this.searchTerm = term;
-      searchSubject.next(term);
-    };
-  }
-
-  onSearchChange(term: string): void {
-    // This will be overridden by setupSearchDebounce
-  }
-
-  onSearchInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.onSearchChange(target.value);
   }
 
   loadNotifications(): void {
@@ -196,31 +177,80 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   private convertToDisplayItems(notifications: any[]): NotificationDisplayItem[] {
-    return notifications.map(notification => ({
-      id: notification.id,
-      title: notification.title,
-      body: notification.body,
-      time: new Date(notification.createdAt),
-      type: notification.type as NotificationType,
-      isRead: notification.isRead,
-      icon: NotificationTypeHelper.getTypeIcon(notification.type),
-      color: NotificationTypeHelper.getTypeColor(notification.type),
-      requestId: notification.requestId || undefined,
-      reservationId: notification.reservationId || undefined
-    }));
+    return notifications.map(notification => {
+      let time: Date;
+      const createdAt = notification.createdAt;
+      
+      try {
+        if (typeof createdAt === 'string') {
+          if (createdAt.match(/[يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر]/)) {
+            // Handle Arabic format: "يونيو 03, 2025 12:45 م"
+            const parts = createdAt.split(' ').filter(Boolean);
+            const month = parts[0];
+            const day = parseInt(parts[1].replace(',', ''));
+            const year = parseInt(parts[2]);
+            const timeParts = parts[3].split(':');
+            const hours = parseInt(timeParts[0]);
+            const minutes = parseInt(timeParts[1]);
+            const isPM = parts[4] === 'م';
+
+            const monthMap: { [key: string]: number } = {
+              'يناير': 0, 'فبراير': 1, 'مارس': 2, 'أبريل': 3, 'مايو': 4, 'يونيو': 5,
+              'يوليو': 6, 'أغسطس': 7, 'سبتمبر': 8, 'أكتوبر': 9, 'نوفمبر': 10, 'ديسمبر': 11
+            };
+
+            let adjustedHours = hours;
+            if (isPM && hours !== 12) {
+              adjustedHours = hours + 12;
+            } else if (!isPM && hours === 12) {
+              adjustedHours = 0;
+            }
+
+            time = new Date(year, monthMap[month], day, adjustedHours, minutes);
+          } else {
+            // Try parsing as English format or ISO
+            time = new Date(createdAt);
+          }
+        } else if (createdAt instanceof Date) {
+          time = createdAt;
+        } else {
+          time = new Date(); // Fallback to current time
+        }
+
+        // Validate the parsed date
+        if (isNaN(time.getTime())) {
+          console.warn('Invalid date created from:', createdAt);
+          time = new Date();
+        }
+      } catch (error) {
+        console.error('Error parsing date:', error, createdAt);
+        time = new Date();
+      }
+
+      return {
+        id: notification.id,
+        title: notification.title,
+        body: notification.body,
+        time,
+        type: notification.type as NotificationType,
+        isRead: notification.isRead,
+        icon: NotificationTypeHelper.getTypeIcon(notification.type),
+        color: NotificationTypeHelper.getTypeColor(notification.type),
+        requestId: notification.requestId || undefined,
+        reservationId: notification.reservationId || undefined
+      };
+    });
   }
 
-  applyFilters(): void {
-    let filtered = [...this.allNotifications];
+  clearFilters(): void {
+    this.selectedTypeFilter = 'all';
+    this.selectedStatusFilter = 'all';
+    this.currentPage = 1;
+    this.applyFilters();
+  }
 
-    // Apply search filter
-    if (this.searchTerm.trim()) {
-      const searchLower = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(notification =>
-        notification.title.toLowerCase().includes(searchLower) ||
-        notification.body.toLowerCase().includes(searchLower)
-      );
-    }
+  private applyFilters(): void {
+    let filtered = [...this.allNotifications];
 
     // Apply type filter
     if (this.selectedTypeFilter !== 'all') {
@@ -307,14 +337,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  clearFilters(): void {
-    this.searchTerm = '';
-    this.selectedTypeFilter = 'all';
-    this.selectedStatusFilter = 'all';
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
   refreshNotifications(): void {
     this.loadNotifications();
   }
@@ -328,18 +350,49 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   formatTime(time: Date): string {
+    if (!time || isNaN(time.getTime())) {
+      return '';
+    }
+
     const now = new Date();
     const diffMs = now.getTime() - time.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-
-    return time.toLocaleDateString();
+    
+    if (this.currentLanguage === 'ar') {
+      // Arabic relative time formatting
+      if (diffMins < 1) return 'للتو';
+      if (diffMins < 60) return `منذ ${diffMins} ${diffMins === 1 ? 'دقيقة' : 'دقائق'}`;
+      if (diffHours < 24) return `منذ ${diffHours} ${diffHours === 1 ? 'ساعة' : 'ساعات'}`;
+      if (diffDays < 7) return `منذ ${diffDays} ${diffDays === 1 ? 'يوم' : 'أيام'}`;
+      
+      // Format absolute date for older entries
+      return time.toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    } else {
+      // English relative time formatting
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      if (diffHours < 24) return `${diffHours}h ago`;
+      if (diffDays < 7) return `${diffDays}d ago`;
+      
+      // Format absolute date for older entries
+      return time.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    }
   }
 
   trackByNotificationId(index: number, notification: NotificationDisplayItem): number {

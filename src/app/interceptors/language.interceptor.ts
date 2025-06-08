@@ -45,11 +45,11 @@ export function languageInterceptor(
 function mapLanguageToLocale(language: string): string {
   const languageLocaleMap: { [key: string]: string } = {
     'ar': 'ar-EG',
-    'en': 'en-EG'
+    'en': 'en-US'
   };
 
-  // Return mapped locale or default to 'en-EG' for unsupported languages
-  return languageLocaleMap[language] || 'en-EG';
+  // Return mapped locale or default to 'en-US' for unsupported languages
+  return languageLocaleMap[language] || 'en-US';
 }
 
 /**

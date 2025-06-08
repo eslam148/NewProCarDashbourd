@@ -36,6 +36,7 @@ import { selectAuthResponse } from '../../../store/auth/auth.selectors';
 import { selectProfile, selectProfileImage, selectProfileFullName } from '../../../store/profile/profile.selectors';
 import { loadProfile } from '../../../store/profile/profile.actions';
 import { AuthService } from '../../../services/auth.service';
+import { NotificationDisplayItem, NotificationType, NotificationTypeHelper } from '../../../Models/DTOs/NotificationDto';
 
 @Component({
     selector: 'app-default-header',
@@ -69,7 +70,7 @@ import { AuthService } from '../../../services/auth.service';
       NgIf,
       NgClass,
       NgForOf,
-      DatePipe
+   
     ]
 })
 export class DefaultHeaderComponent extends HeaderComponent implements OnInit, OnDestroy {
@@ -78,6 +79,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
   readonly #notificationService = inject(NotificationService);
   readonly #authService = inject(AuthService);
   readonly colorMode = this.#colorModeService.colorMode;
+  currentLanguage: string = 'en';
 
   // Profile data observables
   profile$ = this.#store.select(selectProfile);
@@ -132,13 +134,25 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
     { id: 4, title: 'common.tasks.angularVersion', value: 100, color: 'success' }
   ] as const;
 
-  constructor() {
+  constructor(
+        private translationService: TranslationService,
+        private notificationService: NotificationService,
+  ) {
     super();
   }
 
   sidebarId = input('sidebar1');
 
   ngOnInit() {
+    // Add this subscription at the beginning of ngOnInit
+    this.translationService.getCurrentLang()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(lang => {
+        this.currentLanguage = lang;
+        // Refresh notifications to update time formatting
+        this.loadNotifications();
+      });
+
     // Initialize Firebase messaging
     this.initializeFirebaseMessaging();
 
@@ -198,6 +212,52 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
     this.destroy$.next();
     this.destroy$.complete();
   }
+  formatTime(time: any): string {
+    // Ensure time is a valid Date object
+    if (!time || isNaN(time.getTime())) {
+      return '';
+    }
+
+    const now = new Date();
+    const diffMs = now.getTime() - time.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    console.log('Time difference:', this.currentLanguage);
+    if (this.currentLanguage === 'ar') {
+      // Arabic relative time formatting
+      if (diffMins < 1) return 'للتو';
+      if (diffMins < 60) return `منذ ${diffMins} ${diffMins === 1 ? 'دقيقة' : 'دقائق'}`;
+      if (diffHours < 24) return `منذ ${diffHours} ${diffHours === 1 ? 'ساعة' : 'ساعات'}`;
+      if (diffDays < 7) return `منذ ${diffDays} ${diffDays === 1 ? 'يوم' : 'أيام'}`;
+      
+      // Format absolute date for older entries
+      return time.toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    } else {
+      // English relative time formatting
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return `${diffMins}m ago`;
+      if (diffHours < 24) return `${diffHours}h ago`;
+      if (diffDays < 7) return `${diffDays}d ago`;
+      
+      // Format absolute date for older entries
+      return time.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    }
+  }
 
   onLogout() {
     this.#store.dispatch(logout());
@@ -214,8 +274,20 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
 
   private loadNotifications() {
     this.loading = true;
-    this.#notificationService.loadNotifications();
-    // Loading state will be updated when notifications are received
+    this.notificationService.getAllNotifications(0, 100).subscribe({
+      next: (response) => {
+        if (response.status === 0 && response.data) {
+          const displayItems = this.convertToDisplayItems(response.data.items);
+          this.notifications = displayItems;
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+        this.loading = false;
+      }
+    });
+    
     setTimeout(() => {
       this.loading = false;
     }, 1000);
@@ -228,6 +300,71 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
     } catch (error) {
       console.error('Error initializing Firebase messaging in header:', error);
     }
+  }
+ private convertToDisplayItems(notifications: any[]): NotificationDisplayItem[] {
+    return notifications.map(notification => {
+      let time: Date;
+      const createdAt = notification.createdAt;
+      
+      try {
+        if (typeof createdAt === 'string') {
+          if (createdAt.match(/[يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر]/)) {
+            // Handle Arabic format: "يونيو 03, 2025 12:45 م"
+            const parts = createdAt.split(' ').filter(Boolean);
+            const month = parts[0];
+            const day = parseInt(parts[1].replace(',', ''));
+            const year = parseInt(parts[2]);
+            const timeParts = parts[3].split(':');
+            const hours = parseInt(timeParts[0]);
+            const minutes = parseInt(timeParts[1]);
+            const isPM = parts[4] === 'م';
+
+            const monthMap: { [key: string]: number } = {
+              'يناير': 0, 'فبراير': 1, 'مارس': 2, 'أبريل': 3, 'مايو': 4, 'يونيو': 5,
+              'يوليو': 6, 'أغسطس': 7, 'سبتمبر': 8, 'أكتوبر': 9, 'نوفمبر': 10, 'ديسمبر': 11
+            };
+
+            let adjustedHours = hours;
+            if (isPM && hours !== 12) {
+              adjustedHours = hours + 12;
+            } else if (!isPM && hours === 12) {
+              adjustedHours = 0;
+            }
+
+            time = new Date(year, monthMap[month], day, adjustedHours, minutes);
+          } else {
+            // Try parsing as English format or ISO
+            time = new Date(createdAt);
+          }
+        } else if (createdAt instanceof Date) {
+          time = createdAt;
+        } else {
+          time = new Date(); // Fallback to current time
+        }
+
+        // Validate the parsed date
+        if (isNaN(time.getTime())) {
+          console.warn('Invalid date created from:', createdAt);
+          time = new Date();
+        }
+      } catch (error) {
+        console.error('Error parsing date:', error, createdAt);
+        time = new Date();
+      }
+
+      return {
+        id: notification.id,
+        title: notification.title,
+        body: notification.body,
+        time,
+        type: notification.type as NotificationType,
+        isRead: notification.isRead,
+        icon: NotificationTypeHelper.getTypeIcon(notification.type),
+        color: NotificationTypeHelper.getTypeColor(notification.type),
+        requestId: notification.requestId || undefined,
+        reservationId: notification.reservationId || undefined
+      };
+    });
   }
 
   // Removed old mock notification methods - now using real API data
