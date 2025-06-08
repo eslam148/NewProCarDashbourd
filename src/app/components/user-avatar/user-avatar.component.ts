@@ -1,45 +1,133 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AvatarComponent } from '@coreui/angular';
 
 @Component({
   selector: 'app-user-avatar',
   standalone: true,
-  imports: [CommonModule, AvatarComponent],
+  imports: [CommonModule],
   template: `
-    <c-avatar
-      [class]="avatarClass"
-      [size]="size"
-      [shape]="shape"
-      [src]="getAvatarSrc()"
-      [alt]="altText"
-      [status]="status"
-      [textColor]="textColor"
-      (error)="onImageError($event)">
-    </c-avatar>
+    <div class="avatar-wrapper" [class]="avatarClass">
+      <img
+        *ngIf="hasValidImage(); else defaultAvatar"
+        [src]="imageUrl"
+        [alt]="altText"
+        [class]="'avatar-img ' + getSizeClass()"
+        (error)="onImageError($event)"
+        loading="lazy">
+
+      <ng-template #defaultAvatar>
+        <div
+          [class]="'avatar-default ' + getSizeClass()"
+          [style.background-color]="avatarBackgroundColor"
+          [innerHTML]="defaultAvatarContent">
+        </div>
+      </ng-template>
+
+      
+    </div>
   `,
   styles: [`
     :host {
       display: inline-block;
     }
 
-    c-avatar {
-      border-radius: 50% !important;
+    .avatar-wrapper {
+      position: relative;
+      display: inline-block;
+      border-radius: 50%;
       overflow: hidden;
+      background-color: #f8f9fa;
     }
 
-    c-avatar img {
-      border-radius: 50% !important;
-      object-fit: cover;
+    .avatar-img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
     }
 
-    c-avatar .avatar-img {
-      border-radius: 50% !important;
-      object-fit: cover;
+    .avatar-default {
       width: 100%;
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Size classes */
+    .size-sm {
+      width: 32px;
+      height: 32px;
+      font-size: 12px;
+    }
+
+    .size-md {
+      width: 40px;
+      height: 40px;
+      font-size: 16px;
+    }
+
+    .size-lg {
+      width: 48px;
+      height: 48px;
+      font-size: 20px;
+    }
+
+    .size-xl {
+      width: 56px;
+      height: 56px;
+      font-size: 24px;
+    }
+
+    .size-large {
+      width: 150px;
+      height: 150px;
+      font-size: 54px;
+    }
+
+    /* Status indicator */
+    .avatar-status {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 25%;
+      height: 25%;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    .status-success { background-color: #28a745; }
+    .status-danger { background-color: #dc3545; }
+    .status-warning { background-color: #ffc107; }
+    .status-info { background-color: #17a2b8; }
+    .status-primary { background-color: #007bff; }
+    .status-secondary { background-color: #6c757d; }
+    .status-dark { background-color: #343a40; }
+    .status-light { background-color: #f8f9fa; }
+
+    /* Profile avatar large class support */
+    .profile-avatar-large {
+      width: 150px !important;
+      height: 150px !important;
+      border: 4px solid var(--cui-border-color, #dee2e6);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .avatar-img, .avatar-default {
+        width: 150px;
+        height: 150px;
+        font-size: 54px;
+      }
     }
   `]
 })
@@ -54,9 +142,28 @@ export class UserAvatarComponent implements OnInit {
   @Input() avatarClass: string = '';
   @Input() altText: string = '';
 
+  // Computed properties for template
+  avatarBackgroundColor: string = '#6c757d';
+  defaultAvatarContent: string = '<span>U</span>';
+
   ngOnInit() {
     if (!this.altText) {
       this.altText = this.getFullName() || 'User Avatar';
+    }
+
+    // Calculate computed properties
+    this.avatarBackgroundColor = this.getAvatarBackgroundColor();
+    this.defaultAvatarContent = this.getDefaultAvatarSvg();
+
+    // Debug logging (remove in production)
+    if (typeof window !== 'undefined' && window.console) {
+      console.log('UserAvatar initialized:', {
+        imageUrl: this.imageUrl,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        size: this.size,
+        avatarClass: this.avatarClass
+      });
     }
   }
 
@@ -65,6 +172,22 @@ export class UserAvatarComponent implements OnInit {
       return this.imageUrl;
     }
     return this.getDefaultAvatarDataUrl();
+  }
+
+  getSizeClass(): string {
+    if (this.avatarClass?.includes('profile-avatar-large')) {
+      return 'size-large';
+    }
+    return `size-${this.size}`;
+  }
+
+  getDefaultAvatarSvg(): string {
+    const initials = this.getInitials();
+    return `<span style="user-select: none;">${initials}</span>`;
+  }
+
+  hasValidImage(): boolean {
+    return !!(this.imageUrl && this.imageUrl.trim() !== '');
   }
 
   private getFullName(): string {
@@ -89,7 +212,7 @@ export class UserAvatarComponent implements OnInit {
     }
   }
 
-  private getAvatarBackgroundColor(): string {
+  getAvatarBackgroundColor(): string {
     const name = ((this.firstName || '') + (this.lastName || '')).toLowerCase();
 
     if (!name) return '#6c757d';
@@ -159,7 +282,9 @@ export class UserAvatarComponent implements OnInit {
   onImageError(event: Event): void {
     const imgElement = event.target as HTMLImageElement;
     if (imgElement) {
-      imgElement.src = this.getDefaultAvatarDataUrl();
+      // Hide the broken image and show default avatar
+      imgElement.style.display = 'none';
+      this.imageUrl = undefined; // This will trigger the default avatar template
     }
   }
 }

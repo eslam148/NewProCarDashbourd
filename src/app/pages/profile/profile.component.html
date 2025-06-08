@@ -78,12 +78,12 @@
               <div class="col-md-3 text-center">
                 <div class="profile-picture-container">
                   <app-user-avatar
-                    class="profile-avatar-large fade-in"
                     [imageUrl]="userProfile.profilePicture"
                     [firstName]="userProfile.firstName"
                     [lastName]="userProfile.lastName"
-                    shape="rounded-circle"
+                    size="xl"
                     avatarClass="profile-avatar-large"
+                    status="success"
                     [altText]="userProfile.firstName + ' ' + userProfile.lastName">
                   </app-user-avatar>
 
@@ -221,42 +221,17 @@
           </div>
 
           <!-- Last Login -->
-          <div class="mb-3" *ngIf="userProfile.lastLogin">
+          <div class="mb-4" *ngIf="userProfile.lastLogin">
             <small class="text-body-secondary">{{ 'profile.lastLogin' | translate | async }}</small>
             <div>{{ userProfile.lastLogin | date:'medium' }}</div>
           </div>
 
-          <!-- Statistics -->
-          <hr>
-          <h6>{{ 'profile.statistics' | translate | async }}</h6>
+     
 
-          <div class="mb-2">
-            <div class="d-flex justify-content-between">
-              <small>{{ 'profile.totalRequests' | translate | async }}</small>
-              <small class="fw-semibold">{{ userStats.totalRequests || 0 }}</small>
-            </div>
-          </div>
+          
 
-          <div class="mb-2">
-            <div class="d-flex justify-content-between">
-              <small>{{ 'profile.completedRequests' | translate | async }}</small>
-              <small class="fw-semibold">{{ userStats.completedRequests || 0 }}</small>
-            </div>
-          </div>
-
-          <div class="mb-2">
-            <div class="d-flex justify-content-between">
-              <small>{{ 'profile.pendingRequests' | translate | async }}</small>
-              <small class="fw-semibold">{{ userStats.pendingRequests || 0 }}</small>
-            </div>
-          </div>
-
-          <div class="mb-2">
-            <div class="d-flex justify-content-between">
-              <small>{{ 'profile.totalReservations' | translate | async }}</small>
-              <small class="fw-semibold">{{ userStats.totalReservations || 0 }}</small>
-            </div>
-          </div>
+          
+        
 
         </c-card-body>
       </c-card>
