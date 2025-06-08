@@ -167,14 +167,16 @@
       class="py-0 pe-0"
       [attr.aria-label]="'common.openUserMenu' | translate | async"
     >
-      <c-avatar
+      <app-user-avatar
+        [imageUrl]="(profileImage$ | async) || undefined"
+        [firstName]="(profile$ | async)?.firstName"
+        [lastName]="(profile$ | async)?.lastName"
+        size="md"
         shape="rounded-1"
-        [size]="'md'"
-        src="./assets/images/avatars/8.jpg"
         status="success"
         textColor="primary"
-        [attr.alt]="'common.userAvatar' | translate | async"
-      />
+        [altText]="('common.userAvatar' | translate | async) || 'User Avatar'"
+      ></app-user-avatar>
     </button>
     <ul cDropdownMenu class="pt-0 w-auto">
       <li>

@@ -25,6 +25,8 @@ import { adminReducer } from './store/admin/admin.reducer';
 import { AdminEffects } from './store/admin/admin.effects';
 import { cityReducer } from './store/city/city.reducer';
 import { CityEffects } from './store/city/city.effects';
+import { profileReducer } from './store/profile/profile.reducer';
+import { ProfileEffects } from './store/profile/profile.effects';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
 import { SidebarNavHelper } from '@coreui/angular';
 import { TranslationService } from './services/translation.service';
@@ -53,7 +55,8 @@ export const appConfig: ApplicationConfig = {
       translation: translationReducer,
       governorate: governorateReducer,
       admin: adminReducer,
-      city: cityReducer
+      city: cityReducer,
+      profile: profileReducer
     }),
     provideEffects(
       ServiceCategoryEffects,
@@ -63,7 +66,8 @@ export const appConfig: ApplicationConfig = {
       TranslationEffects,
       GovernorateEffects,
       AdminEffects,
-      CityEffects
+      CityEffects,
+      ProfileEffects
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
      provideFirebaseApp(() => initializeApp(firebaseConfig)),

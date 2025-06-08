@@ -100,6 +100,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
+        data: {
+          title: 'Profile'
+        }
+      },
+      {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
       },

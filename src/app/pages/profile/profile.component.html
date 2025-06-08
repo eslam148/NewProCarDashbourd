@@ -1,0 +1,322 @@
+<!-- Profile Page Container -->
+<div class="profile-page">
+
+  <!-- Breadcrumb Navigation -->
+  <c-breadcrumb class="mb-4">
+    <c-breadcrumb-item
+      *ngFor="let item of breadcrumbItems"
+      [active]="item.active">
+      <a *ngIf="!item.active" [routerLink]="item.url">{{ item.label | translate | async }}</a>
+      <span *ngIf="item.active">{{ item.label | translate | async }}</span>
+    </c-breadcrumb-item>
+  </c-breadcrumb>
+
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1">{{ 'common.profile' | translate | async }}</h2>
+      <p class="text-body-secondary mb-0">
+        {{ 'profile.manageYourProfile' | translate | async }}
+      </p>
+    </div>
+    <div class="d-flex gap-2" *ngIf="!editMode && userProfile">
+      <button
+        cButton
+        color="primary"
+        (click)="enableEditMode()">
+        <i class="bi bi-pencil me-1"></i>
+        {{ 'common.edit' | translate | async }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-5">
+    <c-spinner size="sm" class="mb-3"></c-spinner>
+    <p class="text-body-secondary">{{ 'common.loading' | translate | async }}</p>
+  </div>
+
+  <!-- Error State -->
+  <c-alert
+    *ngIf="error && !loading"
+    color="danger"
+    [dismissible]="true"
+    (dismissed)="dismissError()">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    {{ error }}
+  </c-alert>
+
+  <!-- Success Message -->
+  <c-alert
+    *ngIf="successMessage"
+    color="success"
+    [dismissible]="true"
+    (dismissed)="dismissSuccess()">
+    <i class="bi bi-check-circle me-2"></i>
+    {{ successMessage }}
+  </c-alert>
+
+  <!-- Profile Content -->
+  <div *ngIf="!loading && userProfile" class="row">
+
+    <!-- Profile Information Card -->
+    <div class="col-lg-8">
+      <c-card class="mb-4">
+        <c-card-header>
+          <h5 class="mb-0">
+            <i class="bi bi-person me-2"></i>
+            {{ 'profile.personalInformation' | translate | async }}
+          </h5>
+        </c-card-header>
+        <c-card-body>
+
+          <!-- Profile Form -->
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+
+            <!-- Profile Picture Section -->
+            <div class="row mb-4">
+              <div class="col-md-3 text-center">
+                <div class="profile-picture-container">
+                  <app-user-avatar
+                    class="profile-avatar-large fade-in"
+                    [imageUrl]="userProfile.profilePicture"
+                    [firstName]="userProfile.firstName"
+                    [lastName]="userProfile.lastName"
+                    avatarClass="profile-avatar-large"
+                    [altText]="userProfile.firstName + ' ' + userProfile.lastName">
+                  </app-user-avatar>
+
+                  <!-- Upload Button (Edit Mode Only) -->
+                  <div *ngIf="editMode" class="mt-2">
+                    <input
+                      type="file"
+                      #fileInput
+                      accept="image/*"
+                      (change)="onFileSelected($event)"
+                      class="d-none">
+                    <button
+                      type="button"
+                      cButton
+                      size="sm"
+                      color="secondary"
+                      variant="outline"
+                      (click)="fileInput.click()"
+                      [disabled]="uploadingImage">
+                      <c-spinner *ngIf="uploadingImage" size="sm" class="me-1"></c-spinner>
+                      <i *ngIf="!uploadingImage" class="bi bi-camera me-1"></i>
+                      {{ 'profile.changePhoto' | translate | async }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-9">
+                <div class="row name-fields">
+
+                  <!-- First Name Field -->
+                  <div class="col-md-6 mb-3">
+                    <label cLabel for="firstName">{{ 'profile.firstName' | translate | async }} *</label>
+                    <input
+                      cFormControl
+                      id="firstName"
+                      type="text"
+                      formControlName="firstName"
+                      [class.is-invalid]="getFieldError('firstName')"
+                      [placeholder]="'profile.enterFirstName' | translate | async">
+                    <div *ngIf="getFieldError('firstName')" class="invalid-feedback">
+                      {{ getFieldError('firstName') }}
+                    </div>
+                  </div>
+
+                  <!-- Last Name Field -->
+                  <div class="col-md-6 mb-3">
+                    <label cLabel for="lastName">{{ 'profile.lastName' | translate | async }} *</label>
+                    <input
+                      cFormControl
+                      id="lastName"
+                      type="text"
+                      formControlName="lastName"
+                      [class.is-invalid]="getFieldError('lastName')"
+                      [placeholder]="'profile.enterLastName' | translate | async">
+                    <div *ngIf="getFieldError('lastName')" class="invalid-feedback">
+                      {{ getFieldError('lastName') }}
+                    </div>
+                  </div>
+
+                  <!-- Phone Field (Read-only) -->
+                  <div class="col-md-6 mb-3">
+                    <label cLabel>{{ 'common.phone' | translate | async }}</label>
+                    <div class="form-control-plaintext">
+                      {{ userProfile.phone || 'N/A' }}
+                    </div>
+                  </div>
+
+                  <!-- Role Field (Read-only) -->
+                  <div class="col-md-6 mb-3">
+                    <label cLabel>{{ 'common.role' | translate | async }}</label>
+                    <div class="form-control-plaintext">
+                      <c-badge [color]="getRoleBadgeColor(userProfile.role)">
+                        {{ getRoleDisplayName(userProfile.role) }}
+                      </c-badge>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons (Edit Mode) -->
+            <div *ngIf="editMode" class="d-flex justify-content-end gap-2">
+              <button
+                type="button"
+                cButton
+                color="secondary"
+                variant="outline"
+                (click)="cancelEdit()"
+                [disabled]="saving">
+                {{ 'common.cancel' | translate | async }}
+              </button>
+              <button
+                type="submit"
+                cButton
+                color="primary"
+                [disabled]="!profileForm.valid || saving">
+                <c-spinner *ngIf="saving" size="sm" class="me-1"></c-spinner>
+                <i *ngIf="!saving" class="bi bi-check me-1"></i>
+                {{ 'common.save' | translate | async }}
+              </button>
+            </div>
+
+          </form>
+        </c-card-body>
+      </c-card>
+    </div>
+
+    <!-- Profile Statistics Card -->
+    <div class="col-lg-4">
+      <c-card class="mb-4">
+        <c-card-header>
+          <h5 class="mb-0">
+            <i class="bi bi-bar-chart me-2"></i>
+            {{ 'profile.accountInfo' | translate | async }}
+          </h5>
+        </c-card-header>
+        <c-card-body>
+
+          <!-- Account Status -->
+          <div class="mb-3">
+            <small class="text-body-secondary">{{ 'profile.accountStatus' | translate | async }}</small>
+            <div>
+              <c-badge [color]="userProfile.isActive ? 'success' : 'danger'">
+                {{ userProfile.isActive ? ('common.active' | translate | async) : ('common.inactive' | translate | async) }}
+              </c-badge>
+            </div>
+          </div>
+
+          <!-- Member Since -->
+          <div class="mb-3" *ngIf="userProfile.createdAt">
+            <small class="text-body-secondary">{{ 'profile.memberSince' | translate | async }}</small>
+            <div>{{ userProfile.createdAt | date:'mediumDate' }}</div>
+          </div>
+
+          <!-- Last Login -->
+          <div class="mb-3" *ngIf="userProfile.lastLogin">
+            <small class="text-body-secondary">{{ 'profile.lastLogin' | translate | async }}</small>
+            <div>{{ userProfile.lastLogin | date:'medium' }}</div>
+          </div>
+
+          <!-- Statistics -->
+          <hr>
+          <h6>{{ 'profile.statistics' | translate | async }}</h6>
+
+          <div class="mb-2">
+            <div class="d-flex justify-content-between">
+              <small>{{ 'profile.totalRequests' | translate | async }}</small>
+              <small class="fw-semibold">{{ userStats.totalRequests || 0 }}</small>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <div class="d-flex justify-content-between">
+              <small>{{ 'profile.completedRequests' | translate | async }}</small>
+              <small class="fw-semibold">{{ userStats.completedRequests || 0 }}</small>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <div class="d-flex justify-content-between">
+              <small>{{ 'profile.pendingRequests' | translate | async }}</small>
+              <small class="fw-semibold">{{ userStats.pendingRequests || 0 }}</small>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <div class="d-flex justify-content-between">
+              <small>{{ 'profile.totalReservations' | translate | async }}</small>
+              <small class="fw-semibold">{{ userStats.totalReservations || 0 }}</small>
+            </div>
+          </div>
+
+        </c-card-body>
+      </c-card>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<c-modal
+  [visible]="showCancelModal"
+  (visibleChange)="showCancelModal = $event"
+  backdrop="static">
+  <c-modal-header>
+    <h4 cModalTitle>{{ 'common.confirm' | translate | async }}</h4>
+  </c-modal-header>
+  <c-modal-body>
+    <p>{{ 'profile.cancelConfirmation' | translate | async }}</p>
+  </c-modal-body>
+  <c-modal-footer>
+    <button
+      cButton
+      color="secondary"
+      variant="outline"
+      (click)="showCancelModal = false">
+      {{ 'common.no' | translate | async }}
+    </button>
+    <button
+      cButton
+      color="primary"
+      (click)="confirmCancel()">
+      {{ 'common.yes' | translate | async }}
+    </button>
+  </c-modal-footer>
+</c-modal>
+
+<!-- Save Confirmation Modal -->
+<c-modal
+  [visible]="showSaveModal"
+  (visibleChange)="showSaveModal = $event"
+  backdrop="static">
+  <c-modal-header>
+    <h4 cModalTitle>{{ 'common.confirm' | translate | async }}</h4>
+  </c-modal-header>
+  <c-modal-body>
+    <p>{{ 'profile.saveConfirmation' | translate | async }}</p>
+  </c-modal-body>
+  <c-modal-footer>
+    <button
+      cButton
+      color="secondary"
+      variant="outline"
+      (click)="showSaveModal = false">
+      {{ 'common.cancel' | translate | async }}
+    </button>
+    <button
+      cButton
+      color="primary"
+      (click)="confirmSave()">
+      {{ 'common.save' | translate | async }}
+    </button>
+  </c-modal-footer>
+</c-modal>

@@ -5,6 +5,7 @@ import { translationReducer, TranslationState } from './translation/translation.
 import { governorateReducer, GovernorateState } from './governorate/governorate.reducer';
 import { cityReducer, CityState } from './city/city.reducer';
 import { serviceCategoryReducer, ServiceCategoryState } from './service-category/service-category.reducer';
+import { profileReducer, ProfileState } from './profile/profile.reducer';
 
 export interface AppState {
   auth: AuthState;
@@ -13,6 +14,7 @@ export interface AppState {
   governorate: GovernorateState;
   city: CityState;
   serviceCategory: ServiceCategoryState;
+  profile: ProfileState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -21,5 +23,6 @@ export const reducers: ActionReducerMap<AppState> = {
   translation: translationReducer,
   governorate: governorateReducer,
   city: cityReducer,
-  serviceCategory: serviceCategoryReducer
+  serviceCategory: serviceCategoryReducer,
+  profile: profileReducer
 };

@@ -28,12 +28,8 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
   getAdmins(searchDto: AdminsSearchDto): Observable<GenericResponse<PaginatedResponse<AdminsDto>>> {
-    console.log('AdminService - getAdmins called with:', searchDto);
-    console.log('API URL:', `${this.apiUrl}/api/Admins/GetAllAdmins`);
-
     return this.http.post<GenericResponse<PaginatedResponse<AdminsDto>>>(`${this.apiUrl}/api/Admins/GetAllAdmins`, searchDto).pipe(
       tap(response => {
-        console.log('AdminService - getAdmins response:', response);
         if (!response || !response.data) {
           console.warn('AdminService - getAdmins: Response or response.data is null/undefined');
         }
@@ -59,25 +55,49 @@ export class AdminService {
   }
 
   GetAdminById(id: string): Observable<GenericResponse<AdminsDto>> {
-    console.log('AdminService - GetAdminById called with:', id);
     return this.http.get<GenericResponse<AdminsDto>>(`${this.apiUrl}/api/Admins/GetAdminById/${id}`).pipe(
-      tap(response => console.log('AdminService - GetAdminById response:', response)),
       catchError(this.handleError)
     );
   }
 
   DeleteAdmin(id: string): Observable<GenericResponse<AdminsDto>> {
-    console.log('AdminService - DeleteAdmin called with:', id);
     return this.http.delete<GenericResponse<AdminsDto>>(`${this.apiUrl}/api/Admins/DeleteAdmin/${id}`).pipe(
-      tap(response => console.log('AdminService - DeleteAdmin response:', response)),
+      catchError(this.handleError)
+    );
+  }
+
+  // Profile-specific methods
+  getAdminById(id: string): Observable<GenericResponse<AdminsDto>> {
+    return this.http.get<GenericResponse<AdminsDto>>(`${this.apiUrl}/api/Admins/GetAdminById/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateAdmin(updateData: any): Observable<GenericResponse<AdminsDto>> {
+    const formData = new FormData();
+    formData.append('Id', updateData.id);
+    formData.append('FirstName', updateData.firstName || '');
+    formData.append('LastName', updateData.lastName || '');
+    formData.append('Phone', updateData.phone || '');
+
+    // Include image file if provided
+    if (updateData.image) {
+      formData.append('Image', updateData.image);
+    }
+
+    return this.http.put<GenericResponse<AdminsDto>>(`${this.apiUrl}/api/Admins/UpdateAdmin`, formData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  uploadProfilePicture(formData: FormData): Observable<GenericResponse<any>> {
+    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Admins/UploadProfilePicture`, formData).pipe(
       catchError(this.handleError)
     );
   }
 
   RegisterAdmin(registerAdminDto: RegisterDto): Observable<GenericResponse<string>> {
-    console.log('AdminService - RegisterAdmin called with:', registerAdminDto);
     return this.http.post<GenericResponse<string>>(`${this.apiUrl}/api/Admins/AddAdmin`, registerAdminDto).pipe(
-      tap(response => console.log('AdminService - RegisterAdmin response:', response)),
       catchError(this.handleError)
     );
   }

@@ -38,7 +38,6 @@ export class AuthEffects {
     if (token && userData) {
       try {
         const parsedUser = JSON.parse(userData);
-        console.log('Found valid stored auth data:', parsedUser);
         this.store.dispatch(checkAuthSuccess({ response: parsedUser }));
       } catch (error) {
         console.error('Error parsing stored auth data:', error);
@@ -49,7 +48,6 @@ export class AuthEffects {
         this.store.dispatch(checkAuthFailure());
       }
     } else {
-      console.log('No valid auth data found');
       this.store.dispatch(checkAuthFailure());
     }
   }
@@ -67,8 +65,6 @@ export class AuthEffects {
         };
         return this.authService.Login(loginDto).pipe(
           map(response => {
-            console.log('Full API Response:', response);
-
             // Check if response indicates an error (status = 1 usually means error)
             if (response?.status === 1) {
               // This is an error response, throw it to be caught by catchError
@@ -89,7 +85,6 @@ export class AuthEffects {
               };
             }
 
-            console.log('Login successful:', response.data);
             return loginSuccess({
               response: response.data
             });
@@ -119,14 +114,12 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(loginSuccess),
         tap(({ response }) => {
-          console.log('Login success effect triggered:', response);
           if (response?.token) {
             // Store auth data
             localStorage.setItem('token', response.token);
             localStorage.setItem('authToken', response.token);
             localStorage.setItem('user', JSON.stringify(response));
 
-            console.log('Auth data stored, navigating to dashboard');
             // Navigate to dashboard
             this.router.navigate(['/dashboard']);
           } else {
@@ -185,12 +178,9 @@ export class AuthEffects {
         const token = localStorage.getItem('token') || localStorage.getItem('authToken');
         const userData = localStorage.getItem('user');
 
-        console.log('CheckAuth effect triggered:', { hasToken: !!token, hasUserData: !!userData });
-
         if (token && userData) {
           try {
             const parsedUser = JSON.parse(userData);
-            console.log('Auth check successful:', parsedUser);
             return of(checkAuthSuccess({
               response: parsedUser
             }));

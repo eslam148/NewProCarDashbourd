@@ -31,7 +31,7 @@ exec('magick -version', (error) => {
         console.error(`Error generating ${size}x${size} icon:`, stderr);
         return;
       }
-      console.log(`Generated ${size}x${size} icon`);
+      // Icon generated successfully
     });
   });
 
@@ -47,7 +47,7 @@ exec('magick -version', (error) => {
       console.error('Error generating favicon.ico:', stderr);
       return;
     }
-    console.log('Generated favicon.ico');
+    // favicon.ico generated successfully
   });
 
   // Create specific named icons for HTML references
@@ -69,7 +69,7 @@ exec('magick -version', (error) => {
           console.error(`Error copying to ${icon.name}:`, err);
           return;
         }
-        console.log(`Generated ${icon.name}`);
+        // Icon copied successfully
       });
     }
   });

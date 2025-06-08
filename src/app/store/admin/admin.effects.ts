@@ -35,22 +35,15 @@ export class AdminEffects {
     private actions$: Actions,
     private adminService: AdminService
   ) {
-    // Log all actions
-    this.actions$.subscribe(action => {
-      console.log('Action Dispatched:', action);
-    });
+    // Effects initialization
   }
 
   loadAdmins$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadAdmins),
-      tap(action => console.log('loadAdmins Effect - Action:', action)),
       mergeMap(({ searchDto }) => {
-        console.log('loadAdmins Effect - Calling Service with:', searchDto);
         return this.adminService.getAdmins(searchDto).pipe(
-          tap(response => console.log('loadAdmins Effect - Service Response:', response)),
           map(response => {
-            console.log('loadAdmins Effect - Dispatching Success:', response.data);
             return loadAdminsSuccess({ admins: response.data });
           }),
           catchError(error => {
@@ -107,13 +100,9 @@ export class AdminEffects {
   registerAdmin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(registerAdmin),
-      tap(action => console.log('registerAdmin Effect - Action:', action)),
       mergeMap(({ registerDto }) => {
-        console.log('registerAdmin Effect - Calling Service with:', registerDto);
         return this.adminService.RegisterAdmin(registerDto).pipe(
-          tap(response => console.log('registerAdmin Effect - Service Response:', response)),
           map(response => {
-            console.log('registerAdmin Effect - Dispatching Success:', response);
             return registerAdminSuccess({ admin: response.data });
           }),
           catchError(error => {

@@ -75,11 +75,10 @@ export class NotificationService {
           });
 
           if (token) {
-            console.log('FCM token received:', token);
             this.currentToken$.next(token);
             return;
           } else {
-            console.log('No registration token available.');
+            // No registration token available
           }
         } catch (err) {
           console.error(`FCM token error (retry ${2-retries}/2):`, err);
@@ -404,10 +403,8 @@ export class NotificationService {
     // Mark each unread notification as read
     unreadNotifications.forEach(notification => {
       this.markNotificationAsRead(notification.id).subscribe({
-        next: (response) => {
-          if (response.status === 0) {
-            console.log(`Notification ${notification.id} marked as read`);
-          }
+        next: () => {
+          // Notification marked as read successfully
         },
         error: (error) => {
           console.error(`Error marking notification ${notification.id} as read:`, error);

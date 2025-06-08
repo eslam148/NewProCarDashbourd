@@ -35,8 +35,6 @@ export class DiseaseService {
     const url = `${this.apiUrl}/api/Disease/GetAll`;
     const body = { pageNumber, pageSize };
 
-    console.log(`Fetching diseases: ${url}`, body);
-
     // Use direct API response which is already in the correct format
     return this.http.post<any>(url, body, this.httpOptions);
 
@@ -47,8 +45,6 @@ export class DiseaseService {
    */
   getById(id: string): Observable<GenericResponse<DiseaseDto>> {
     const url = `${this.apiUrl}/api/Disease/GetById/${id}`;
-
-    console.log(`Fetching disease by id: ${url}`);
 
     return this.http.get<GenericResponse<DiseaseDto>>(url, this.httpOptions)
       .pipe(
@@ -62,8 +58,6 @@ export class DiseaseService {
   add(disease: DiseaseDto): Observable<GenericResponse<DiseaseDto>> {
     const url = `${this.apiUrl}/api/Disease/Add`;
 
-    console.log(`Adding disease: ${url}`, disease);
-
     return this.http.post<GenericResponse<DiseaseDto>>(url, disease, this.httpOptions)
       .pipe(
         catchError(this.handleError<DiseaseDto>('add'))
@@ -76,8 +70,6 @@ export class DiseaseService {
   update(disease: DiseaseDto): Observable<GenericResponse<DiseaseDto>> {
     const url = `${this.apiUrl}/api/Disease/Update`;
 
-    console.log(`Updating disease: ${url}`, disease);
-
     return this.http.put<GenericResponse<DiseaseDto>>(url, disease, this.httpOptions)
       .pipe(
         catchError(this.handleError<DiseaseDto>('update'))
@@ -89,8 +81,6 @@ export class DiseaseService {
    */
   delete(id: string): Observable<GenericResponse<any>> {
     const url = `${this.apiUrl}/api/Disease/Delete/${id}`;
-
-    console.log(`Deleting disease: ${url}`);
 
     return this.http.delete<GenericResponse<any>>(url, this.httpOptions)
       .pipe(

@@ -31,6 +31,11 @@ import {
 import { IconDirective } from '@coreui/icons-angular';
 import { LanguageSwitcherComponent } from '../../../components/language-switcher/language-switcher.component';
 import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-toggle.component';
+import { UserAvatarComponent } from '../../../components/user-avatar/user-avatar.component';
+import { selectAuthResponse } from '../../../store/auth/auth.selectors';
+import { selectProfile, selectProfileImage, selectProfileFullName } from '../../../store/profile/profile.selectors';
+import { loadProfile } from '../../../store/profile/profile.actions';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
     selector: 'app-default-header',
@@ -51,7 +56,6 @@ import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-tog
 
       DropdownComponent,
       DropdownToggleDirective,
-      AvatarComponent,
       DropdownMenuDirective,
       DropdownHeaderDirective,
       DropdownItemDirective,
@@ -59,6 +63,7 @@ import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-tog
       DropdownDividerDirective,
       LanguageSwitcherComponent,
       ThemeToggleComponent,
+      UserAvatarComponent,
       AsyncPipe,
       TranslatePipe,
       NgIf,
@@ -71,7 +76,14 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
   readonly #colorModeService = inject(ColorModeService);
   readonly #store = inject(Store);
   readonly #notificationService = inject(NotificationService);
+  readonly #authService = inject(AuthService);
   readonly colorMode = this.#colorModeService.colorMode;
+
+  // Profile data observables
+  profile$ = this.#store.select(selectProfile);
+  profileImage$ = this.#store.select(selectProfileImage);
+  profileFullName$ = this.#store.select(selectProfileFullName);
+  authUser$ = this.#store.select(selectAuthResponse);
 
   // Notification properties
   unreadCount = 0;
@@ -132,6 +144,19 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
 
     // Load real notifications from API
     this.loadNotifications();
+
+    // Load profile data when auth user is available
+    this.authUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(authUser => {
+        if (authUser) {
+          // Get user ID from auth service
+          const userId = this.#authService.getCurrentUserId();
+          if (userId) {
+            this.#store.dispatch(loadProfile({ userId: userId.toString() }));
+          }
+        }
+      });
 
     // Subscribe to notification updates from API
     this.#notificationService.notifications$

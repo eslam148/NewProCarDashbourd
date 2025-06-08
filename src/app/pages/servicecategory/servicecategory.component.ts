@@ -267,7 +267,6 @@ export class ServicecategoryComponent implements OnInit {
   // Helper method to show success toast
   showSuccess(message: string): void {
     // You can implement your preferred toast notification system here
-    console.log('Success:', message);
     // Example using browser alert (replace with your toast system)
     alert('Success: ' + message);
   }

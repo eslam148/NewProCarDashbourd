@@ -98,7 +98,7 @@ function getNotificationUrl(data) {
 
 // Handle notification close
 self.addEventListener('notificationclose', (event) => {
-    console.log('[firebase-messaging-sw.js] Notification closed:', event);
+    // Notification closed by user
 });
 
 // Handle push events for additional processing

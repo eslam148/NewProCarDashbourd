@@ -106,7 +106,6 @@ export class MainLoginComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(token => {
         this.deviceToken = token || '';
-        console.log('FCM token updated in login:', this.deviceToken);
       });
 
     // Subscribe to Firebase messages
@@ -115,7 +114,6 @@ export class MainLoginComponent implements OnInit, OnDestroy {
       .subscribe(payload => {
         if (payload) {
           this.message = payload.notification || payload;
-          console.log('Firebase message received in login:', payload);
         }
       });
   }
@@ -161,11 +159,8 @@ export class MainLoginComponent implements OnInit, OnDestroy {
     // Clear previous errors
       this.enableNotifications()
 
-    console.log('Device Token:', this.token);
-
     this.loginError = null;
     this.phoneError = null;
-    console.log('Device Token:', this.deviceToken);
     if (this.loginForm.valid) {
       const { phonenumber, password } = this.loginForm.value;
       this.store.dispatch(login({ phonenumber, password,deviceToken:this.deviceToken }));
