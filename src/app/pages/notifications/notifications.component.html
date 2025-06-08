@@ -176,8 +176,9 @@
         }">
         <c-card-body class="d-flex">
           <!-- Icon -->
-          <div class="me-3 flex-shrink-0">
-            <div class="notification-icon d-flex align-items-center justify-content-center">
+          <div class="me-3 flex-shrink-0 notification-icon-container">
+            <div class="notification-icon d-flex align-items-center justify-content-center"
+                 [ngClass]="'type-' + notification.color">
               <i [class]="'bi bi-' + notification.icon"
                  [ngClass]="'text-' + notification.color"></i>
             </div>

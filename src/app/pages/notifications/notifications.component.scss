@@ -40,6 +40,17 @@
     border-radius: 50%;
     background: rgba(var(--cui-primary-rgb), 0.1);
     font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    // Icon positioning
+    i, svg {
+      display: block;
+      margin: 0;
+      line-height: 1;
+    }
 
     // Different background colors based on notification type
     &.type-success {
@@ -56,6 +67,14 @@
 
     &.type-info {
       background: rgba(var(--cui-info-rgb), 0.1);
+    }
+
+    &.type-primary {
+      background: rgba(var(--cui-primary-rgb), 0.1);
+    }
+
+    &.type-secondary {
+      background: rgba(var(--cui-secondary-rgb), 0.1);
     }
   }
 
@@ -254,6 +273,8 @@
 
   // RTL specific fixes for this component
   :host-context([dir="rtl"]) {
+
+    // Select dropdown fixes
     select,
     .form-select,
     [cSelect] {
@@ -286,13 +307,129 @@
       }
     }
 
+    // Notification card RTL fixes
     .notification-card {
-      .d-flex {
-        flex-direction: row-reverse;
 
-        .me-3 {
-          margin-left: 1rem !important;
-          margin-right: 0 !important;
+      // Main card container
+      c-card-body {
+        .d-flex {
+          flex-direction: row-reverse !important;
+
+          // Icon container - positioned on the right
+          .me-3 {
+            margin-left: 1rem !important;
+            margin-right: 0 !important;
+            order: 2 !important;
+          }
+
+          // Content container - positioned on the left
+          .flex-grow-1 {
+            order: 1 !important;
+            text-align: right !important;
+            direction: rtl !important;
+          }
+        }
+      }
+
+      // Notification icon specific styling
+      .notification-icon {
+        margin-left: 1rem !important;
+        margin-right: 0 !important;
+        order: 2 !important;
+
+        // Ensure icon is centered
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        i {
+          margin: 0 !important;
+          display: block !important;
+        }
+      }
+
+      // Header section (title and time)
+      .d-flex.justify-content-between.align-items-start {
+        flex-direction: row-reverse !important;
+
+        h6 {
+          text-align: right !important;
+          order: 2 !important;
+        }
+
+        .d-flex.align-items-center.gap-2 {
+          flex-direction: row-reverse !important;
+          order: 1 !important;
+
+          small {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+          }
+
+          c-badge {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+          }
+        }
+      }
+
+      // Body text
+      .notification-body {
+        text-align: right !important;
+        direction: rtl !important;
+      }
+
+      // Footer section (badge and actions)
+      .d-flex.justify-content-between.align-items-center {
+        flex-direction: row-reverse !important;
+
+        .d-flex.align-items-center.gap-2 {
+          flex-direction: row-reverse !important;
+          order: 2 !important;
+
+          c-badge {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+          }
+
+          small {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+
+            i {
+              margin-left: 0.25rem !important;
+              margin-right: 0 !important;
+            }
+          }
+        }
+
+        .d-flex.gap-2 {
+          flex-direction: row-reverse !important;
+          order: 1 !important;
+
+          button {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+
+            &:first-child {
+              margin-left: 0 !important;
+            }
+
+            i {
+              margin-left: 0.25rem !important;
+              margin-right: 0 !important;
+            }
+          }
+
+          span {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+
+            i {
+              margin-left: 0.25rem !important;
+              margin-right: 0 !important;
+            }
+          }
         }
       }
     }

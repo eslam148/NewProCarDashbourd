@@ -370,16 +370,66 @@
     }
   }
 
-  /* Icon positioning fixes */
-  .bi {
-    &.me-1, &.me-2, &.me-3 {
-      margin-left: 0.25rem;
-      margin-right: 0;
+  /* Universal Icon positioning fixes */
+  .bi, i, svg, .icon {
+    &.me-1 {
+      margin-left: 0.25rem !important;
+      margin-right: 0 !important;
     }
 
-    &.ms-1, &.ms-2, &.ms-3 {
-      margin-right: 0.25rem;
-      margin-left: 0;
+    &.me-2 {
+      margin-left: 0.5rem !important;
+      margin-right: 0 !important;
+    }
+
+    &.me-3 {
+      margin-left: 1rem !important;
+      margin-right: 0 !important;
+    }
+
+    &.ms-1 {
+      margin-right: 0.25rem !important;
+      margin-left: 0 !important;
+    }
+
+    &.ms-2 {
+      margin-right: 0.5rem !important;
+      margin-left: 0 !important;
+    }
+
+    &.ms-3 {
+      margin-right: 1rem !important;
+      margin-left: 0 !important;
+    }
+  }
+
+  /* Flex container icon fixes */
+  .d-flex {
+    .bi, i, svg, .icon {
+      &:first-child {
+        margin-right: 0.5rem !important;
+        margin-left: 0 !important;
+      }
+
+      &:last-child {
+        margin-left: 0.5rem !important;
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  /* Notification specific icon containers */
+  .notification-icon,
+  .icon-container,
+  .notification-type-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+
+    i, svg, .bi {
+      display: block !important;
+      margin: 0 !important;
     }
   }
 
@@ -583,29 +633,116 @@
   /* Notifications page specific fixes */
   .notifications-page {
     .notification-card {
-      .d-flex {
-        flex-direction: row-reverse;
 
+      /* Main card flex container */
+      .d-flex {
+        flex-direction: row-reverse !important;
+
+        /* Icon container positioning */
         .me-3 {
           margin-left: 1rem !important;
           margin-right: 0 !important;
+          order: 2; /* Move icon to the right */
         }
 
         .ms-2 {
           margin-right: 0.5rem !important;
           margin-left: 0 !important;
         }
+
+        /* Content container */
+        .flex-grow-1 {
+          order: 1; /* Move content to the left */
+          text-align: right !important;
+        }
       }
 
+      /* Notification icon container */
+      .notification-icon {
+        margin-left: 1rem !important;
+        margin-right: 0 !important;
+        order: 2 !important;
+        flex-shrink: 0;
+
+        /* Icon alignment within container */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        i, svg {
+          display: block;
+          text-align: center;
+        }
+      }
+
+      /* Notification body text */
       .notification-body {
-        text-align: right;
+        text-align: right !important;
+        direction: rtl !important;
       }
 
+      /* Header section with title and time */
       .d-flex.justify-content-between {
-        flex-direction: row-reverse;
+        flex-direction: row-reverse !important;
+        text-align: right !important;
+
+        h6 {
+          text-align: right !important;
+          order: 2;
+        }
+
+        .d-flex.align-items-center.gap-2 {
+          flex-direction: row-reverse !important;
+          order: 1;
+
+          small {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+          }
+
+          c-badge {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+          }
+        }
+      }
+
+      /* Footer section with badge and actions */
+      .d-flex.justify-content-between.align-items-center {
+        flex-direction: row-reverse !important;
+
+        .d-flex.align-items-center.gap-2 {
+          flex-direction: row-reverse !important;
+          order: 2;
+
+          c-badge {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+          }
+
+          small {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+          }
+        }
 
         .d-flex.gap-2 {
-          flex-direction: row-reverse;
+          flex-direction: row-reverse !important;
+          order: 1;
+
+          button {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+
+            &:first-child {
+              margin-left: 0 !important;
+            }
+          }
+
+          span {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+          }
         }
       }
     }

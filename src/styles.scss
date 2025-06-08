@@ -57,6 +57,72 @@
   }
 }
 
+/* RTL Notification Icon Fixes - Global */
+[dir="rtl"] {
+
+  /* Notification cards and icon containers */
+  .notification-card,
+  .notification-item,
+  .alert,
+  .toast {
+
+    .d-flex {
+      flex-direction: row-reverse !important;
+
+      .me-3,
+      .me-2,
+      .me-1 {
+        margin-left: 1rem !important;
+        margin-right: 0 !important;
+        order: 2 !important;
+      }
+
+      .flex-grow-1 {
+        order: 1 !important;
+        text-align: right !important;
+      }
+    }
+
+    .notification-icon,
+    .icon-container,
+    .alert-icon {
+      margin-left: 1rem !important;
+      margin-right: 0 !important;
+      order: 2 !important;
+
+      i, svg, .bi {
+        margin: 0 !important;
+        display: block !important;
+      }
+    }
+  }
+
+  /* Icon positioning in buttons and links */
+  button, a, .btn {
+    i, svg, .bi {
+      &.me-1 {
+        margin-left: 0.25rem !important;
+        margin-right: 0 !important;
+      }
+
+      &.me-2 {
+        margin-left: 0.5rem !important;
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  /* Badge and small text icon fixes */
+  .badge, .small, small {
+    i, svg, .bi {
+      &.me-1 {
+        margin-left: 0.25rem !important;
+        margin-right: 0 !important;
+      }
+    }
+  }
+}
+
 /* Additional Angular Material styles if needed */
 @use '@angular/material' as mat;
 
