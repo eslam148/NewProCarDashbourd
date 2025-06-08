@@ -36,6 +36,7 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      border-radius: 50% !important;
 
       // Ensure the avatar content scales properly
       .avatar-img,
@@ -43,14 +44,24 @@
         width: 150px !important;
         height: 150px !important;
         object-fit: cover;
-        border-radius: 50%;
+        border-radius: 50% !important;
       }
 
       // SVG handling for generated avatars
       svg {
         width: 150px !important;
         height: 150px !important;
-        border-radius: 50%;
+        border-radius: 50% !important;
+      }
+
+      // CoreUI avatar component override
+      c-avatar {
+        border-radius: 50% !important;
+
+        img, .avatar-img {
+          border-radius: 50% !important;
+          object-fit: cover;
+        }
       }
 
       // Hover effect for larger avatar
@@ -63,24 +74,28 @@
       @media (max-width: 768px) {
         width: 120px !important;
         height: 120px !important;
+        border-radius: 50% !important;
 
         .avatar-img,
         img,
         svg {
           width: 120px !important;
           height: 120px !important;
+          border-radius: 50% !important;
         }
       }
 
       @media (max-width: 576px) {
         width: 100px !important;
         height: 100px !important;
+        border-radius: 50% !important;
 
         .avatar-img,
         img,
         svg {
           width: 100px !important;
           height: 100px !important;
+          border-radius: 50% !important;
         }
       }
     }

@@ -13,6 +13,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
+    "start:stable": "ng serve -o --disable-host-check --poll=2000",
+    "start:no-hmr": "ng serve -o --no-hmr --disable-host-check",
+    "start:debug": "ng serve -o --host 0.0.0.0 --disable-host-check --poll=2000 --no-hmr",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

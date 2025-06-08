@@ -1,0 +1,26 @@
+{
+  "serve": {
+    "builder": "@angular-devkit/build-angular:dev-server",
+    "options": {
+      "host": "localhost",
+      "port": 4200,
+      "liveReload": true,
+      "hmr": false,
+      "poll": 2000,
+      "disableHostCheck": true,
+      "allowedHosts": [
+        "localhost",
+        "127.0.0.1",
+        "0.0.0.0"
+      ]
+    },
+    "configurations": {
+      "development": {
+        "buildTarget": "app:build:development"
+      },
+      "production": {
+        "buildTarget": "app:build:production"
+      }
+    }
+  }
+}

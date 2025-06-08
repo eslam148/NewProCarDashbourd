@@ -22,6 +22,25 @@ import { AvatarComponent } from '@coreui/angular';
     :host {
       display: inline-block;
     }
+
+    c-avatar {
+      border-radius: 50% !important;
+      overflow: hidden;
+    }
+
+    c-avatar img {
+      border-radius: 50% !important;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+
+    c-avatar .avatar-img {
+      border-radius: 50% !important;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
   `]
 })
 export class UserAvatarComponent implements OnInit {
@@ -29,7 +48,7 @@ export class UserAvatarComponent implements OnInit {
   @Input() firstName?: string;
   @Input() lastName?: string;
   @Input() size: 'sm' | 'md' | 'lg' | 'xl' = 'md';
-  @Input() shape: 'rounded' | 'rounded-circle' | 'rounded-0' | 'rounded-1' | 'rounded-2' | 'rounded-3' = 'rounded-1';
+  @Input() shape: 'rounded' | 'rounded-circle' | 'rounded-0' | 'rounded-1' | 'rounded-2' | 'rounded-3' = 'rounded-circle';
   @Input() status?: 'success' | 'danger' | 'warning' | 'info' | 'primary' | 'secondary' | 'dark' | 'light';
   @Input() textColor: string = 'primary';
   @Input() avatarClass: string = '';
@@ -124,10 +143,10 @@ export class UserAvatarComponent implements OnInit {
     }
     
     const svg = `
-      <svg width="${svgSize}" height="${svgSize}" viewBox="0 0 ${svgSize} ${svgSize}" xmlns="http://www.w3.org/2000/svg">
+      <svg width="${svgSize}" height="${svgSize}" viewBox="0 0 ${svgSize} ${svgSize}" xmlns="http://www.w3.org/2000/svg" style="border-radius: 50%; overflow: hidden;">
         <circle cx="${svgSize/2}" cy="${svgSize/2}" r="${svgSize/2}" fill="${backgroundColor}"/>
-        <text x="${svgSize/2}" y="${svgSize/2}" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold" 
-              text-anchor="middle" dominant-baseline="central" fill="white" 
+        <text x="${svgSize/2}" y="${svgSize/2}" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="bold"
+              text-anchor="middle" dominant-baseline="central" fill="white"
               style="user-select: none;">
           ${initials}
         </text>
