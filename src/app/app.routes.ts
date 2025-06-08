@@ -93,6 +93,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'notifications',
+        loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent),
+        data: {
+          title: 'Notifications'
+        }
+      },
+      {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
       },
@@ -113,7 +120,7 @@ export const routes: Routes = [
         loadChildren: () => import('./views/icons/routes').then((m) => m.routes)
       },
       {
-        path: 'notifications',
+        path: 'ui-notifications',
         loadChildren: () => import('./views/notifications/routes').then((m) => m.routes)
       },
       {

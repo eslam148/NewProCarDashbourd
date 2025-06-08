@@ -1,7 +1,15 @@
 import { INavData } from '@coreui/angular';
 
 export const navItems: INavData[] = [
-
+  {
+    name: 'common.notifications',
+    url: '/notifications',
+    iconComponent: { name: 'cil-bell' },
+    badge: {
+      color: 'danger',
+      text: 'NEW'
+    }
+  },
   {
     name: 'admin.title',
     url: '/admins',
@@ -283,28 +291,28 @@ export const navItems: INavData[] = [
     ]
   },
   {
-    name: 'common.notifications',
-    url: '/notifications',
-    iconComponent: { name: 'cil-bell' },
+    name: 'UI Components',
+    url: '/ui-notifications',
+    iconComponent: { name: 'cil-layers' },
     children: [
       {
         name: 'common.alerts',
-        url: '/notifications/alerts',
+        url: '/ui-notifications/alerts',
         icon: 'nav-icon-bullet'
       },
       {
         name: 'common.badges',
-        url: '/notifications/badges',
+        url: '/ui-notifications/badges',
         icon: 'nav-icon-bullet'
       },
       {
         name: 'common.modal',
-        url: '/notifications/modal',
+        url: '/ui-notifications/modal',
         icon: 'nav-icon-bullet'
       },
       {
         name: 'common.toast',
-        url: '/notifications/toasts',
+        url: '/ui-notifications/toasts',
         icon: 'nav-icon-bullet'
       }
     ]

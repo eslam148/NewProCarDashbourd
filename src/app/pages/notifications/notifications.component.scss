@@ -1,0 +1,315 @@
+:host {
+  .notification-card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    // Unread notification styling
+    &.border-start {
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, var(--cui-info) 0%, var(--cui-info-dark, var(--cui-info)) 100%);
+        border-radius: 0 2px 2px 0;
+      }
+    }
+
+    // Read notification styling
+    &:not(.border-start) {
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  .notification-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(var(--cui-primary-rgb), 0.1);
+    font-size: 1.25rem;
+
+    // Different background colors based on notification type
+    &.type-success {
+      background: rgba(var(--cui-success-rgb), 0.1);
+    }
+
+    &.type-danger {
+      background: rgba(var(--cui-danger-rgb), 0.1);
+    }
+
+    &.type-warning {
+      background: rgba(var(--cui-warning-rgb), 0.1);
+    }
+
+    &.type-info {
+      background: rgba(var(--cui-info-rgb), 0.1);
+    }
+  }
+
+  .notification-body {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+    max-height: 2.8em;
+  }
+
+  // Filter section styling
+  .filters-section {
+    background: var(--cui-body-bg);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  // Search input styling
+  input[cFormControl] {
+    &:focus {
+      border-color: var(--cui-primary);
+      box-shadow: 0 0 0 0.2rem rgba(var(--cui-primary-rgb), 0.25);
+    }
+  }
+
+  // Select styling
+  select[cSelect] {
+    &:focus {
+      border-color: var(--cui-primary);
+      box-shadow: 0 0 0 0.2rem rgba(var(--cui-primary-rgb), 0.25);
+    }
+  }
+
+  // Empty state styling
+  .empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+
+    i {
+      opacity: 0.5;
+      margin-bottom: 1rem;
+    }
+  }
+
+  // Loading state styling
+  .loading-state {
+    padding: 3rem 1rem;
+    text-align: center;
+
+    .spinner-border {
+      width: 3rem;
+      height: 3rem;
+      border-width: 0.3em;
+    }
+  }
+
+  // Results summary styling
+  .results-summary {
+    font-size: 0.875rem;
+    color: var(--cui-secondary);
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--cui-border-color);
+  }
+
+  // Badge styling
+  c-badge {
+    &.badge-new {
+      animation: pulse 2s infinite;
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    .notification-card {
+      margin-bottom: 1rem;
+
+      c-card-body {
+        padding: 1rem;
+      }
+
+      .notification-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+      }
+
+      .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+
+        .d-flex.gap-2 {
+          align-self: flex-end;
+        }
+      }
+    }
+
+    // Stack filters vertically on mobile
+    .filters-section {
+      .row.g-3 {
+        .col-md-2,
+        .col-md-3,
+        .col-md-4 {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+
+    // Adjust header on mobile
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 1rem;
+
+      .d-flex.gap-2 {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .notification-card {
+      .notification-body {
+        -webkit-line-clamp: 3;
+        max-height: 4.2em;
+      }
+
+      .d-flex.align-items-center.gap-2 {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.25rem !important;
+      }
+    }
+
+    // Single column layout for very small screens
+    .filters-section {
+      .row.g-3 > div {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  // Dark mode adjustments
+  [data-coreui-theme="dark"] & {
+    .notification-card {
+      &.bg-light {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+      }
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .notification-icon {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .filters-section {
+      background: var(--cui-dark);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  // Animation for new notifications
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  // Smooth transitions
+  * {
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  // Focus states for accessibility
+  button:focus,
+  input:focus,
+  select:focus {
+    outline: 2px solid var(--cui-primary);
+    outline-offset: 2px;
+  }
+
+  // RTL specific fixes for this component
+  :host-context([dir="rtl"]) {
+    select,
+    .form-select,
+    [cSelect] {
+      text-align: right !important;
+      direction: rtl !important;
+      background-position: left 0.75rem center !important;
+      padding-left: 2.25rem !important;
+      padding-right: 0.75rem !important;
+
+      // Custom arrow for RTL
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+      background-repeat: no-repeat !important;
+      background-size: 16px 12px !important;
+
+      &:focus {
+        background-position: left 0.75rem center !important;
+      }
+    }
+
+    // Dark mode arrow
+    [data-coreui-theme="dark"] & {
+      select,
+      .form-select,
+      [cSelect] {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+
+        &:focus {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+        }
+      }
+    }
+
+    .notification-card {
+      .d-flex {
+        flex-direction: row-reverse;
+
+        .me-3 {
+          margin-left: 1rem !important;
+          margin-right: 0 !important;
+        }
+      }
+    }
+  }
+
+  // Print styles
+  @media print {
+    .notification-card {
+      break-inside: avoid;
+      box-shadow: none !important;
+      border: 1px solid #ddd !important;
+    }
+
+    .filters-section,
+    c-pagination,
+    button {
+      display: none !important;
+    }
+  }
+}

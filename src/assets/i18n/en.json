@@ -73,6 +73,23 @@
       "requestCompleted": "Request Completed",
       "newReservation": "New Reservation"
     },
+    "search": "Search",
+    "clear": "Clear",
+    "refresh": "Refresh",
+    "of": "of",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "update": "Update",
+    "view": "View",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "Unknown",
     "status": {
       "cpuUsage": "CPU Usage",
       "memoryUsage": "Memory Usage",
@@ -139,6 +156,24 @@
     "links": "Links",
     "docs": "Docs",
     "confirmDelete": "Are you sure you want to delete this item?"
+  },
+  "notifications": {
+    "manageAllNotifications": "Manage all your notifications",
+    "unread": "unread",
+    "searchPlaceholder": "Search notifications...",
+    "filterByType": "Filter by Type",
+    "filterByStatus": "Filter by Status",
+    "noNotificationsFound": "No notifications found",
+    "tryDifferentFilters": "Try adjusting your filters or search terms",
+    "noNotificationsYet": "You don't have any notifications yet",
+    "clearFilters": "Clear Filters",
+    "showingResults": "Showing",
+    "pageSize": "Page size",
+    "new": "New",
+    "markRead": "Mark as Read",
+    "read": "Read",
+    "allTypes": "All Types",
+    "allStatus": "All Status"
   },
   "theme": {
     "light": "Light",
@@ -309,11 +344,6 @@
     "noSubCategories": "No sub-categories available",
     "fromCallCenter": "From Call Center"
   },
-  "theme": {
-    "light": "Light",
-    "dark": "Dark",
-    "auto": "Auto"
-  },
   "users": {
     "title": "Users"
   },
@@ -419,6 +449,53 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "close": "Close"
+  },
+  "REPORTS": {
+    "TITLE": "Reports Management",
+    "SUBTITLE": "Generate and view system reports",
+    "FILTERS": {
+      "TITLE": "Report Filters",
+      "DATE_RANGE": "Date Range",
+      "FROM_DATE": "From Date",
+      "TO_DATE": "To Date",
+      "REPORT_TYPE": "Report Type",
+      "ALL_TYPES": "All Types"
+    },
+    "TYPES": {
+      "REQUESTS": "Requests Report",
+      "RESERVATIONS": "Reservations Report",
+      "NURSES": "Nurses Report",
+      "PHARMACIES": "Pharmacies Report"
+    },
+    "BUTTONS": {
+      "GENERATE": "Generate Report",
+      "EXPORT": "Export",
+      "PRINT": "Print",
+      "RESET": "Reset Filters"
+    }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "messages": {
+    "success": "Operation completed successfully",
+    "error": "An error occurred",
+    "warning": "Warning",
+    "info": "Information",
+    "deleteSuccess": "Item deleted successfully",
+    "updateSuccess": "Item updated successfully",
+    "addSuccess": "Item added successfully",
+    "deleteError": "Error deleting item",
+    "updateError": "Error updating item",
+    "addError": "Error adding item",
+    "noData": "No data available",
+    "noResults": "No results found"
   },
   "PHARMACY": {
     "TITLE": "Pharmacies",

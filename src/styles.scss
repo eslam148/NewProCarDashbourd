@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @forward 'scss/styles.scss';
 
+/* Import RTL fixes for Arabic language support */
+@import 'scss/rtl-fixes';
+
 /* Additional Angular Material styles if needed */
 @use '@angular/material' as mat;
 

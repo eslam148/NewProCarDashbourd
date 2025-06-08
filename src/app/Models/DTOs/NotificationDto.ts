@@ -70,23 +70,28 @@ export interface NotificationDisplayItem {
 
 // Helper functions for notification types
 export class NotificationTypeHelper {
-  static getTypeDescription(type: NotificationType): string {
+  static getTypeDescriptionKey(type: NotificationType): string {
     switch (type) {
       case NotificationType.NewRequest:
-        return 'New Request';
+        return 'common.notificationTypes.newRequest';
       case NotificationType.RequestAccepted:
-        return 'Request Accepted';
+        return 'common.notificationTypes.requestAccepted';
       case NotificationType.RequestRejected:
-        return 'Request Rejected';
+        return 'common.notificationTypes.requestRejected';
       case NotificationType.RequestCancelled:
-        return 'Request Cancelled';
+        return 'common.notificationTypes.requestCancelled';
       case NotificationType.RequestCompleted:
-        return 'Request Completed';
+        return 'common.notificationTypes.requestCompleted';
       case NotificationType.NewReservation:
-        return 'New Reservation';
+        return 'common.notificationTypes.newReservation';
       default:
-        return 'Notification';
+        return 'common.notifications';
     }
+  }
+
+  // Legacy method for backward compatibility
+  static getTypeDescription(type: NotificationType): string {
+    return this.getTypeDescriptionKey(type);
   }
 
   static getTypeIcon(type: NotificationType): string {

@@ -1,0 +1,278 @@
+<!-- Notifications Page Container -->
+<div class="notifications-page">
+
+<!-- Breadcrumb Navigation -->
+<c-breadcrumb class="mb-4">
+  <c-breadcrumb-item
+    *ngFor="let item of breadcrumbItems"
+    [active]="item.active"
+    [routerLink]="item.url">
+    {{ item.label | translate | async }}
+  </c-breadcrumb-item>
+</c-breadcrumb>
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="mb-1">{{ 'common.notifications' | translate | async }}</h2>
+    <p class="text-body-secondary mb-0">
+      {{ 'notifications.manageAllNotifications' | translate | async }}
+      <c-badge
+        *ngIf="getUnreadCount() > 0"
+        color="danger"
+        class="ms-2">
+        {{ getUnreadCount() }} {{ 'notifications.unread' | translate | async }}
+      </c-badge>
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <button
+      cButton
+      color="primary"
+      variant="outline"
+      (click)="refreshNotifications()"
+      [disabled]="loading">
+      <i class="bi bi-arrow-clockwise me-1"></i>
+      {{ 'common.refresh' | translate | async }}
+    </button>
+    <button
+      cButton
+      color="success"
+      (click)="markAllAsRead()"
+      [disabled]="loadingMarkAll || getUnreadCount() === 0">
+      <c-spinner
+        *ngIf="loadingMarkAll"
+        size="sm"
+        class="me-1">
+      </c-spinner>
+      <i *ngIf="!loadingMarkAll" class="bi bi-check-all me-1"></i>
+      {{ 'common.markAllRead' | translate | async }}
+    </button>
+  </div>
+</div>
+
+<!-- Filters and Search -->
+<c-card class="mb-4">
+  <c-card-body>
+    <div class="row g-3">
+      <!-- Search -->
+      <div class="col-md-4">
+        <label cLabel for="searchInput">{{ 'common.search' | translate | async }}</label>
+        <input
+          cFormControl
+          id="searchInput"
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchInput($event)"
+          [placeholder]="'notifications.searchPlaceholder' | translate | async">
+      </div>
+
+      <!-- Type Filter -->
+      <div class="col-md-3">
+        <label cLabel for="typeFilter">{{ 'notifications.filterByType' | translate | async }}</label>
+        <select
+          cSelect
+          id="typeFilter"
+          [(ngModel)]="selectedTypeFilter"
+          (change)="onTypeFilterChange()">
+          <option *ngFor="let type of notificationTypes" [value]="type.value">
+            {{ type.label | translate | async }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="col-md-3">
+        <label cLabel for="statusFilter">{{ 'notifications.filterByStatus' | translate | async }}</label>
+        <select
+          cSelect
+          id="statusFilter"
+          [(ngModel)]="selectedStatusFilter"
+          (change)="onStatusFilterChange()">
+          <option *ngFor="let status of statusFilters" [value]="status.value">
+            {{ status.label | translate | async }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Clear Filters -->
+      <div class="col-md-2 d-flex align-items-end">
+        <button
+          cButton
+          color="secondary"
+          variant="outline"
+          (click)="clearFilters()"
+          class="w-100">
+          <i class="bi bi-x-circle me-1"></i>
+          {{ 'common.clear' | translate | async }}
+        </button>
+      </div>
+    </div>
+  </c-card-body>
+</c-card>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="text-center py-5">
+  <c-spinner size="sm" class="mb-3"></c-spinner>
+  <p class="text-body-secondary">{{ 'common.loading' | translate | async }}</p>
+</div>
+
+<!-- Error State -->
+<c-alert
+  *ngIf="error && !loading"
+  color="danger"
+  [dismissible]="true"
+  (dismissed)="error = null">
+  <i class="bi bi-exclamation-triangle me-2"></i>
+  {{ error }}
+</c-alert>
+
+<!-- Empty State -->
+<c-card *ngIf="!loading && !error && filteredNotifications.length === 0">
+  <c-card-body class="text-center py-5">
+    <i class="bi bi-bell-slash text-muted mb-3" style="font-size: 3rem;"></i>
+    <h5 class="text-muted mb-2">{{ 'notifications.noNotificationsFound' | translate | async }}</h5>
+    <p class="text-body-secondary mb-3">
+      <span *ngIf="searchTerm || selectedTypeFilter !== 'all' || selectedStatusFilter !== 'all'">
+        {{ 'notifications.tryDifferentFilters' | translate | async }}
+      </span>
+      <span *ngIf="!searchTerm && selectedTypeFilter === 'all' && selectedStatusFilter === 'all'">
+        {{ 'notifications.noNotificationsYet' | translate | async }}
+      </span>
+    </p>
+    <button
+      *ngIf="searchTerm || selectedTypeFilter !== 'all' || selectedStatusFilter !== 'all'"
+      cButton
+      color="primary"
+      variant="outline"
+      (click)="clearFilters()">
+      {{ 'notifications.clearFilters' | translate | async }}
+    </button>
+  </c-card-body>
+</c-card>
+
+<!-- Notifications List -->
+<div *ngIf="!loading && !error && notifications.length > 0">
+  <!-- Results Summary -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <small class="text-body-secondary">
+      {{ 'notifications.showingResults' | translate | async }}
+      {{ (currentPage - 1) * pageSize + 1 }}-{{ Math.min(currentPage * pageSize, totalItems) }}
+      {{ 'common.of' | translate | async }} {{ totalItems }}
+    </small>
+    <small class="text-body-secondary">
+      {{ 'notifications.pageSize' | translate | async }}: {{ pageSize }}
+    </small>
+  </div>
+
+  <!-- Notification Cards -->
+  <div class="row g-3">
+    <div class="col-12" *ngFor="let notification of notifications; trackBy: trackByNotificationId">
+      <c-card
+        class="notification-card h-100"
+        [ngClass]="{
+          'border-start border-info border-3': !notification.isRead,
+          'bg-light bg-opacity-25': !notification.isRead
+        }">
+        <c-card-body class="d-flex">
+          <!-- Icon -->
+          <div class="me-3 flex-shrink-0">
+            <div class="notification-icon d-flex align-items-center justify-content-center">
+              <i [class]="'bi bi-' + notification.icon"
+                 [ngClass]="'text-' + notification.color"></i>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-grow-1 min-w-0">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="mb-0 fw-semibold" [title]="notification.title">
+                {{ notification.title }}
+              </h6>
+              <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                <small class="text-body-secondary">
+                  {{ formatTime(notification.time) }}
+                </small>
+                <c-badge
+                  *ngIf="!notification.isRead"
+                  color="info"
+                  size="sm">
+                  {{ 'notifications.new' | translate | async }}
+                </c-badge>
+              </div>
+            </div>
+
+            <p class="text-body-secondary mb-2 notification-body" [title]="notification.body">
+              {{ notification.body }}
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center gap-2">
+                <c-badge
+                  [color]="notification.color"
+                  variant="outline"
+                  size="sm">
+                  {{ getTypeDescriptionKey(notification.type) | translate | async }}
+                </c-badge>
+                <small class="text-body-secondary">
+                  <i class="bi bi-clock me-1"></i>
+                  {{ notification.time | date:'medium' }}
+                </small>
+              </div>
+
+              <div class="d-flex gap-2">
+                <button
+                  *ngIf="!notification.isRead"
+                  cButton
+                  size="sm"
+                  color="primary"
+                  variant="outline"
+                  (click)="markAsRead(notification)">
+                  <i class="bi bi-check me-1"></i>
+                  {{ 'notifications.markRead' | translate | async }}
+                </button>
+                <span
+                  *ngIf="notification.isRead"
+                  class="text-success small">
+                  <i class="bi bi-check-circle me-1"></i>
+                  {{ 'notifications.read' | translate | async }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </c-card-body>
+      </c-card>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-center mt-4" *ngIf="totalPages > 1">
+    <nav aria-label="Notifications pagination">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1 || loading">
+          <button class="page-link" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1 || loading">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+
+        <li *ngFor="let page of getPageNumbers()"
+            class="page-item"
+            [class.active]="page === currentPage">
+          <button class="page-link"
+                  (click)="onPageChange(page)"
+                  [disabled]="loading">
+            {{ page }}
+          </button>
+        </li>
+
+        <li class="page-item" [class.disabled]="currentPage === totalPages || loading">
+          <button class="page-link" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages || loading">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+</div> <!-- End notifications-page container -->

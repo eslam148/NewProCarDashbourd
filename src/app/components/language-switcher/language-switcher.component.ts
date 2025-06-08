@@ -59,5 +59,15 @@ export class LanguageSwitcherComponent {
 
   switchLanguage(lang: string): void {
     this.translationService.setLanguage(lang);
+
+    // Apply RTL direction for Arabic
+    const htmlElement = document.documentElement;
+    if (lang === 'ar') {
+      htmlElement.setAttribute('dir', 'rtl');
+      htmlElement.setAttribute('lang', 'ar');
+    } else {
+      htmlElement.setAttribute('dir', 'ltr');
+      htmlElement.setAttribute('lang', 'en');
+    }
   }
 }

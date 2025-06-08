@@ -64,6 +64,23 @@
       "requestCompleted": "تم إكمال الطلب",
       "newReservation": "حجز جديد"
     },
+    "search": "بحث",
+    "clear": "مسح",
+    "refresh": "تحديث",
+    "of": "من",
+    "loading": "جاري التحميل...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "add": "إضافة",
+    "update": "تحديث",
+    "view": "عرض",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "yes": "نعم",
+    "no": "لا",
+    "unknown": "غير معروف",
     "status": {
       "cpuUsage": "استخدام المعالج",
       "memoryUsage": "استخدام الذاكرة",
@@ -130,6 +147,24 @@
     "links": "روابط",
     "docs": "التوثيق",
     "confirmDelete": "هل أنت متأكد من حذف هذا العنصر؟"
+  },
+  "notifications": {
+    "manageAllNotifications": "إدارة جميع الإشعارات",
+    "unread": "غير مقروء",
+    "searchPlaceholder": "البحث في الإشعارات...",
+    "filterByType": "تصفية حسب النوع",
+    "filterByStatus": "تصفية حسب الحالة",
+    "noNotificationsFound": "لم يتم العثور على إشعارات",
+    "tryDifferentFilters": "جرب تعديل المرشحات أو مصطلحات البحث",
+    "noNotificationsYet": "ليس لديك أي إشعارات بعد",
+    "clearFilters": "مسح المرشحات",
+    "showingResults": "عرض",
+    "pageSize": "حجم الصفحة",
+    "new": "جديد",
+    "markRead": "تحديد كمقروء",
+    "read": "مقروء",
+    "allTypes": "جميع الأنواع",
+    "allStatus": "جميع الحالات"
   },
   "theme": {
     "light": "فاتح",
@@ -288,11 +323,6 @@
     "noSubCategories": "لا توجد فئات فرعية",
     "fromCallCenter": "من المركز الرئيسي"
   },
-  "theme": {
-    "light": "فاتح",
-    "dark": "داكن",
-    "auto": "تلقائي"
-  },
   "users": {
     "title": "المستخدمين"
   },
@@ -379,7 +409,61 @@
     "distanceBetween": "المسافة بين {0} و {1}",
     "distanceToNurse": "المسافة إلى الممرضة",
     "distanceToUser": "المسافة إلى المستخدم",
-    "loadingDetails": "جاري تحميل التفاصيل..."
+    "loadingDetails": "جاري تحميل التفاصيل...",
+    "confirmDelete": "هل أنت متأكد من حذف هذا الطلب؟",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "close": "إغلاق"
+  },
+  "REPORTS": {
+    "TITLE": "إدارة التقارير",
+    "SUBTITLE": "إنشاء وعرض تقارير النظام",
+    "FILTERS": {
+      "TITLE": "مرشحات التقرير",
+      "DATE_RANGE": "نطاق التاريخ",
+      "FROM_DATE": "من تاريخ",
+      "TO_DATE": "إلى تاريخ",
+      "REPORT_TYPE": "نوع التقرير",
+      "ALL_TYPES": "جميع الأنواع"
+    },
+    "TYPES": {
+      "REQUESTS": "تقرير الطلبات",
+      "RESERVATIONS": "تقرير الحجوزات",
+      "NURSES": "تقرير الممرضين",
+      "PHARMACIES": "تقرير الصيدليات"
+    },
+    "BUTTONS": {
+      "GENERATE": "إنشاء التقرير",
+      "EXPORT": "تصدير",
+      "PRINT": "طباعة",
+      "RESET": "إعادة تعيين المرشحات"
+    }
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "pending": "في الانتظار",
+    "completed": "مكتمل",
+    "cancelled": "ملغي",
+    "approved": "موافق عليه",
+    "rejected": "مرفوض"
+  },
+  "messages": {
+    "success": "تمت العملية بنجاح",
+    "error": "حدث خطأ",
+    "warning": "تحذير",
+    "info": "معلومات",
+    "deleteSuccess": "تم حذف العنصر بنجاح",
+    "updateSuccess": "تم تحديث العنصر بنجاح",
+    "addSuccess": "تم إضافة العنصر بنجاح",
+    "deleteError": "خطأ في حذف العنصر",
+    "updateError": "خطأ في تحديث العنصر",
+    "addError": "خطأ في إضافة العنصر",
+    "noData": "لا توجد بيانات متاحة",
+    "noResults": "لا توجد نتائج"
   },
   "map": {
     "instructions": "انقر على الخريطة لتحديد موقع أو اسحب العلامة لتعديل الموقع",
