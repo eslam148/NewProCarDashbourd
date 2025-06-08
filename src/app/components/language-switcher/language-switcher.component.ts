@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslationService } from '../../services/translation.service';
+import { RTLSelectFix } from '../../utils/rtl-select-fix';
 import { DropdownComponent, DropdownItemDirective, DropdownMenuDirective, DropdownToggleDirective } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 
@@ -69,5 +70,10 @@ export class LanguageSwitcherComponent {
       htmlElement.setAttribute('dir', 'ltr');
       htmlElement.setAttribute('lang', 'en');
     }
+
+    // Apply RTL fixes to all select elements after language change
+    setTimeout(() => {
+      RTLSelectFix.applyRTLToAllSelects();
+    }, 100);
   }
 }

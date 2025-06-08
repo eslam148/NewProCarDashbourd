@@ -7,6 +7,7 @@ import { delay, filter, map, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { checkAuth } from './store/auth/auth.actions';
 import { ThemeService } from './services/theme.service';
+import { RTLSelectFix } from './utils/rtl-select-fix';
 
 import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
@@ -143,9 +144,12 @@ export class AppComponent implements OnInit {
     // Check authentication state on app initialization
     this.#store.dispatch(checkAuth());
 
-    // Fix Leaflet icon paths
+    // Fix Leaflet icon paths and initialize RTL select fixes
     if (isPlatformBrowser(this.#platformId)) {
       fixLeafletIcons();
+
+      // Initialize RTL select fixes for all select elements
+      RTLSelectFix.initialize();
     }
 
     this.#router.events.pipe(

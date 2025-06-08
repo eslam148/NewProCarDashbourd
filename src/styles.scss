@@ -4,6 +4,59 @@
 /* Import RTL fixes for Arabic language support */
 @import 'scss/rtl-fixes';
 
+/* Global RTL Select Fixes - High Priority */
+[dir="rtl"] {
+
+  /* Universal select targeting with highest specificity */
+  select,
+  .form-select,
+  [cSelect],
+  input[type="select"],
+  .custom-select,
+  .bootstrap-select {
+    text-align: right !important;
+    direction: rtl !important;
+    background-position: left 0.75rem center !important;
+    padding-left: 2.25rem !important;
+    padding-right: 0.75rem !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-size: 16px 12px !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
+
+  /* Select options */
+  select option,
+  .form-select option {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  /* Focus states */
+  select:focus,
+  .form-select:focus,
+  [cSelect]:focus {
+    background-position: left 0.75rem center !important;
+    text-align: right !important;
+    direction: rtl !important;
+  }
+}
+
+/* Dark mode select fixes */
+[dir="rtl"][data-coreui-theme="dark"] {
+  select,
+  .form-select,
+  [cSelect] {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+
+    &:focus {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+    }
+  }
+}
+
 /* Additional Angular Material styles if needed */
 @use '@angular/material' as mat;
 

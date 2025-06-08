@@ -1,16 +1,42 @@
 /* RTL (Right-to-Left) Fixes for Arabic Language Support */
 
-/* ===== SELECT DROPDOWN RTL FIXES ===== */
+/* ===== GLOBAL SELECT DROPDOWN RTL FIXES ===== */
+
+/* Universal select element targeting - Catches ALL possible select elements */
+[dir="rtl"] *:is(
+  select,
+  .form-select,
+  [cSelect],
+  .custom-select,
+  .bootstrap-select,
+  .select2-selection,
+  .ng-select,
+  .mat-select,
+  input[list],
+  datalist
+) {
+  text-align: right !important;
+  direction: rtl !important;
+}
 
 /* Base RTL direction for Arabic */
 [dir="rtl"] {
 
-  /* Select dropdown styling */
+  /* Universal Select dropdown styling - Covers ALL select elements */
   select,
   .form-select,
   [cSelect],
   select.form-control,
-  select.form-select {
+  select.form-select,
+  .form-control[type="select"],
+  input[type="select"],
+  c-select select,
+  c-form-select select,
+  .custom-select,
+  .bootstrap-select,
+  .select2-selection,
+  .ng-select,
+  .mat-select {
     /* Fix text alignment */
     text-align: right !important;
     direction: rtl !important;
@@ -44,46 +70,115 @@
     padding-left: 0.75rem !important;
   }
 
-  /* Select options alignment */
+  /* Select options alignment - Universal coverage */
   select option,
-  .form-select option {
-    text-align: right;
-    direction: rtl;
+  .form-select option,
+  [cSelect] option,
+  c-select option,
+  .custom-select option,
+  .bootstrap-select option,
+  .ng-select .ng-option,
+  .mat-option {
+    text-align: right !important;
+    direction: rtl !important;
+    padding-right: 0.75rem !important;
+    padding-left: 2rem !important;
   }
 
-  /* CoreUI specific select fixes */
+  /* Universal select states and variations */
+  select,
   .form-select,
+  [cSelect],
   c-select select,
-  [cSelect] {
-    &:focus {
+  .custom-select,
+  .bootstrap-select {
+
+    /* Focus state */
+    &:focus,
+    &:focus-visible,
+    &.focus {
       background-position: left 0.75rem center !important;
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+      text-align: right !important;
+      direction: rtl !important;
     }
 
-    &[multiple] {
+    /* Multiple select */
+    &[multiple],
+    &.multiple {
       background-image: none !important;
       padding-left: 0.75rem !important;
+      padding-right: 0.75rem !important;
     }
 
-    &[size]:not([size="1"]) {
+    /* Sized select */
+    &[size]:not([size="1"]),
+    &.sized {
       background-image: none !important;
       padding-left: 0.75rem !important;
+      padding-right: 0.75rem !important;
     }
 
-    &:disabled {
+    /* Disabled state */
+    &:disabled,
+    &.disabled {
       background-position: left 0.75rem center !important;
       opacity: 0.65;
+      text-align: right !important;
+      direction: rtl !important;
+    }
+
+    /* Readonly state */
+    &:read-only,
+    &[readonly] {
+      background-position: left 0.75rem center !important;
+      text-align: right !important;
+      direction: rtl !important;
     }
   }
 
-  /* Fix for CoreUI select component wrapper */
-  c-select {
+  /* CoreUI component wrappers */
+  c-select,
+  c-form-select {
     select {
       text-align: right !important;
       direction: rtl !important;
       background-position: left 0.75rem center !important;
       padding-left: 2.25rem !important;
       padding-right: 0.75rem !important;
+    }
+  }
+
+  /* Angular Material select fixes */
+  .mat-select {
+    text-align: right !important;
+    direction: rtl !important;
+
+    .mat-select-arrow {
+      right: auto !important;
+      left: 16px !important;
+    }
+
+    .mat-select-value {
+      text-align: right !important;
+    }
+  }
+
+  /* ng-select fixes */
+  .ng-select {
+    text-align: right !important;
+    direction: rtl !important;
+
+    .ng-arrow-wrapper {
+      right: auto !important;
+      left: 12px !important;
+    }
+
+    .ng-placeholder,
+    .ng-value-container {
+      text-align: right !important;
+      padding-right: 12px !important;
+      padding-left: 30px !important;
     }
   }
 
@@ -396,24 +491,94 @@
   }
 }
 
-/* Dark mode RTL fixes */
+/* Dark mode RTL fixes - Universal coverage */
 [dir="rtl"][data-coreui-theme="dark"] {
   select,
   .form-select,
   [cSelect],
-  c-select select {
+  c-select select,
+  c-form-select select,
+  .custom-select,
+  .bootstrap-select,
+  .form-control[type="select"] {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
     background-position: left 0.75rem center !important;
+    text-align: right !important;
+    direction: rtl !important;
 
-    &:focus {
+    &:focus,
+    &:focus-visible,
+    &.focus {
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
       background-position: left 0.75rem center !important;
+      text-align: right !important;
+      direction: rtl !important;
+    }
+
+    &:disabled,
+    &.disabled {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23666666' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+      background-position: left 0.75rem center !important;
+    }
+  }
+
+  /* Dark mode for Angular Material */
+  .mat-select {
+    .mat-select-arrow {
+      color: #ffffff !important;
+    }
+  }
+
+  /* Dark mode for ng-select */
+  .ng-select {
+    .ng-arrow-wrapper .ng-arrow {
+      border-color: #ffffff transparent transparent !important;
     }
   }
 }
 
 /* Specific component fixes */
 [dir="rtl"] {
+
+  /* Universal select fixes for all pages and components */
+  .admin-management,
+  .pharmacy-management,
+  .notifications-page,
+  .dashboard,
+  .reports,
+  .reservations,
+  .requests,
+  .service-categories,
+  .locations {
+
+    select,
+    .form-select,
+    [cSelect],
+    .custom-select {
+      text-align: right !important;
+      direction: rtl !important;
+      background-position: left 0.75rem center !important;
+      padding-left: 2.25rem !important;
+      padding-right: 0.75rem !important;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+      background-repeat: no-repeat !important;
+      background-size: 16px 12px !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      appearance: none !important;
+
+      &:focus {
+        background-position: left 0.75rem center !important;
+        text-align: right !important;
+        direction: rtl !important;
+      }
+
+      option {
+        text-align: right !important;
+        direction: rtl !important;
+      }
+    }
+  }
 
   /* Notifications page specific fixes */
   .notifications-page {
