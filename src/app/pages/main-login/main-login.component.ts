@@ -279,6 +279,7 @@ export class MainLoginComponent implements OnInit, OnDestroy {
   toggleLanguage(): void {
     // Use the tracked current language to avoid subscription issues
     const newLang = this.currentLanguage === 'en' ? 'ar' : 'en';
+    // Use local setLanguage since user is not authenticated yet
     this.translationService.setLanguage(newLang);
   }
 

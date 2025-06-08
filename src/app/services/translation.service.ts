@@ -3,8 +3,17 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { setLanguage, loadTranslations } from '../store/translation/translation.actions';
-import { selectCurrentLanguage, selectTranslations } from '../store/translation/translation.selectors';
+import {
+  setLanguage,
+  loadTranslations,
+  changeLanguageApi
+} from '../store/translation/translation.actions';
+import {
+  selectCurrentLanguage,
+  selectTranslations,
+  selectIsChangingLanguage
+} from '../store/translation/translation.selectors';
+import { AuthService } from './auth.service';
 
 const LANGUAGE_KEY = 'app_language';
 
@@ -12,7 +21,10 @@ const LANGUAGE_KEY = 'app_language';
   providedIn: 'root'
 })
 export class TranslationService {
-  constructor(private store: Store) {
+  constructor(
+    private store: Store,
+    private authService: AuthService
+  ) {
     // Try to load language from localStorage, fallback to default
     const savedLang = localStorage.getItem(LANGUAGE_KEY) || environment.defaultLanguage;
     this.setLanguage(savedLang);
@@ -33,6 +45,35 @@ export class TranslationService {
       console.warn(`Language ${lang} is not supported. Using default language: ${environment.defaultLanguage}`);
       this.setLanguage(environment.defaultLanguage);
     }
+  }
+
+  /**
+   * Set language with API synchronization
+   * This method will update both local state and backend preference
+   */
+  public setLanguageWithApi(lang: string): void {
+    if (environment.supportedLanguages.includes(lang)) {
+      // Check if user is authenticated before making API call
+      if (this.authService.isAuthenticated()) {
+        localStorage.setItem(LANGUAGE_KEY, lang);
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        this.store.dispatch(changeLanguageApi({ language: lang }));
+      } else {
+        // If not authenticated, just set locally
+        this.setLanguage(lang);
+      }
+    } else {
+      console.warn(`Language ${lang} is not supported. Using default language: ${environment.defaultLanguage}`);
+      this.setLanguageWithApi(environment.defaultLanguage);
+    }
+  }
+
+  /**
+   * Get loading state for language change
+   */
+  public getIsChangingLanguage(): Observable<boolean> {
+    return this.store.select(selectIsChangingLanguage);
   }
 
   private loadTranslation(lang: string): void {

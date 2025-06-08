@@ -9,6 +9,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { languageInterceptor } from './interceptors/language.interceptor';
 import { serviceCategoryReducer } from './store/service-category/service-category.reducer';
 import { subCategoryReducer } from './store/sub-category/sub-category.reducer';
 import { serviceCatalogReducer } from './store/service-catalog/service-catalog.reducer';
@@ -70,6 +71,8 @@ export const appConfig: ApplicationConfig = {
       ProfileEffects
     ),
     provideHttpClient(withInterceptors([authInterceptor])),
+    // Note: languageInterceptor is available as an alternative if you want to separate concerns
+    // provideHttpClient(withInterceptors([authInterceptor, languageInterceptor])),
      provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideMessaging(() => getMessaging()),
     provideAnimations(),

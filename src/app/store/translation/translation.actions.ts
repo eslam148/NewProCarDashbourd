@@ -19,3 +19,19 @@ export const loadTranslationsFailure = createAction(
   '[Translation] Load Translations Failure',
   props<{ error: any }>()
 );
+
+// API Language Change Actions
+export const changeLanguageApi = createAction(
+  '[Translation] Change Language API',
+  props<{ language: string }>()
+);
+
+export const changeLanguageApiSuccess = createAction(
+  '[Translation] Change Language API Success',
+  props<{ language: string }>()
+);
+
+export const changeLanguageApiFailure = createAction(
+  '[Translation] Change Language API Failure',
+  props<{ error: any }>()
+);

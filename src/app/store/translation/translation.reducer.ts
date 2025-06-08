@@ -1,17 +1,26 @@
 import { createReducer, on } from '@ngrx/store';
-import { setLanguage, loadTranslationsSuccess, loadTranslationsFailure } from './translation.actions';
+import {
+  setLanguage,
+  loadTranslationsSuccess,
+  loadTranslationsFailure,
+  changeLanguageApi,
+  changeLanguageApiSuccess,
+  changeLanguageApiFailure
+} from './translation.actions';
 import { environment } from '../../../environments/environment';
 
 export interface TranslationState {
   currentLanguage: string;
   translations: any;
   error: any;
+  isChangingLanguage: boolean;
 }
 
 export const initialState: TranslationState = {
   currentLanguage: environment.defaultLanguage,
   translations: {},
-  error: null
+  error: null,
+  isChangingLanguage: false
 };
 
 export const translationReducer = createReducer(
@@ -27,6 +36,22 @@ export const translationReducer = createReducer(
   })),
   on(loadTranslationsFailure, (state, { error }) => ({
     ...state,
+    error
+  })),
+  on(changeLanguageApi, (state) => ({
+    ...state,
+    isChangingLanguage: true,
+    error: null
+  })),
+  on(changeLanguageApiSuccess, (state, { language }) => ({
+    ...state,
+    currentLanguage: language,
+    isChangingLanguage: false,
+    error: null
+  })),
+  on(changeLanguageApiFailure, (state, { error }) => ({
+    ...state,
+    isChangingLanguage: false,
     error
   }))
 );

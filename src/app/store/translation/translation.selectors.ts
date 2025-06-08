@@ -17,3 +17,8 @@ export const selectTranslationError = createSelector(
   selectTranslationState,
   (state: TranslationState) => state.error
 );
+
+export const selectIsChangingLanguage = createSelector(
+  selectTranslationState,
+  (state: TranslationState) => state.isChangingLanguage
+);
