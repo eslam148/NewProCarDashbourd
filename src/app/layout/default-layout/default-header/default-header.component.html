@@ -182,7 +182,7 @@
           {{ 'common.account' | translate | async }}
         </h6>
       </li>
-      @for (message of newMessages; track message.id) {
+      <!-- @for (message of newMessages; track message.id) {
         <li>
           <a cDropdownItem [routerLink]="message.link">
             <i class="bi bi-bell-fill me-2"></i>
@@ -190,24 +190,24 @@
             <c-badge class="ms-2 float-end" [color]="message.status">{{ message.time | translate | async }}</c-badge>
           </a>
         </li>
-      }
-      <li>
+      } -->
+      <!-- <li>
         <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2">
           {{ 'common.settings' | translate | async }}
         </h6>
-      </li>
+      </li> -->
       <li>
         <a cDropdownItem routerLink="/profile">
           <i class="bi bi-person-fill me-2"></i>
           {{ 'common.profile' | translate | async }}
         </a>
       </li>
-      <li>
+      <!-- <li>
         <a cDropdownItem routerLink="/settings">
           <i class="bi bi-gear-fill me-2"></i>
           {{ 'common.settings' | translate | async }}
         </a>
-      </li>
+      </li> -->
       <li>
         <hr cDropdownDivider />
       </li>

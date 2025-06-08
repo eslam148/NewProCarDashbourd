@@ -13,6 +13,8 @@ import { TranslationService } from '../../services/translation.service';
 import { Subject, takeUntil, Observable, take } from 'rxjs';
 import { getMessaging, getToken, isSupported } from 'firebase/messaging';
 import { NotificationService } from '../../services/Notification.service';
+import { AuthService } from '../../services/auth.service';
+import { saveFcmToken } from '../../store/auth/auth.actions';
 @Component({
   selector: 'app-main-login',
   standalone: true,
@@ -57,7 +59,8 @@ export class MainLoginComponent implements OnInit, OnDestroy {
     private store: Store,
     private router: Router,
     private translationService: TranslationService,
-    private NotificationService : NotificationService
+    private NotificationService : NotificationService,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       phonenumber: ['', [
@@ -75,11 +78,16 @@ export class MainLoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Redirect if already authenticated
+    // Redirect if already authenticated and save FCM token
     this.isAuthenticated$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((isAuthenticated: boolean) => {
+      .subscribe(async (isAuthenticated: boolean) => {
         if (isAuthenticated) {
+          // Save FCM token to store and localStorage after successful login
+          // Add a small delay to ensure FCM token is ready
+          setTimeout(async () => {
+            await this.saveFcmTokenAfterLogin();
+          }, 500);
           this.router.navigate(['/dashboard']);
         }
       });
@@ -157,13 +165,25 @@ export class MainLoginComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     // Clear previous errors
-      this.enableNotifications()
+    this.enableNotifications();
 
     this.loginError = null;
     this.phoneError = null;
+
     if (this.loginForm.valid) {
       const { phonenumber, password } = this.loginForm.value;
-      this.store.dispatch(login({ phonenumber, password,deviceToken:this.deviceToken }));
+
+      // Dispatch login action with FCM token
+      this.store.dispatch(login({
+        phonenumber,
+        password,
+        deviceToken: this.deviceToken
+      }));
+
+      // Also save FCM token immediately if available
+      if (this.deviceToken) {
+        this.store.dispatch(saveFcmToken({ fcmToken: this.deviceToken }));
+      }
     } else {
       // Mark all fields as touched to trigger validation messages
       Object.keys(this.loginForm.controls).forEach(key => {
@@ -267,5 +287,85 @@ export class MainLoginComponent implements OnInit, OnDestroy {
    */
   getCurrentLanguageDisplay(): Observable<string> {
     return this.currentLang$;
+  }
+
+  /**
+   * Save FCM token to store and localStorage after successful login
+   */
+  private async saveFcmTokenAfterLogin(): Promise<void> {
+    try {
+      // Get the current FCM token from the component's deviceToken property
+      let currentToken = this.deviceToken;
+
+      // If no token, try to get it from the notification service
+      if (!currentToken) {
+        // Try to get token from notification service observable
+        this.NotificationService.currentToken$
+          .pipe(take(1))
+          .subscribe(token => {
+            if (token) {
+              currentToken = token;
+              this.deviceToken = token;
+            }
+          });
+      }
+
+      // If still no token, try to request permission and generate new token
+      if (!currentToken) {
+        try {
+          await this.NotificationService.requestPermission();
+          await this.NotificationService.initializeFirebaseMessaging();
+
+          // Wait for token to be generated
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          // Check again
+          this.NotificationService.currentToken$
+            .pipe(take(1))
+            .subscribe(token => {
+              if (token) {
+                currentToken = token;
+                this.deviceToken = token;
+              }
+            });
+        } catch (error) {
+          console.error('Error generating new FCM token:', error);
+        }
+      }
+
+      if (currentToken) {
+        // Dispatch action to save FCM token to store
+        this.store.dispatch(saveFcmToken({ fcmToken: currentToken }));
+
+        // Also save directly to localStorage as backup
+        localStorage.setItem('fcmToken', currentToken);
+
+        // Save with metadata
+        const tokenData = {
+          token: currentToken,
+          timestamp: new Date().toISOString(),
+          userId: this.getCurrentUserId()
+        };
+        localStorage.setItem('fcmTokenData', JSON.stringify(tokenData));
+      }
+    } catch (error) {
+      console.error('Error saving FCM token after login:', error);
+    }
+  }
+
+  /**
+   * Get current user ID for FCM token metadata
+   */
+  private getCurrentUserId(): string | null {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        return user?.id || user?.UserId || null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
   }
 }

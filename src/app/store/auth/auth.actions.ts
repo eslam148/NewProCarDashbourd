@@ -15,6 +15,15 @@ export const login = createAction(
   props<{ phonenumber: string; password: string,deviceToken:string }>()
 );
 
+export const saveFcmToken = createAction(
+  '[Auth] Save FCM Token',
+  props<{ fcmToken: string }>()
+);
+
+export const clearFcmToken = createAction(
+  '[Auth] Clear FCM Token'
+);
+
 export const loginSuccess = createAction(
   '[Auth] Login Success',
   props<{ response: LoginResponse }>()

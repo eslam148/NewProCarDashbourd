@@ -7,7 +7,9 @@ import {
   logoutSuccess,
   checkAuth,
   checkAuthSuccess,
-  checkAuthFailure
+  checkAuthFailure,
+  saveFcmToken,
+  clearFcmToken
 } from './auth.actions';
 import { LoginResponse } from '../../Models/Responses/LoginResponse';
 
@@ -15,12 +17,14 @@ export interface AuthState {
   response: LoginResponse | null;
   loading: boolean;
   error: any;
+  fcmToken: string | null;
 }
 
 export const initialState: AuthState = {
   response: null,
   loading: false,
-  error: null
+  error: null,
+  fcmToken: null
 };
 
 export const authReducer = createReducer(
@@ -62,5 +66,13 @@ export const authReducer = createReducer(
     ...state,
     response: null,
     loading: false
+  })),
+  on(saveFcmToken, (state, { fcmToken }) => ({
+    ...state,
+    fcmToken
+  })),
+  on(clearFcmToken, (state) => ({
+    ...state,
+    fcmToken: null
   }))
 );

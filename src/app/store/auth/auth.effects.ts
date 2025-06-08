@@ -14,7 +14,9 @@ import {
   logoutSuccess,
   checkAuth,
   checkAuthSuccess,
-  checkAuthFailure
+  checkAuthFailure,
+  saveFcmToken,
+  clearFcmToken
 } from './auth.actions';
 
 @Injectable()
@@ -113,12 +115,19 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(loginSuccess),
-        tap(({ response }) => {
+        tap(async ({ response }) => {
           if (response?.token) {
             // Store auth data
             localStorage.setItem('token', response.token);
             localStorage.setItem('authToken', response.token);
             localStorage.setItem('user', JSON.stringify(response));
+
+            // Initialize FCM token after successful login
+            try {
+              await this.authService.initializeFcmAfterLogin();
+            } catch (error) {
+              console.error('Error initializing FCM after login:', error);
+            }
 
             // Navigate to dashboard
             this.router.navigate(['/dashboard']);
@@ -139,6 +148,8 @@ export class AuthEffects {
 
         // Clear local storage immediately
 
+        
+        
 
         // Call logout API
         return this.authService.Logout().pipe(
@@ -164,6 +175,10 @@ export class AuthEffects {
           localStorage.removeItem('token');
           localStorage.removeItem('authToken');
           localStorage.removeItem('user');
+
+          // Clear FCM token on logout
+          this.authService.clearFcmToken();
+
           console.log('Logout success, navigating to login');
           this.router.navigate(['/login']);
         })
@@ -199,4 +214,52 @@ export class AuthEffects {
       })
     )
   );
+
+  // Save FCM Token Effect
+  saveFcmToken$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(saveFcmToken),
+        tap(({ fcmToken }) => {
+          // Save FCM token to localStorage
+          localStorage.setItem('fcmToken', fcmToken);
+
+          // Also save it with a timestamp for tracking
+          const tokenData = {
+            token: fcmToken,
+            timestamp: new Date().toISOString(),
+            userId: this.getCurrentUserId()
+          };
+          localStorage.setItem('fcmTokenData', JSON.stringify(tokenData));
+        })
+      ),
+    { dispatch: false }
+  );
+
+  // Clear FCM Token Effect
+  clearFcmToken$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(clearFcmToken),
+        tap(() => {
+          // Remove FCM token from localStorage
+          localStorage.removeItem('fcmToken');
+          localStorage.removeItem('fcmTokenData');
+        })
+      ),
+    { dispatch: false }
+  );
+
+  private getCurrentUserId(): string | null {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        return user?.id || null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
 }

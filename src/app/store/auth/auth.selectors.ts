@@ -33,3 +33,8 @@ export const selectIsAuthenticated = createSelector(
   selectAuthState,
   (state: AuthState) => state?.response?.loginStatus === LoginStatus.Success
 );
+
+export const selectFcmToken = createSelector(
+  selectAuthState,
+  (state: AuthState) => state?.fcmToken || null
+);

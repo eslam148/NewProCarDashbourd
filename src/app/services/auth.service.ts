@@ -6,6 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment.prod';
 import { Observable } from 'rxjs';
 import { GenericResponse } from '../Models/Responses/GenericResponse';
+import { FcmService } from './fcm.service';
 
 interface JWTPayload {
   UserId: number;
@@ -24,7 +25,10 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
   private platformId = inject(PLATFORM_ID);
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private fcmService: FcmService
+  ) { }
 
   Login(loginDto: LoginDto): Observable<GenericResponse<LoginResponse>> {
     return this.http.post<GenericResponse<LoginResponse>>(`${this.apiUrl}/api/Auth/Login`, loginDto);
@@ -32,8 +36,10 @@ export class AuthService {
 
   Logout(): Observable<GenericResponse<any>> {
     const token: string = this.getToken() || '';
-
-    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Auth/Logout`, "aa",
+    const fcmToken = this.getFcmToken();
+    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Auth/Logout`,{
+      token: fcmToken
+    },
       { headers: { 'Authorization': `Bearer ${token}` } }
     );
   }
@@ -136,5 +142,50 @@ export class AuthService {
         localStorage.setItem('user', JSON.stringify(user));
       }
     }
+  }
+
+  /**
+   * Initialize FCM token after successful login
+   */
+  async initializeFcmAfterLogin(): Promise<void> {
+    try {
+      const fcmToken = await this.fcmService.initializeFCM();
+      if (fcmToken) {
+        const userId = this.getCurrentUserId();
+        if (userId) {
+          await this.fcmService.sendTokenToServer(fcmToken, userId.toString());
+        }
+      }
+    } catch (error) {
+      console.error('Error initializing FCM after login:', error);
+    }
+  }
+
+  /**
+   * Get FCM token
+   */
+  getFcmToken(): string | null {
+    return this.fcmService.getCurrentToken();
+  }
+
+  /**
+   * Clear FCM token on logout
+   */
+  clearFcmToken(): void {
+    this.fcmService.clearToken();
+  }
+
+  /**
+   * Check if FCM is available and has valid token
+   */
+  hasFcmToken(): boolean {
+    return this.fcmService.hasValidToken();
+  }
+
+  /**
+   * Refresh FCM token if needed
+   */
+  async refreshFcmToken(): Promise<string | null> {
+    return await this.fcmService.refreshTokenIfNeeded();
   }
 }
