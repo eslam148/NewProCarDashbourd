@@ -63,7 +63,7 @@ import { NotificationDisplayItem, NotificationType, NotificationTypeHelper } fro
       BadgeComponent,
       DropdownDividerDirective,
       LanguageSwitcherComponent,
-      ThemeToggleComponent,
+      
       UserAvatarComponent,
       AsyncPipe,
       TranslatePipe,

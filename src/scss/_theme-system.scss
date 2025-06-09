@@ -33,43 +33,33 @@
   --theme-bg-secondary: #2d3748;
   --theme-bg-tertiary: #374151;
   --theme-text-primary: #ffffff;
-  --theme-text-secondary: #e2e8f0;
-  --theme-text-muted: #a0aec0;
+  --theme-text-secondary: #ffffff;
+  --theme-text-muted: #ffffff;
   --theme-border-color: #4a5568;
   --theme-shadow: rgba(0, 0, 0, 0.3);
   --theme-shadow-hover: rgba(0, 0, 0, 0.4);
 
   // Override CoreUI variables for dark theme
   --cui-body-bg: var(--theme-bg-primary);
-  --cui-body-color: var(--theme-text-primary);
+  --cui-body-color: #ffffff;
   --cui-border-color: var(--theme-border-color);
   --cui-tertiary-bg: var(--theme-bg-tertiary);
   --cui-secondary-bg: var(--theme-bg-secondary);
-
-  // Card backgrounds
   --cui-card-bg: var(--theme-bg-secondary);
   --cui-card-border-color: var(--theme-border-color);
-
-  // Form controls
   --cui-input-bg: var(--theme-bg-tertiary);
   --cui-input-border-color: var(--theme-border-color);
-  --cui-input-color: var(--theme-text-primary);
-  --cui-input-placeholder-color: var(--theme-text-muted);
-
-  // Navigation
+  --cui-input-color: #ffffff;
+  --cui-input-placeholder-color: #ffffff;
   --cui-sidebar-bg: var(--theme-bg-primary);
-  --cui-sidebar-color: var(--theme-text-secondary);
+  --cui-sidebar-color: #ffffff;
   --cui-header-bg: var(--theme-bg-secondary);
-
-  // Tables
   --cui-table-bg: var(--theme-bg-primary);
   --cui-table-striped-bg: var(--theme-bg-secondary);
   --cui-table-hover-bg: var(--theme-bg-tertiary);
-
-  // Dropdowns
   --cui-dropdown-bg: var(--theme-bg-secondary);
   --cui-dropdown-border-color: var(--theme-border-color);
-  --cui-dropdown-link-color: var(--theme-text-primary);
+  --cui-dropdown-link-color: #ffffff;
   --cui-dropdown-link-hover-bg: var(--theme-bg-tertiary);
 }
 

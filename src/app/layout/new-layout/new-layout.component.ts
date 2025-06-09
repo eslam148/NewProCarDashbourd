@@ -1,33 +1,53 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { TranslatePipe } from '../../pipes/translate.pipe';
-import { LanguageSwitcherComponent } from '../../components/language-switcher/language-switcher.component';
+import { RouterOutlet } from '@angular/router';
+import { LandingHeaderComponent } from './components/header/header.component';
+import { LandingHeroComponent } from './components/hero/hero.component';
+import { LandingFeaturesComponent } from './components/features/features.component';
+import { LandingHowItWorksComponent } from './components/how-it-works/how-it-works.component';
+import { LandingWhyChooseComponent } from './components/why-choose/why-choose.component';
+import { LandingTestimonialsComponent } from './components/testimonials/testimonials.component';
+import { LandingFooterComponent } from './components/footer/footer.component';
 
 @Component({
   selector: 'app-new-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, LanguageSwitcherComponent],
-  templateUrl: './new-layout.component.html',
-  styleUrls: ['./new-layout.component.scss']
-})
-export class NewLayoutComponent {
-  currentLang: string = 'ar'; // Default to Arabic since the template is in Arabic
-  activeFaqIndex: number | null = null;
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    LandingHeaderComponent,
+    LandingHeroComponent,
+    LandingFeaturesComponent,
+    LandingHowItWorksComponent,
+    LandingWhyChooseComponent,
+    LandingTestimonialsComponent,
+    LandingFooterComponent
+  ],
+  template: `
+    <div class="landing-page">
+      <app-landing-header></app-landing-header>
+      <app-landing-hero></app-landing-hero>
+      <app-landing-features></app-landing-features>
+      <app-landing-how-it-works></app-landing-how-it-works>
+      <app-landing-why-choose></app-landing-why-choose>
+      <app-landing-testimonials></app-landing-testimonials>
+      <app-landing-footer></app-landing-footer>
 
-  switchLanguage(lang: 'en' | 'ar') {
-    this.currentLang = lang;
-  }
-
-  toggleFaq(index: number) {
-    if (this.activeFaqIndex === index) {
-      this.activeFaqIndex = null;
-    } else {
-      this.activeFaqIndex = index;
+      <!-- محتوى إضافي من الـ router -->
+      <router-outlet></router-outlet>
+    </div>
+  `,
+  styles: [`
+    .landing-page {
+      font-family: 'Cairo', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-  }
 
-  isFaqActive(index: number): boolean {
-    return this.activeFaqIndex === index;
-  }
-}
+    router-outlet {
+      flex: 1;
+    }
+  `]
+})
+export class NewLayoutComponent {}
