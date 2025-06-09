@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../../../pipes/translate.pipe';
 
@@ -10,18 +10,18 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
     <footer class="footer">
       <div class="container">
         <div class="footer-content">
-          <div class="footer-section">
+          <div class="footer-section animate-slide-up" #animateElement [style.--delay]="'0s'">
             <h3 class="footer-title">proCare</h3>
             <p>{{ 'landing.footer_description' | translate | async }}</p>
             <div class="social-links">
-              <a href="#" aria-label="Facebook">📘</a>
-              <a href="#" aria-label="Twitter">🐦</a>
-              <a href="#" aria-label="Instagram">📷</a>
-              <a href="#" aria-label="LinkedIn">💼</a>
+              <a href="#" aria-label="Facebook" class="social-link">📘</a>
+              <a href="#" aria-label="Twitter" class="social-link">🐦</a>
+              <a href="#" aria-label="Instagram" class="social-link">📷</a>
+              <a href="#" aria-label="LinkedIn" class="social-link">💼</a>
             </div>
           </div>
 
-          <div class="footer-section">
+          <div class="footer-section animate-slide-up" #animateElement [style.--delay]="'0.1s'">
             <h4>{{ 'landing.footer_quick_links' | translate | async }}</h4>
             <ul>
               <li><a href="#features">{{ 'landing.features' | translate | async }}</a></li>
@@ -31,7 +31,7 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
             </ul>
           </div>
 
-          <div class="footer-section">
+          <div class="footer-section animate-slide-up" #animateElement [style.--delay]="'0.2s'">
             <h4>{{ 'landing.footer_contact' | translate | async }}</h4>
             <ul>
               <li>📞 {{ 'landing.footer_phone' | translate | async }}</li>
@@ -40,7 +40,7 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
             </ul>
           </div>
 
-          <div class="footer-section">
+          <div class="footer-section animate-slide-up" #animateElement [style.--delay]="'0.3s'">
             <h4>{{ 'landing.footer_download' | translate | async }}</h4>
             <div class="app-buttons">
               <a href="#" class="app-button">
@@ -53,7 +53,7 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
           </div>
         </div>
 
-        <div class="footer-bottom">
+        <div class="footer-bottom animate-fade-in" #animateElement [style.--delay]="'0.4s'">
           <p>&copy; 2024 proCare. {{ 'landing.footer_rights' | translate | async }}</p>
         </div>
       </div>
@@ -110,12 +110,14 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
       display: flex;
       gap: 1rem;
 
-      a {
+      .social-link {
         font-size: 1.5rem;
         text-decoration: none;
-        transition: transform 0.3s;
+        transition: transform 0.3s ease;
 
-        &:hover { transform: scale(1.2); }
+        &:hover {
+          transform: scale(1.2) rotate(10deg);
+        }
       }
     }
 
@@ -123,6 +125,14 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+
+      .app-button {
+        transition: transform 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+        }
+      }
 
       img {
         height: 40px;
@@ -141,6 +151,46 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
       }
     }
 
+    /* Scroll Animations */
+    .animate-slide-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition-delay: var(--delay);
+    }
+
+    .animate-fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition-delay: var(--delay);
+    }
+
+    /* Active state when in view */
+    .animate-slide-up.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .animate-fade-in.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Original keyframes */
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
     @media (max-width: 768px) {
       .footer-content {
         grid-template-columns: 1fr;
@@ -153,4 +203,35 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
     }
   `]
 })
-export class LandingFooterComponent {}
+export class LandingFooterComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChildren('animateElement') animateElements!: QueryList<ElementRef>;
+
+  private observer!: IntersectionObserver;
+
+  ngOnInit() {
+    // Setup intersection observer for scroll animations
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+  }
+
+  ngAfterViewInit() {
+    // Observe all animate elements
+    this.animateElements.forEach(element => {
+      this.observer.observe(element.nativeElement);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+}

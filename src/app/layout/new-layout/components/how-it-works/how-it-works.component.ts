@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../../../pipes/translate.pipe';
 
@@ -9,10 +9,12 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
   template: `
     <section id="how-it-works" class="how-it-works">
       <div class="container">
-        <h2 class="section-title">{{ 'landing.how_it_works_title' | translate | async }}</h2>
+        <h2 class="section-title animate-fade-in" #animateElement>{{ 'landing.how_it_works_title' | translate | async }}</h2>
         <div class="steps-container">
-          <div class="step" *ngFor="let step of stepsData; let i = index">
-            <div class="step-number">{{ i + 1 }}</div>
+          <div class="step animate-scale-in" #animateElement
+               *ngFor="let step of stepsData; let i = index"
+               [style.--delay]="(i * 0.2) + 's'">
+            <div class="step-number animate-bounce">{{ i + 1 }}</div>
             <div class="step-icon" [innerHTML]="step.icon"></div>
             <h3>{{ step.title | translate | async }}</h3>
             <p>{{ step.description | translate | async }}</p>
@@ -58,16 +60,87 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
       font-size: 1.5rem;
       font-weight: 700;
       margin: 0 auto 1rem;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
 
     .step-icon { margin-bottom: 1.5rem; }
+
+    /* Scroll Animations */
+    .animate-fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .animate-scale-in {
+      opacity: 0;
+      transform: scale(0.7) translateY(30px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition-delay: var(--delay);
+    }
+
+    .animate-bounce {
+      animation: none;
+    }
+
+    /* Active state when in view */
+    .animate-fade-in.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .animate-scale-in.in-view {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .animate-scale-in.in-view .animate-bounce {
+      animation: bounce 2s ease infinite 1s;
+    }
+
+    /* Original keyframes */
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes scaleIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 53%, 80%, 100% {
+        transform: translate3d(0,0,0);
+      }
+      40%, 43% {
+        transform: translate3d(0, -5px, 0);
+      }
+      70% {
+        transform: translate3d(0, -3px, 0);
+      }
+      90% {
+        transform: translate3d(0, -1px, 0);
+      }
+    }
 
     @media (max-width: 768px) {
       .steps-container { flex-direction: column; }
     }
   `]
 })
-export class LandingHowItWorksComponent {
+export class LandingHowItWorksComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChildren('animateElement') animateElements!: QueryList<ElementRef>;
+
+  private observer!: IntersectionObserver;
+
   stepsData = [
     {
       icon: `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -91,4 +164,31 @@ export class LandingHowItWorksComponent {
       description: 'landing.step3_desc'
     }
   ];
+
+  ngOnInit() {
+    // Setup intersection observer for scroll animations
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    });
+  }
+
+  ngAfterViewInit() {
+    // Observe all animate elements
+    this.animateElements.forEach(element => {
+      this.observer.observe(element.nativeElement);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
 }

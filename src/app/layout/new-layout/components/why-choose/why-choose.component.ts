@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../../../pipes/translate.pipe';
 
@@ -9,9 +9,11 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
   template: `
     <section id="why-choose" class="why-choose">
       <div class="container">
-        <h2 class="section-title">{{ 'landing.why_choose_title' | translate | async }}</h2>
+        <h2 class="section-title animate-fade-in" #animateElement>{{ 'landing.why_choose_title' | translate | async }}</h2>
         <div class="benefits-grid">
-          <div class="benefit-card" *ngFor="let benefit of benefitsData">
+          <div class="benefit-card animate-slide-up" #animateElement
+               *ngFor="let benefit of benefitsData; let i = index"
+               [style.--delay]="(i * 0.15) + 's'">
             <div class="benefit-icon" [innerHTML]="benefit.icon"></div>
             <h3>{{ benefit.title | translate | async }}</h3>
             <p>{{ benefit.description | translate | async }}</p>
@@ -60,9 +62,38 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
     }
 
     .benefit-icon { margin-bottom: 1.5rem; }
+
+    /* Scroll Animations */
+    .animate-fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .animate-slide-up {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition-delay: var(--delay);
+    }
+
+    /* Active state when in view */
+    .animate-fade-in.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .animate-slide-up.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
   `]
 })
-export class LandingWhyChooseComponent {
+export class LandingWhyChooseComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChildren('animateElement') animateElements!: QueryList<ElementRef>;
+
+  private observer!: IntersectionObserver;
+
   benefitsData = [
     {
       icon: `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -93,4 +124,31 @@ export class LandingWhyChooseComponent {
       description: 'landing.benefit4_desc'
     }
   ];
+
+  ngOnInit() {
+    // Setup intersection observer for scroll animations
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    });
+  }
+
+  ngAfterViewInit() {
+    // Observe all animate elements
+    this.animateElements.forEach(element => {
+      this.observer.observe(element.nativeElement);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
 }

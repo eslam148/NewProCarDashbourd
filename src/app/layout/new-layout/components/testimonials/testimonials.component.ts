@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../../../pipes/translate.pipe';
 
@@ -9,10 +9,12 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
   template: `
     <section class="testimonials">
       <div class="container">
-        <h2 class="section-title">{{ 'landing.testimonials_title' | translate | async }}</h2>
+        <h2 class="section-title animate-fade-in" #animateElement>{{ 'landing.testimonials_title' | translate | async }}</h2>
         <div class="testimonials-grid">
-          <div class="testimonial-card" *ngFor="let testimonial of testimonialsData">
-            <div class="stars">
+          <div class="testimonial-card animate-slide-up" #animateElement
+               *ngFor="let testimonial of testimonialsData; let i = index"
+               [style.--delay]="(i * 0.15) + 's'">
+            <div class="stars animate-twinkle">
               <span>★★★★★</span>
             </div>
             <p>{{ testimonial.text | translate | async }}</p>
@@ -51,6 +53,12 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      }
 
       .stars {
         color: #ffc107;
@@ -77,9 +85,71 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
         }
       }
     }
+
+    /* Scroll Animations */
+    .animate-fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .animate-slide-up {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transition-delay: var(--delay);
+    }
+
+    .animate-twinkle {
+      animation: none;
+    }
+
+    /* Active state when in view */
+    .animate-fade-in.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .animate-slide-up.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .animate-slide-up.in-view .animate-twinkle {
+      animation: twinkle 2s ease-in-out infinite 1s;
+    }
+
+    /* Original keyframes */
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+      }
+    }
   `]
 })
-export class LandingTestimonialsComponent {
+export class LandingTestimonialsComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChildren('animateElement') animateElements!: QueryList<ElementRef>;
+
+  private observer!: IntersectionObserver;
+
   testimonialsData = [
     {
       text: 'landing.testimonial1_text',
@@ -97,4 +167,31 @@ export class LandingTestimonialsComponent {
       location: 'landing.testimonial3_location'
     }
   ];
+
+  ngOnInit() {
+    // Setup intersection observer for scroll animations
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    });
+  }
+
+  ngAfterViewInit() {
+    // Observe all animate elements
+    this.animateElements.forEach(element => {
+      this.observer.observe(element.nativeElement);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
 }
