@@ -51,6 +51,8 @@
       "tasks": "المهام",
       "comments": "التعليقات"
     },
+    "loadingMore": "جاري التحميل...",
+    "allNotificationsLoaded": "تم إظهار جميع الإشعارات",
     "notifications": "الإشعارات",
     "markAllRead": "تحديد الكل كمقروء",
     "noNotifications": "لا توجد إشعارات",

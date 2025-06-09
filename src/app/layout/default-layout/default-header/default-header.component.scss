@@ -370,6 +370,138 @@ a[cNavLink] {
       border-radius: 50%;
       background-color: var(--cui-info);
     }
+
+    // Scroll pagination styles
+    .notification-scroll-container {
+      // Smooth scrolling
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+
+      // Custom scrollbar for the scroll container
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(var(--cui-body-color-rgb), 0.2);
+        border-radius: 2px;
+
+        &:hover {
+          background: rgba(var(--cui-body-color-rgb), 0.4);
+        }
+      }
+
+      // Firefox scrollbar
+      scrollbar-width: thin;
+      scrollbar-color: rgba(var(--cui-body-color-rgb), 0.2) transparent;
+    }
+
+    // Fixed header and footer
+    .notification-header,
+    .notification-footer {
+      position: sticky;
+      z-index: 10;
+      background-color: var(--cui-body-bg);
+
+      &.notification-header {
+        top: 0;
+        border-bottom: 1px solid var(--cui-border-color);
+      }
+
+      &.notification-footer {
+        bottom: 0;
+        border-top: 1px solid var(--cui-border-color);
+      }
+    }
+
+    // Load more indicator
+    .load-more-indicator {
+      background-color: rgba(var(--cui-primary-rgb), 0.05);
+      border-radius: 0.25rem;
+      margin: 0.5rem;
+
+      .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.15em;
+      }
+    }
+
+    // End of list indicator
+    .end-of-list-indicator {
+      background-color: rgba(var(--cui-success-rgb), 0.05);
+      border-radius: 0.25rem;
+      margin: 0.5rem;
+
+      span {
+        color: var(--cui-success) !important;
+        font-weight: 500;
+      }
+
+      i {
+        color: var(--cui-success) !important;
+      }
+    }
+
+    // Load more button
+    .load-more-button {
+      background-color: rgba(var(--cui-info-rgb), 0.05);
+      border-radius: 0.25rem;
+      margin: 0.5rem;
+
+      button {
+        color: var(--cui-info) !important;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &:hover {
+          color: var(--cui-info-hover, var(--cui-info)) !important;
+          background-color: rgba(var(--cui-info-rgb), 0.1);
+          transform: translateY(-1px);
+        }
+
+        i {
+          transition: transform 0.2s ease;
+        }
+
+        &:hover i {
+          transform: translateY(2px);
+        }
+      }
+    }
+
+    // Notification list items
+    .notification-list-item {
+      &:hover {
+        background-color: rgba(var(--cui-primary-rgb), 0.02);
+      }
+
+      // Add a subtle border between items
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba(var(--cui-border-color-rgb), 0.3);
+      }
+    }
+
+    // Responsive pagination adjustments
+    @media (max-width: 768px) {
+      .notification-scroll-container {
+        max-height: 300px;
+      }
+
+      .load-more-indicator,
+      .end-of-list-indicator,
+      .load-more-button {
+        margin: 0.25rem;
+
+        .small {
+          font-size: 0.6875rem;
+        }
+      }
+    }
   }
 }
 

@@ -60,6 +60,8 @@
       "tasks": "Tasks",
       "comments": "Comments"
     },
+    "loadingMore": "Loading more...",
+    "allNotificationsLoaded": "All notifications loaded",
     "notifications": "Notifications",
     "markAllRead": "Mark All Read",
     "noNotifications": "No notifications",

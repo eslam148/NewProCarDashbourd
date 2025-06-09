@@ -94,6 +94,13 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
   private destroy$ = new Subject<void>();
   loading = false;
 
+  // Pagination properties
+  currentPage = 0;
+  pageSize = 20;
+  hasMoreNotifications = true;
+  loadingMore = false;
+  totalNotifications = 0;
+
   readonly colorModes = [
     { name: 'light', text: 'Light', icon: 'cilSun' },
     { name: 'dark', text: 'Dark', icon: 'cilMoon' },
@@ -166,7 +173,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
             this.#store.dispatch(loadProfile({ userId: userId.toString() }));
           }
           // Load notifications after auth is confirmed
-          this.loadNotifications();
+          this.loadNotifications(true);
         }
       });
 
@@ -230,7 +237,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
 
         // Refresh from API after a short delay to get official data
         setTimeout(() => {
-          this.loadNotifications();
+          this.loadNotifications(true);
         }, 1500);
       });
 
@@ -335,30 +342,49 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
     this.#notificationService.markAsRead(notification.id);
   }
 
-  private loadNotifications() {
+    private loadNotifications(reset: boolean = true) {
     if (this.loading) {
       console.log('Already loading notifications, skipping...');
       return;
     }
 
-    this.loading = true;
-    console.log('Loading notifications from API...');
+    if (reset) {
+      this.currentPage = 0;
+      this.notifications = [];
+      this.hasMoreNotifications = true;
+    }
 
-    this.#notificationService.getAllNotifications(0, 100).subscribe({
+    this.loading = true;
+    console.log(`Loading notifications from API - Page: ${this.currentPage}, PageSize: ${this.pageSize}`);
+
+    this.#notificationService.getAllNotifications(this.currentPage, this.pageSize).subscribe({
       next: (response) => {
         console.log('Notifications API response:', response);
         if (response.status === 0 && response.data) {
           const displayItems = this.convertToDisplayItems(response.data.items);
-          this.notifications = displayItems;
+
+          if (reset) {
+            this.notifications = displayItems;
+          } else {
+            // Append new notifications for pagination
+            this.notifications = [...this.notifications, ...displayItems];
+          }
+
           console.log('Processed notification display items:', displayItems);
 
+          // Update pagination info
+          this.totalNotifications = response.data.totalCount || 0;
+          this.hasMoreNotifications = this.notifications.length < this.totalNotifications;
+
           // Update the service observables manually if needed
-          this.#notificationService.notifications$.next(displayItems);
+          this.#notificationService.notifications$.next(this.notifications);
 
           // Update unread count
-          const unreadCount = displayItems.filter(n => !n.isRead).length;
+          const unreadCount = this.notifications.filter(n => !n.isRead).length;
           this.unreadCount = unreadCount;
           this.#notificationService.unreadCount$.next(unreadCount);
+
+          console.log(`Pagination info - Total: ${this.totalNotifications}, Loaded: ${this.notifications.length}, HasMore: ${this.hasMoreNotifications}`);
         } else {
           console.warn('Invalid notifications response:', response);
         }
@@ -390,7 +416,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
 
       // Load initial notifications after Firebase is initialized
       setTimeout(() => {
-        this.loadNotifications();
+        this.loadNotifications(true);
       }, 2000);
 
     } catch (error) {
@@ -487,7 +513,63 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
    */
   public refreshNotifications() {
     console.log('Refreshing notifications...');
-    this.loadNotifications();
+    this.loadNotifications(true);
+  }
+
+  /**
+   * Load more notifications for pagination
+   */
+  public loadMoreNotifications() {
+    if (this.loadingMore || !this.hasMoreNotifications || this.loading) {
+      console.log('Cannot load more notifications:', {
+        loadingMore: this.loadingMore,
+        hasMore: this.hasMoreNotifications,
+        loading: this.loading
+      });
+      return;
+    }
+
+    this.loadingMore = true;
+    this.currentPage++;
+
+    console.log(`Loading more notifications - Page: ${this.currentPage}`);
+
+    this.#notificationService.getAllNotifications(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        console.log('Load more notifications response:', response);
+        if (response.status === 0 && response.data) {
+          const displayItems = this.convertToDisplayItems(response.data.items);
+
+          // Append new notifications
+          this.notifications = [...this.notifications, ...displayItems];
+
+          // Update pagination info
+          this.totalNotifications = response.data.totalCount || 0;
+          this.hasMoreNotifications = this.notifications.length < this.totalNotifications;
+
+          console.log(`Load more completed - Total: ${this.totalNotifications}, Loaded: ${this.notifications.length}, HasMore: ${this.hasMoreNotifications}`);
+        }
+        this.loadingMore = false;
+      },
+      error: (error) => {
+        console.error('Error loading more notifications:', error);
+        this.currentPage--; // Rollback page increment on error
+        this.loadingMore = false;
+      }
+    });
+  }
+
+  /**
+   * Handle scroll event for pagination
+   */
+  public onNotificationScroll(event: Event) {
+    const element = event.target as HTMLElement;
+    const threshold = 50; // pixels from bottom
+
+    if (element.scrollTop + element.clientHeight >= element.scrollHeight - threshold) {
+      console.log('Scroll threshold reached, loading more notifications...');
+      this.loadMoreNotifications();
+    }
   }
 
   // Removed old mock notification methods - now using real API data
