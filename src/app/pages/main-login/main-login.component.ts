@@ -24,7 +24,7 @@ import { saveFcmToken } from '../../store/auth/auth.actions';
     ContainerComponent,
     RowComponent,
     ColComponent,
-    IconDirective,
+
     FormControlDirective,
     TranslatePipe
   ],

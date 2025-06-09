@@ -34,7 +34,7 @@
             <div class="login-header">
               <div class="logo-container">
                 <div class="logo-icon">
-                  <svg cIcon name="cilMedicalCross" size="xxl"></svg>
+                  <img src="assets/images/image.png" class="img-fluid" alt="logo">
                 </div>
               </div>
               <h1 class="login-title">{{ 'auth.login' | translate | async }}</h1>
@@ -132,11 +132,11 @@
                 </div>
 
                 <!-- Remember Me & Forgot Password -->
-                <div class="form-options">
+                <div class="form-options my-3">
                   <label class="remember-checkbox">
                     <input type="checkbox" class="checkbox-input">
                     <span class="checkbox-custom"></span>
-                    <span class="checkbox-label">{{ 'auth.rememberMe' | translate | async }}</span>
+                    <span class="checkbox-label ms-3 ">{{ 'auth.rememberMe' | translate | async }}</span>
                   </label>
 
                 </div>
@@ -148,7 +148,7 @@
                   [disabled]="loginForm.invalid || !!(loading$ | async)"
                   [ngClass]="{'loading': loading$ | async}">
                   <span class="button-content">
-                    <i class="bi bi-box-arrow-in-right button-icon"></i>
+
                     <span class="button-text">{{ 'auth.signIn' | translate | async }}</span>
                   </span>
                   <div class="button-loader">
@@ -159,7 +159,7 @@
               </form>
             </div>
 
-            
+
 
           </div>
         </c-col>
