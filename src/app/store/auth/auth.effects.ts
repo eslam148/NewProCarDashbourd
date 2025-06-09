@@ -130,7 +130,7 @@ export class AuthEffects {
             }
 
             // Navigate to dashboard
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/profile']);
           } else {
             console.error('No token in response:', response);
           }
@@ -148,8 +148,8 @@ export class AuthEffects {
 
         // Clear local storage immediately
 
-        
-        
+
+
 
         // Call logout API
         return this.authService.Logout().pipe(

@@ -49,10 +49,10 @@ import { NotificationDisplayItem, NotificationType, NotificationTypeHelper } fro
       SidebarToggleDirective,
 
       HeaderNavComponent,
-      NavItemComponent,
-      NavLinkDirective,
+
+
       RouterLink,
-      RouterLinkActive,
+
       NgTemplateOutlet,
 
       DropdownComponent,
@@ -70,7 +70,7 @@ import { NotificationDisplayItem, NotificationType, NotificationTypeHelper } fro
       NgIf,
       NgClass,
       NgForOf,
-   
+
     ]
 })
 export class DefaultHeaderComponent extends HeaderComponent implements OnInit, OnDestroy {
@@ -230,7 +230,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
       if (diffMins < 60) return `منذ ${diffMins} ${diffMins === 1 ? 'دقيقة' : 'دقائق'}`;
       if (diffHours < 24) return `منذ ${diffHours} ${diffHours === 1 ? 'ساعة' : 'ساعات'}`;
       if (diffDays < 7) return `منذ ${diffDays} ${diffDays === 1 ? 'يوم' : 'أيام'}`;
-      
+
       // Format absolute date for older entries
       return time.toLocaleDateString('ar-EG', {
         year: 'numeric',
@@ -246,7 +246,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
       if (diffMins < 60) return `${diffMins}m ago`;
       if (diffHours < 24) return `${diffHours}h ago`;
       if (diffDays < 7) return `${diffDays}d ago`;
-      
+
       // Format absolute date for older entries
       return time.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -287,7 +287,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
         this.loading = false;
       }
     });
-    
+
     setTimeout(() => {
       this.loading = false;
     }, 1000);
@@ -305,7 +305,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
     return notifications.map(notification => {
       let time: Date;
       const createdAt = notification.createdAt;
-      
+
       try {
         if (typeof createdAt === 'string') {
           if (createdAt.match(/[يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر]/)) {

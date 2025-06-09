@@ -22,7 +22,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'profile',
     pathMatch: 'full'
   },
 
@@ -34,10 +34,12 @@ export const routes: Routes = [
       title: 'Home'
     },
     children: [
+      /*
       {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
+      */
       {
         path: 'admins',
         loadComponent: () => import('./pages/admin/admin.component').then(m => m.AdminComponent),
@@ -121,7 +123,8 @@ export const routes: Routes = [
         data: {
           title: 'Profile'
         }
-      },
+      }
+      /*,
       {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
@@ -158,6 +161,7 @@ export const routes: Routes = [
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
       }
+        */
     ]
   },
   {
@@ -188,5 +192,5 @@ export const routes: Routes = [
       title: 'Register Page'
     }
   },
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '**', redirectTo: 'profile' }
 ];

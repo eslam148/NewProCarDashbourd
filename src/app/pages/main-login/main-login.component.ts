@@ -88,7 +88,7 @@ export class MainLoginComponent implements OnInit, OnDestroy {
           setTimeout(async () => {
             await this.saveFcmTokenAfterLogin();
           }, 500);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/profile']);
         }
       });
 

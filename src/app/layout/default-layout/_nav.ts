@@ -1,7 +1,7 @@
 import { INavData } from '@coreui/angular';
 
 export const navItems: INavData[] = [
-  {
+ /* {
     name: 'common.dashboard',
     url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },
@@ -9,7 +9,7 @@ export const navItems: INavData[] = [
       color: 'info',
       text: 'NEW'
     }
-  },
+  },*/
   {
     name: 'common.profile',
     url: '/profile',
@@ -105,7 +105,8 @@ export const navItems: INavData[] = [
     url: '/reports',
     iconComponent: { name: 'cil-file-medical' },
     badge: { color: 'warning', text: 'NEW' }
-  },
+  }
+  /*,
 
   {
     title: true,
@@ -385,5 +386,5 @@ export const navItems: INavData[] = [
     url: 'https://coreui.io/angular/docs/',
     iconComponent: { name: 'cil-description' },
     attributes: { target: '_blank' }
-  }
+  }*/
 ];
