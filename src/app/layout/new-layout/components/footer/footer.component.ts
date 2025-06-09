@@ -64,7 +64,7 @@ import { TranslatePipe } from '../../../../pipes/translate.pipe';
       background: var(--primary);
       color: white;
       padding: 3rem 0 1rem;
-      margin-top: 4rem;
+      margin-top: 0rem;
     }
 
     .footer-content {

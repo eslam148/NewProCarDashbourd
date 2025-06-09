@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -9,7 +9,11 @@ import { RouterModule } from '@angular/router';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent {
+export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChildren('animateElement') animateElements!: QueryList<ElementRef>;
+
+  private observer!: IntersectionObserver;
+
   features = [
     {
       icon: 'fas fa-car',
@@ -47,4 +51,29 @@ export class LandingComponent {
       image: 'assets/img/testimonials/user2.jpg'
     }
   ];
+
+  ngOnInit() {
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    });
+  }
+
+  ngAfterViewInit() {
+    this.animateElements.forEach(element => {
+      this.observer.observe(element.nativeElement);
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
 }

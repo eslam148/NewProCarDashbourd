@@ -31,10 +31,10 @@ import { LandingFooterComponent } from './components/footer/footer.component';
       <app-landing-how-it-works></app-landing-how-it-works>
       <app-landing-why-choose></app-landing-why-choose>
       <app-landing-testimonials></app-landing-testimonials>
+      <router-outlet></router-outlet>
       <app-landing-footer></app-landing-footer>
 
       <!-- محتوى إضافي من الـ router -->
-      <router-outlet></router-outlet>
 
       <!-- Back to Top Button -->
       <button
@@ -57,10 +57,18 @@ import { LandingFooterComponent } from './components/footer/footer.component';
       display: flex;
       flex-direction: column;
       position: relative;
+      padding-top: 80px; /* Space for fixed header */
     }
 
     router-outlet {
       flex: 1;
+    }
+
+    /* Adjust padding for mobile */
+    @media (max-width: 768px) {
+      .landing-page {
+        padding-top: 70px; /* Smaller space for mobile */
+      }
     }
 
     /* Back to Top Button Styles */
@@ -257,7 +265,11 @@ import { LandingFooterComponent } from './components/footer/footer.component';
         }
       }
 
-      @keyframes pulse, pulseLight {
+      @keyframes pulse {
+        /* Remove pulse animation for users who prefer reduced motion */
+      }
+
+      @keyframes pulseLight {
         /* Remove pulse animation for users who prefer reduced motion */
       }
     }
