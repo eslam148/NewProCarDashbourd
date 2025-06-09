@@ -407,11 +407,12 @@ nav .container {
 }
 
 .faq-item {
-  background-color: var(--light-color);
-  border-radius: 12px;
   margin-bottom: 1rem;
+  border-radius: 8px;
   overflow: hidden;
+  background-color: var(--light-color);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .faq-question {
@@ -420,47 +421,50 @@ nav .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--light-color);
-  transition: background-color 0.3s;
-}
+  transition: all 0.3s ease;
 
-.faq-question:hover {
-  background-color: #FDD5DD;
-}
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+  }
 
-.faq-question h3 {
-  color: #CD2C4E;
-  margin: 0;
-  font-size: 1.1rem;
+  &:hover {
+    background-color: rgba(205, 44, 78, 0.05);
+
+    h3 {
+      color: #CD2C4E;
+    }
+  }
 }
 
 .faq-toggle {
   font-size: 1.5rem;
   color: #CD2C4E;
-  font-weight: bold;
-  transition: transform 0.3s;
-}
+  transition: transform 0.3s ease;
 
-.faq-item.active .faq-toggle {
-  transform: rotate(45deg);
+  &.active {
+    transform: rotate(180deg);
+  }
 }
 
 .faq-answer {
-  padding: 0 1.5rem;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-}
+  transition: all 0.3s ease;
+  padding: 0 1.5rem;
 
-.faq-item.active .faq-answer {
-  max-height: 200px;
-  padding: 0 1.5rem 1.5rem;
-}
+  &.active {
+    max-height: 500px;
+    padding: 0 1.5rem 1.5rem;
+  }
 
-.faq-answer p {
-  color: #333;
-  line-height: 1.6;
-  margin: 0;
+  p {
+    margin: 0;
+    color: var(--text-color);
+    line-height: 1.6;
+  }
 }
 
 /* CTA Section */
@@ -810,5 +814,195 @@ html {
       margin: 0.5rem 0;
       padding: 0.5rem;
       text-align: center;
+  }
+}
+
+/* Beautiful Animation Keyframes */
+@keyframes gentleFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes softPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@keyframes shimmerEffect {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Apply Beautiful Animations */
+.hero-image img {
+  animation: gentleFloat 6s ease-in-out infinite;
+}
+
+.feature-card {
+  animation: fadeInScale 0.8s ease-out;
+  transition: all 0.4s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(205, 44, 78, 0.15);
+  }
+
+  .feature-icon {
+    transition: transform 0.4s ease;
+
+    &:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+}
+
+.benefit-card {
+  animation: fadeInScale 0.8s ease-out;
+  transition: all 0.4s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary-color);
+    background: linear-gradient(45deg, rgba(205, 44, 78, 0.05), rgba(253, 213, 221, 0.1));
+  }
+}
+
+.testimonial-card {
+  animation: fadeInScale 0.8s ease-out;
+  transition: all 0.4s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(205, 44, 78, 0.15);
+  }
+
+  .stars {
+    transition: transform 0.4s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.screenshot {
+  animation: fadeInScale 0.8s ease-out;
+  transition: all 0.4s ease;
+
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+
+  .phone-mockup {
+    transition: transform 0.4s ease;
+
+    &:hover {
+      transform: perspective(1000px) rotateY(5deg);
+    }
+  }
+}
+
+.faq-item {
+  animation: fadeInScale 0.8s ease-out;
+  transition: all 0.4s ease;
+
+  .faq-question {
+    transition: all 0.4s ease;
+
+    &:hover {
+      background-color: rgba(205, 44, 78, 0.05);
+      transform: translateX(5px);
+    }
+  }
+}
+
+.cta {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      rgba(205, 44, 78, 0.05),
+      rgba(253, 213, 221, 0.1)
+    );
+    animation: shimmerEffect 8s linear infinite;
+    background-size: 200% 200%;
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
+    animation: fadeInScale 0.8s ease-out;
+  }
+}
+
+.nav-links a {
+  position: relative;
+  transition: color 0.4s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width 0.4s ease;
+  }
+
+  &:hover {
+    color: var(--primary-color);
+
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+.app-button {
+  transition: all 0.4s ease;
+
+  &:hover {
+    transform: translateY(-5px);
   }
 }
