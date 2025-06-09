@@ -2,8 +2,24 @@ import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './layout';
 import { AuthGuard } from './guards/auth.guard';
+import { NewLayoutComponent } from './layout/new-layout/new-layout.component';
+import { HomeComponent } from './pages/home/home.component';
+import { LandingComponent } from './pages/landing/landing.component';
 
 export const routes: Routes = [
+  {
+    path: '',
+    component: NewLayoutComponent,
+    children: [
+      {
+        path: '',
+        component: LandingComponent,
+        data: {
+          title: 'Welcome to ProCar Dashboard'
+        }
+      }
+    ]
+  },
   {
     path: '',
     redirectTo: 'dashboard',
