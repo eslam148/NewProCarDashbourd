@@ -11,7 +11,18 @@ export interface NotificationDto {
   isRead: boolean;
   readAt: string | null;
 }
-
+export interface DisplayNotificationDto {
+  id: number;
+  title: string;
+  body: string;
+  time: Date;
+  type: NotificationType;
+  isRead: boolean;
+  icon: string;
+  color: string;
+  requestId: string | null;
+  reservationId: string | null;
+}
 export interface NotificationListRequest {
   pageNumber: number;
   pageSize: number;

@@ -1,12 +1,12 @@
 import { NgTemplateOutlet, AsyncPipe, NgIf, NgClass, NgForOf, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, input, OnInit, OnDestroy } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { logout } from '../../../store/auth/auth.actions';
 import { TranslatePipe } from '../../../pipes/translate.pipe';
 import { TranslationService } from '../../../services/translation.service';
 import { NotificationService } from '../../../services/Notification.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, filter } from 'rxjs';
 
 import {
   AvatarComponent,
@@ -63,7 +63,7 @@ import { NotificationDisplayItem, NotificationType, NotificationTypeHelper } fro
       BadgeComponent,
       DropdownDividerDirective,
       LanguageSwitcherComponent,
-      
+
       UserAvatarComponent,
       AsyncPipe,
       TranslatePipe,
@@ -78,6 +78,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
   readonly #store = inject(Store);
   readonly #notificationService = inject(NotificationService);
   readonly #authService = inject(AuthService);
+  readonly #cdr = inject(ChangeDetectorRef);
   readonly colorMode = this.#colorModeService.colorMode;
   currentLanguage: string = 'en';
 
@@ -144,20 +145,15 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
   sidebarId = input('sidebar1');
 
   ngOnInit() {
-    // Add this subscription at the beginning of ngOnInit
+    // Initialize Firebase messaging first
+    this.initializeFirebaseMessaging();
+
+    // Subscribe to language changes
     this.translationService.getCurrentLang()
       .pipe(takeUntil(this.destroy$))
       .subscribe(lang => {
         this.currentLanguage = lang;
-        // Refresh notifications to update time formatting
-        this.loadNotifications();
       });
-
-    // Initialize Firebase messaging
-    this.initializeFirebaseMessaging();
-
-    // Load real notifications from API
-    this.loadNotifications();
 
     // Load profile data when auth user is available
     this.authUser$
@@ -169,6 +165,8 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
           if (userId) {
             this.#store.dispatch(loadProfile({ userId: userId.toString() }));
           }
+          // Load notifications after auth is confirmed
+          this.loadNotifications();
         }
       });
 
@@ -176,34 +174,77 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
     this.#notificationService.notifications$
       .pipe(takeUntil(this.destroy$))
       .subscribe(notifications => {
-        this.notifications = notifications;
+        console.log('Notifications updated from service:', notifications);
+        // Only update if we don't have pending immediate updates
+        if (!this.loading) {
+          this.notifications = notifications;
+          this.#cdr.detectChanges();
+        }
       });
 
     // Subscribe to unread count updates
     this.#notificationService.unreadCount$
       .pipe(takeUntil(this.destroy$))
       .subscribe(count => {
-        this.unreadCount = count;
+        console.log('Unread count updated from service:', count);
+        // Only update if we don't have pending immediate updates
+        if (!this.loading) {
+          this.unreadCount = count;
+          this.#cdr.detectChanges();
+        }
       });
 
     // Subscribe to Firebase notification updates (for real-time notifications)
     this.#notificationService.message$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(payload => payload !== null) // Only process non-null payloads
+      )
       .subscribe(payload => {
-        if (payload) {
-          console.log('New Firebase notification received in header:', payload);
-          // Notifications are automatically updated by the service
-          // No need to manually reload here as the service handles it
-        }
+        console.log('New Firebase notification received in header:', payload);
+
+        // Immediately update unread count for instant UI feedback
+        this.unreadCount = this.unreadCount + 1;
+        console.log('Immediate unread count update in header:', this.unreadCount);
+
+        // Add the new notification to the list immediately
+        const newNotification = {
+          id: Date.now(),
+          title: payload.notification?.title || payload.data?.title || 'New Notification',
+          body: payload.notification?.body || payload.data?.body || '',
+          time: new Date(),
+          type: payload.data?.type ? parseInt(payload.data.type) : 1,
+          isRead: false,
+          icon: 'cilBell',
+          color: 'primary',
+          requestId: payload.data?.requestId,
+          reservationId: payload.data?.reservationId
+        };
+
+                // Add to beginning of notifications array for immediate display
+        this.notifications = [newNotification, ...this.notifications];
+        console.log('Added new notification to header list:', newNotification);
+
+        // Force change detection to update UI immediately
+        this.#cdr.detectChanges();
+
+        // Refresh from API after a short delay to get official data
+        setTimeout(() => {
+          this.loadNotifications();
+        }, 1500);
       });
 
     // Subscribe to Firebase token updates
     this.#notificationService.currentToken$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(token => token !== null && token !== '')
+      )
       .subscribe(token => {
+        console.log('FCM token received in header:', token);
+        // Send this token to your backend if needed
         if (token) {
-          console.log('FCM token received in header:', token);
-          // You can send this token to your backend if needed
+          this.sendTokenToBackend(token);
         }
       });
   }
@@ -265,20 +306,61 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
 
   // Notification methods
   markAllAsRead() {
+    // Immediately update local state for instant UI feedback
+    this.notifications.forEach(notification => {
+      notification.isRead = true;
+    });
+    this.unreadCount = 0;
+    console.log('Immediately marked all as read, unread count:', this.unreadCount);
+
+    // Force change detection
+    this.#cdr.detectChanges();
+
+    // Update via service (for backend sync)
     this.#notificationService.markAllAsRead();
   }
 
   markAsRead(notification: any) {
+    // Immediately update local state for instant UI feedback
+    if (!notification.isRead) {
+      notification.isRead = true;
+      this.unreadCount = Math.max(0, this.unreadCount - 1);
+      console.log('Immediately marked as read, new unread count:', this.unreadCount);
+
+      // Force change detection
+      this.#cdr.detectChanges();
+    }
+
+    // Update via service (for backend sync)
     this.#notificationService.markAsRead(notification.id);
   }
 
   private loadNotifications() {
+    if (this.loading) {
+      console.log('Already loading notifications, skipping...');
+      return;
+    }
+
     this.loading = true;
-    this.notificationService.getAllNotifications(0, 100).subscribe({
+    console.log('Loading notifications from API...');
+
+    this.#notificationService.getAllNotifications(0, 100).subscribe({
       next: (response) => {
+        console.log('Notifications API response:', response);
         if (response.status === 0 && response.data) {
           const displayItems = this.convertToDisplayItems(response.data.items);
           this.notifications = displayItems;
+          console.log('Processed notification display items:', displayItems);
+
+          // Update the service observables manually if needed
+          this.#notificationService.notifications$.next(displayItems);
+
+          // Update unread count
+          const unreadCount = displayItems.filter(n => !n.isRead).length;
+          this.unreadCount = unreadCount;
+          this.#notificationService.unreadCount$.next(unreadCount);
+        } else {
+          console.warn('Invalid notifications response:', response);
         }
         this.loading = false;
       },
@@ -288,15 +370,29 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
       }
     });
 
+    // Fallback timeout
     setTimeout(() => {
-      this.loading = false;
-    }, 1000);
+      if (this.loading) {
+        console.warn('Notification loading timed out');
+        this.loading = false;
+      }
+    }, 10000);
   }
 
   private async initializeFirebaseMessaging() {
     try {
+      console.log('Initializing Firebase messaging in header component...');
       await this.#notificationService.initializeFirebaseMessaging();
-      console.log('Firebase messaging initialized in header component');
+      console.log('Firebase messaging initialized successfully in header component');
+
+      // Start listening for messages
+      this.#notificationService.listen();
+
+      // Load initial notifications after Firebase is initialized
+      setTimeout(() => {
+        this.loadNotifications();
+      }, 2000);
+
     } catch (error) {
       console.error('Error initializing Firebase messaging in header:', error);
     }
@@ -365,6 +461,33 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
         reservationId: notification.reservationId || undefined
       };
     });
+  }
+
+  /**
+   * Send FCM token to backend for push notifications
+   */
+  private sendTokenToBackend(token: string) {
+    // Implement this method to send the FCM token to your backend
+    // This allows your backend to send push notifications to this device
+    console.log('FCM Token to send to backend:', token);
+
+    // Example implementation:
+    // this.#notificationService.sendTokenToBackend(token).subscribe({
+    //   next: (response) => {
+    //     console.log('Token sent to backend successfully:', response);
+    //   },
+    //   error: (error) => {
+    //     console.error('Error sending token to backend:', error);
+    //   }
+    // });
+  }
+
+  /**
+   * Force refresh notifications from API
+   */
+  public refreshNotifications() {
+    console.log('Refreshing notifications...');
+    this.loadNotifications();
   }
 
   // Removed old mock notification methods - now using real API data

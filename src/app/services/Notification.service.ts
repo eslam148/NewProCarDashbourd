@@ -137,11 +137,18 @@ export class NotificationService {
       // Show browser notification if permission granted
       this.showBrowserNotification(notificationData);
 
-      // Add to local notifications list
+      // Add to local notifications list (this updates unread count immediately)
       this.addNotificationToList(notificationData);
 
-      // Refresh notifications from API to get the latest data
-      this.loadNotifications();
+      // Refresh notifications from API to get the latest data with a slight delay
+      setTimeout(() => {
+        this.loadNotifications();
+      }, 500);
+
+      // Force immediate unread count update
+      const currentCount = this.unreadCount$.value;
+      this.unreadCount$.next(currentCount + 1);
+      console.log('Immediate unread count update:', currentCount + 1);
 
     } catch (error) {
       console.error('Error handling incoming notification:', error);
@@ -355,12 +362,21 @@ export class NotificationService {
    * Load notifications and update the subjects
    */
   loadNotifications(): void {
+    console.log('Loading notifications from API...');
     this.getAllNotifications(0, 50).subscribe({
       next: (response) => {
+        console.log('Notifications API response:', response);
         if (response.status === 0 && response.data) {
           const displayItems = this.convertToDisplayItems(response.data.items);
+          console.log('Converted display items:', displayItems);
+
+          // Force update the observables
           this.notifications$.next(displayItems);
           this.updateUnreadCount(displayItems);
+
+          console.log('Updated notifications and unread count');
+        } else {
+          console.warn('Invalid API response:', response);
         }
       },
       error: (error) => {
