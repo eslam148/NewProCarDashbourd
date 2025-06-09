@@ -27,11 +27,13 @@
                 <div class="logo">proCare</div>
                 <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">☰</button>
                 <div class="nav-links">
-                    <a href="#features">المميزات</a>
-                    <a href="#how-it-works">كيف يعمل</a>
-                    <a href="#why-choose">لماذا proCare</a>
-                    <a href="#faq">الأسئلة الشائعة</a>
-                    <a href="#" class="lang-toggle">English</a>
+                    <a href="#features">{{ 'landing.features' | translate  | async }}</a>
+                    <a href="#how-it-works">{{ 'landing.how_it_works' | translate | async }}</a>
+                    <a href="#why-choose">{{ 'landing.why_choose' | translate | async }}</a>
+                    <a href="#faq">{{ 'landing.faq' | translate | async }}</a>
+                    <a href="#" class="lang-toggle" (click)="switchLanguage(currentLang === 'ar' ? 'en' : 'ar')">
+                        {{ currentLang === 'ar' ? 'English' : 'العربية' }}
+                    </a>
                 </div>
             </div>
         </nav>
@@ -40,8 +42,8 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>الرعاية الصحية وصلت لباب بيتك</h1>
-                <p>احجز ممرض، أو اطلب دواء، وأنت مرتاح في منزلك</p>
+                <h1>{{ 'landing.hero_title' | translate | async }}</h1>
+                <p>{{ 'landing.hero_subtitle' | translate | async }}</p>
                 <div class="app-buttons">
                     <a href="#" class="app-button">
                         <img src="img/app-store.svg" alt="App Store">
@@ -60,7 +62,7 @@
     <!-- Features section -->
     <section id="features" class="features">
         <div class="container">
-            <h2 class="section-title">مميزات proCare</h2>
+            <h2 class="section-title">{{ 'landing.features_title' | translate | async }}</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -68,8 +70,8 @@
                             <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>ممرضين مؤهلين</h3>
-                    <p>فريق من الممرضين المعتمدين والمدربين لتقديم أفضل رعاية صحية في منزلك</p>
+                    <h3>{{ 'landing.feature1_title' | translate | async }}</h3>
+                    <p>{{ 'landing.feature1_desc' | translate | async }}</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -77,8 +79,8 @@
                             <path d="M19 7H16V6C16 4.9 15.1 4 14 4H10C8.9 4 8 4.9 8 5V6H5C3.9 6 3 6.9 3 8V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V8C21 6.9 20.1 6 19 7ZM10 6H14V7H10V6ZM12 18C10.3 18 9 16.7 9 15S10.3 12 12 12S15 13.3 15 15S13.7 18 12 18Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>توصيل الأدوية</h3>
-                    <p>احصل على أدويتك من أقرب صيدلية مع خدمة التوصيل السريع والآمن</p>
+                    <h3>{{ 'landing.feature2_title' | translate | async }}</h3>
+                    <p>{{ 'landing.feature2_desc' | translate | async }}</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -86,8 +88,8 @@
                             <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>السجلات الطبية</h3>
-                    <p>احتفظ بجميع سجلاتك الطبية منظمة ومتاحة في أي وقت</p>
+                    <h3>{{ 'landing.feature3_title' | translate | async }}</h3>
+                    <p>{{ 'landing.feature3_desc' | translate | async }}</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -95,8 +97,8 @@
                             <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V8H19V19ZM7 10H17V12H7V10ZM7 14H14V16H7V14Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>حجز سهل</h3>
-                    <p>احجز موعدك بضغطة واحدة واختر الوقت المناسب لك</p>
+                    <h3>{{ 'landing.feature4_title' | translate | async }}</h3>
+                    <p>{{ 'landing.feature4_desc' | translate | async }}</p>
                 </div>
             </div>
         </div>
@@ -105,7 +107,7 @@
     <!-- How it works section -->
     <section id="how-it-works" class="how-it-works">
         <div class="container">
-            <h2 class="section-title">كيف يعمل proCare</h2>
+            <h2 class="section-title">{{ 'landing.how_it_works_title' | translate | async }}</h2>
             <div class="steps-container">
                 <div class="step">
                     <div class="step-number">1</div>
@@ -114,8 +116,8 @@
                             <path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>حمل التطبيق</h3>
-                    <p>حمل تطبيق proCare من متجر التطبيقات وأنشئ حسابك</p>
+                    <h3>{{ 'landing.step1_title' | translate | async }}</h3>
+                    <p>{{ 'landing.step1_desc' | translate | async }}</p>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
@@ -124,8 +126,8 @@
                             <path d="M9 11H7V9H9V11ZM13 11H11V9H13V11ZM17 11H15V9H17V11ZM19 4H18V2H16V4H8V2H6V4H5C3.89 4 3.01 4.9 3.01 6L3 20C3 21.1 3.89 22 5 22H19C20.1 22 21 21.1 21 20V6C21 4.9 20.1 4 19 4ZM19 20H5V9H19V20Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>احجز الخدمة</h3>
-                    <p>اختر نوع الخدمة واحجز موعدك المناسب</p>
+                    <h3>{{ 'landing.step2_title' | translate | async }}</h3>
+                    <p>{{ 'landing.step2_desc' | translate | async }}</p>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
@@ -134,8 +136,8 @@
                             <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22S22 17.52 22 12S17.52 2 12 2ZM10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>استقبل الخدمة</h3>
-                    <p>استقبل الممرض أو الدواء في منزلك في الوقت المحدد</p>
+                    <h3>{{ 'landing.step3_title' | translate | async }}</h3>
+                    <p>{{ 'landing.step3_desc' | translate | async }}</p>
                 </div>
             </div>
         </div>
@@ -144,7 +146,7 @@
     <!-- Why choose section -->
     <section id="why-choose" class="why-choose">
         <div class="container">
-            <h2 class="section-title">لماذا تختار proCare</h2>
+            <h2 class="section-title">{{ 'landing.why_choose_title' | translate | async }}</h2>
             <div class="benefits-grid">
                 <div class="benefit-card">
                     <div class="benefit-icon">
@@ -152,8 +154,8 @@
                             <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>طاقم معتمد</h3>
-                    <p>جميع الممرضين حاصلون على شهادات معتمدة ومرخصة من وزارة الصحة</p>
+                    <h3>{{ 'landing.benefit1_title' | translate | async }}</h3>
+                    <p>{{ 'landing.benefit1_desc' | translate | async }}</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
@@ -161,8 +163,8 @@
                             <path d="M18 8H17V6C17 3.24 14.76 1 12 1S7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM12 17C10.9 17 10 16.1 10 15S10.9 13 12 13S14 13.9 14 15S13.1 17 12 17ZM15.1 8H8.9V6C8.9 4.29 10.29 2.9 12 2.9S15.1 4.29 15.1 6V8Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>أمان وخصوصية</h3>
-                    <p>نحافظ على خصوصية بياناتك الطبية بأعلى معايير الأمان</p>
+                    <h3>{{ 'landing.benefit2_title' | translate | async }}</h3>
+                    <p>{{ 'landing.benefit2_desc' | translate | async }}</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
@@ -170,8 +172,8 @@
                             <path d="M20 4H4C2.89 4 2.01 4.89 2.01 6L2 18C2 19.11 2.89 20 4 20H20C21.11 20 22 19.11 22 18V6C22 4.89 21.11 4 20 4ZM20 18H4V8L12 13L20 8V18ZM12 11L4 6H20L12 11Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>دفع آمن</h3>
-                    <p>طرق دفع متعددة وآمنة تشمل البطاقات الائتمانية والدفع عند الاستلام</p>
+                    <h3>{{ 'landing.benefit3_title' | translate | async }}</h3>
+                    <p>{{ 'landing.benefit3_desc' | translate | async }}</p>
                 </div>
                 <div class="benefit-card">
                     <div class="benefit-icon">
@@ -179,8 +181,8 @@
                             <path d="M11.99 2C6.47 2 2 6.48 2 12S6.47 22 11.99 22C17.52 22 22 17.52 22 12S17.52 2 11.99 2ZM12 20C7.58 20 4 16.42 4 12S7.58 4 12 4S20 7.58 20 12S16.42 20 12 20ZM12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z" fill="#CD2C4E"/>
                         </svg>
                     </div>
-                    <h3>مواعيد مرنة</h3>
-                    <p>خدمة متاحة 24/7 مع إمكانية الحجز المسبق أو الطارئ</p>
+                    <h3>{{ 'landing.benefit4_title' | translate | async }}</h3>
+                    <p>{{ 'landing.benefit4_desc' | translate | async }}</p>
                 </div>
             </div>
         </div>
@@ -189,36 +191,36 @@
     <!-- Testimonials section -->
     <section class="testimonials">
         <div class="container">
-            <h2 class="section-title">ماذا يقول عملاؤنا</h2>
+            <h2 class="section-title">{{ 'landing.testimonials_title' | translate | async }}</h2>
             <div class="testimonials-grid">
                 <div class="testimonial-card">
                     <div class="stars">
                         <span>★★★★★</span>
                     </div>
-                    <p>"خدمة ممتازة وسريعة. الممرضة كانت محترفة جداً واهتمت بوالدتي بشكل رائع. أنصح الجميع بهذا التطبيق."</p>
+                    <p>{{ 'landing.testimonial1_text' | translate | async }}</p>
                     <div class="testimonial-author">
-                        <strong>أم محمد</strong>
-                        <span>الرياض</span>
+                        <strong>{{ 'landing.testimonial1_author' | translate | async }}</strong>
+                        <span>{{ 'landing.testimonial1_location' | translate | async }}</span>
                     </div>
                 </div>
                 <div class="testimonial-card">
                     <div class="stars">
                         <span>★★★★★</span>
                     </div>
-                    <p>"توصيل الأدوية سريع جداً ووصل في نفس اليوم. التطبيق سهل الاستخدام والأسعار معقولة."</p>
+                    <p>{{ 'landing.testimonial2_text' | translate | async }}</p>
                     <div class="testimonial-author">
-                        <strong>أحمد العلي</strong>
-                        <span>جدة</span>
+                        <strong>{{ 'landing.testimonial2_author' | translate | async }}</strong>
+                        <span>{{ 'landing.testimonial2_location' | translate | async }}</span>
                     </div>
                 </div>
                 <div class="testimonial-card">
                     <div class="stars">
                         <span>★★★★★</span>
                     </div>
-                    <p>"أفضل تطبيق للرعاية الصحية المنزلية. الطاقم مدرب ومؤهل والخدمة متاحة في أي وقت."</p>
+                    <p>{{ 'landing.testimonial3_text' | translate | async }}</p>
                     <div class="testimonial-author">
-                        <strong>فاطمة السالم</strong>
-                        <span>الدمام</span>
+                        <strong>{{ 'landing.testimonial3_author' | translate | async }}</strong>
+                        <span>{{ 'landing.testimonial3_location' | translate | async }}</span>
                     </div>
                 </div>
             </div>
@@ -284,51 +286,51 @@
     <!-- FAQ section -->
     <section id="faq" class="faq">
         <div class="container">
-            <h2 class="section-title">الأسئلة الشائعة</h2>
+            <h2 class="section-title">{{ 'landing.faq_title' | translate | async }}</h2>
             <div class="faq-container">
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3>كيف أتأكد من جودة الطاقم الطبي؟</h3>
+                        <h3>{{ 'landing.faq1_question' | translate | async }}</h3>
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>جميع الممرضين والممرضات في proCare حاصلون على شهادات معتمدة من وزارة الصحة ولديهم خبرة لا تقل عن 3 سنوات في المجال الطبي. كما نقوم بإجراء فحوصات دورية وتدريبات مستمرة لضمان أعلى مستوى من الخدمة.</p>
+                        <p>{{ 'landing.faq1_answer' | translate | async }}</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3>كم يستغرق وصول الممرض أو الدواء؟</h3>
+                        <h3>{{ 'landing.faq2_question' | translate | async }}</h3>
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>نسعى لتوفير خدمة سريعة حيث يصل الممرض خلال 30-60 دقيقة للحالات العادية، وخلال 15-30 دقيقة للحالات الطارئة. أما بالنسبة للأدوية، فيتم التوصيل خلال 2-4 ساعات حسب المنطقة.</p>
+                        <p>{{ 'landing.faq2_answer' | translate | async }}</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3>ما هي طرق الدفع المتاحة؟</h3>
+                        <h3>{{ 'landing.faq3_question' | translate | async }}</h3>
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>نقبل جميع طرق الدفع الرئيسية: البطاقات الائتمانية (فيزا، ماستركارد)، مدى، أبل باي، والدفع عند الاستلام. جميع المعاملات آمنة ومشفرة.</p>
+                        <p>{{ 'landing.faq3_answer' | translate | async }}</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3>هل يمكنني طلب أدوية بدون وصفة طبية؟</h3>
+                        <h3>{{ 'landing.faq4_question' | translate | async }}</h3>
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>نعم، يمكنك طلب الأدوية المتاحة بدون وصفة طبية. أما الأدوية التي تتطلب وصفة طبية، فيجب تحميل صورة من الوصفة الطبية المعتمدة من طبيب مرخص.</p>
+                        <p>{{ 'landing.faq4_answer' | translate | async }}</p>
                     </div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">
-                        <h3>هل الخدمة متاحة على مدار الساعة؟</h3>
+                        <h3>{{ 'landing.faq5_question' | translate | async }}</h3>
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>نعم، خدمة proCare متاحة 24/7 طوال أيام الأسبوع. يمكنك حجز موعد مسبق أو طلب خدمة طارئة في أي وقت.</p>
+                        <p>{{ 'landing.faq5_answer' | translate | async }}</p>
                     </div>
                 </div>
             </div>
@@ -339,8 +341,8 @@
     <section class="cta">
         <div class="container">
             <div class="cta-content">
-                <h2>ابدأ رحلتك مع proCare اليوم</h2>
-                <p>حمل التطبيق الآن واحصل على أفضل رعاية صحية في منزلك</p>
+                <h2>{{ 'landing.cta_title' | translate | async }}</h2>
+                <p>{{ 'landing.cta_subtitle' | translate | async }}</p>
                 <div class="app-buttons">
                     <a href="#" class="app-button">
                         <img src="img/app-store.svg" alt="App Store">
@@ -352,15 +354,15 @@
                 <div class="cta-features">
                     <div class="cta-feature">
                         <span>✓</span>
-                        <p>تحميل مجاني</p>
+                        <p>{{ 'landing.cta_feature1' | translate | async }}</p>
                     </div>
                     <div class="cta-feature">
                         <span>✓</span>
-                        <p>خدمة 24/7</p>
+                        <p>{{ 'landing.cta_feature2' | translate | async }}</p>
                     </div>
                     <div class="cta-feature">
                         <span>✓</span>
-                        <p>طاقم معتمد</p>
+                        <p>{{ 'landing.cta_feature3' | translate | async }}</p>
                     </div>
                 </div>
             </div>
@@ -372,7 +374,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">proCare</div>
-                    <p>الرعاية الصحية وصلت لباب بيتك</p>
+                    <p>{{ 'footer_tagline' | translate | async }}</p>
                     <div class="social-links">
                         <a href="#" aria-label="Facebook">📘</a>
                         <a href="#" aria-label="Twitter">🐦</a>
@@ -381,42 +383,41 @@
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h4>الخدمات</h4>
+                    <h4>{{ 'landing.services_title' | translate | async }}</h4>
                     <ul>
-                        <li><a href="#">التمريض المنزلي</a></li>
-                        <li><a href="#">توصيل الأدوية</a></li>
-                        <li><a href="#">الاستشارات الطبية</a></li>
-                        <li><a href="#">الفحوصات المنزلية</a></li>
+                        <li><a href="#">{{ 'landing.service1' | translate | async }}</a></li>
+                        <li><a href="#">{{ 'landing.service2' | translate | async }}</a></li>
+                        <li><a href="#">{{ 'landing.service3' | translate | async }}</a></li>
+                        <li><a href="#">{{ 'landing.service4' | translate | async }}</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>الدعم</h4>
+                    <h4>{{ 'landing.support_title' | translate | async }}</h4>
                     <ul>
-                        <li><a href="#">مركز المساعدة</a></li>
-                        <li><a href="#">اتصل بنا</a></li>
-                        <li><a href="#">الأسئلة الشائعة</a></li>
-                        <li><a href="#">سياسة الخصوصية</a></li>
+                        <li><a href="#">{{ 'landing.support1' | translate | async }}</a></li>
+                        <li><a href="#">{{ 'landing.support2' | translate | async }}</a></li>
+                        <li><a href="#">{{ 'landing.support3' | translate | async }}</a></li>
+                        <li><a href="#">{{ 'landing.support4' | translate | async }}</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>تواصل معنا</h4>
+                    <h4>{{ 'landing.contact_title' | translate | async }}</h4>
                     <div class="contact-info">
                         <p>📞 920000000</p>
-
-                        <p>📍 الرياض، المملكة العربية السعودية</p>
+                        <p>📍 {{ 'landing.contact_address' | translate | async }}</p>
                     </div>
                     <div class="language-switcher">
-                        <button class="lang-btn active" data-lang="ar">العربية</button>
-                        <button class="lang-btn" data-lang="en">English</button>
+                        <button class="lang-btn" [class.active]="currentLang === 'ar'" (click)="switchLanguage('ar')">العربية</button>
+                        <button class="lang-btn" [class.active]="currentLang === 'en'" (click)="switchLanguage('en')">English</button>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 proCare. جميع الحقوق محفوظة.</p>
+                <p>{{ 'landing.copyright' | translate | async }}</p>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    
 </body>
 </html>
