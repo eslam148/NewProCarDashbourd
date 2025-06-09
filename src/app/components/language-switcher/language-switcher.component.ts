@@ -20,8 +20,8 @@ import { takeUntil } from 'rxjs/operators';
   ],
   template: `
     <c-dropdown alignment="end" variant="nav-item">
-      <button [caret]="false" cDropdownToggle aria-label="Switch language" [disabled]="isChangingLanguage">
-        <svg cIcon [name]="currentLang === 'en' ? 'cilGlobeAlt' : 'cilLanguage'" size="lg"></svg>
+      <button [caret]="false" class="lang-btn active" cDropdownToggle aria-label="Switch language" [disabled]="isChangingLanguage">
+        {{currentLang === 'en' ? 'English' : 'العربية'}}
         <span *ngIf="isChangingLanguage" class="spinner-border spinner-border-sm ms-1" role="status" aria-hidden="true"></span>
       </button>
       <div cDropdownMenu>

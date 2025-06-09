@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '../../pipes/translate.pipe';
-
+import { LanguageSwitcherComponent } from '../../components/language-switcher/language-switcher.component';
 @Component({
   selector: 'app-new-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, TranslatePipe, LanguageSwitcherComponent],
   templateUrl: './new-layout.component.html',
   styleUrls: ['./new-layout.component.scss']
 })
