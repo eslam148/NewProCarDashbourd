@@ -144,12 +144,31 @@
                     </div>
                   </div>
 
-                  <!-- Phone Field (Read-only) -->
+                  <!-- Phone Field -->
                   <div class="col-md-6 mb-3">
-                    <label cLabel>{{ 'common.phone' | translate | async }}</label>
-                    <div class="form-control-plaintext">
-                      {{ userProfile.phone || 'N/A' }}
+                    <label cLabel for="phone">{{ 'common.phone' | translate | async }}</label>
+                    <input
+                      cFormControl
+                      id="phone"
+                      type="tel"
+                      formControlName="phone"
+                      [class.is-invalid]="getFieldError('phone')"
+                      [placeholder]="'profile.enterPhone' | translate | async">
+                    <div *ngIf="getFieldError('phone')" class="invalid-feedback">
+                      {{ getFieldError('phone') }}
                     </div>
+                  </div>
+
+                  <!-- Email Field (Read-only) -->
+                  <div class="col-md-6 mb-3">
+                    <label cLabel for="email">{{ 'common.email' | translate | async }}</label>
+                    <input
+                      cFormControl
+                      id="email"
+                      type="email"
+                      formControlName="email"
+                      readonly
+                      class="form-control-plaintext">
                   </div>
 
                   <!-- Role Field (Read-only) -->
@@ -193,7 +212,7 @@
       </c-card>
     </div>
 
-    <!-- Profile Statistics Card -->
+        <!-- Profile Statistics Card -->
     <div class="col-lg-4">
       <c-card class="mb-4">
         <c-card-header>
@@ -226,13 +245,28 @@
             <div>{{ userProfile.lastLogin | date:'medium' }}</div>
           </div>
 
-     
+        </c-card-body>
+      </c-card>
 
-          
-
-          
-        
-
+      <!-- Security Settings Card -->
+      <c-card class="mb-4">
+        <c-card-header>
+          <h5 class="mb-0">
+            <i class="bi bi-shield-lock me-2"></i>
+            {{ 'profile.security' | translate | async }}
+          </h5>
+        </c-card-header>
+        <c-card-body>
+          <div class="d-grid">
+            <button
+              cButton
+              color="warning"
+              variant="outline"
+              (click)="openChangePasswordModal()">
+              <i class="bi bi-key me-2"></i>
+              {{ 'profile.changePassword' | translate | async }}
+            </button>
+          </div>
         </c-card-body>
       </c-card>
     </div>
@@ -293,6 +327,118 @@
       color="primary"
       (click)="confirmSave()">
       {{ 'common.save' | translate | async }}
+    </button>
+  </c-modal-footer>
+</c-modal>
+
+<!-- Change Password Modal -->
+<c-modal
+  [visible]="showChangePasswordModal"
+  (visibleChange)="showChangePasswordModal = $event"
+  backdrop="static">
+  <c-modal-header>
+    <h4 cModalTitle>
+      <i class="bi bi-key me-2"></i>
+      {{ 'profile.changePassword' | translate | async }}
+    </h4>
+  </c-modal-header>
+  <c-modal-body>
+
+    <!-- Error Alert -->
+    <c-alert
+      *ngIf="passwordError"
+      color="danger"
+      [dismissible]="true"
+      (dismissed)="dismissPasswordError()">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      {{ passwordError }}
+    </c-alert>
+
+    <!-- Success Alert -->
+    <c-alert
+      *ngIf="passwordSuccessMessage"
+      color="success"
+      [dismissible]="true"
+      (dismissed)="dismissPasswordSuccess()">
+      <i class="bi bi-check-circle me-2"></i>
+      {{ passwordSuccessMessage }}
+    </c-alert>
+
+    <!-- Password Change Form -->
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+
+      <!-- Current Password -->
+      <div class="mb-3">
+        <label cLabel for="oldPassword">{{ 'profile.currentPassword' | translate | async }} *</label>
+        <input
+          cFormControl
+          id="oldPassword"
+          type="password"
+          formControlName="oldPassword"
+          [class.is-invalid]="getPasswordFieldError('oldPassword')"
+          [placeholder]="'profile.enterCurrentPassword' | translate | async"
+          autocomplete="current-password">
+        <div *ngIf="getPasswordFieldError('oldPassword')" class="invalid-feedback">
+          {{ getPasswordFieldError('oldPassword') }}
+        </div>
+      </div>
+
+      <!-- New Password -->
+      <div class="mb-3">
+        <label cLabel for="newPassword">{{ 'profile.newPassword' | translate | async }} *</label>
+        <input
+          cFormControl
+          id="newPassword"
+          type="password"
+          formControlName="newPassword"
+          [class.is-invalid]="getPasswordFieldError('newPassword')"
+          [placeholder]="'profile.enterNewPassword' | translate | async"
+          autocomplete="new-password">
+        <div *ngIf="getPasswordFieldError('newPassword')" class="invalid-feedback">
+          {{ getPasswordFieldError('newPassword') }}
+        </div>
+        <div class="form-text">
+          {{ 'profile.passwordRequirements' | translate | async }}
+        </div>
+      </div>
+
+      <!-- Confirm New Password -->
+      <div class="mb-3">
+        <label cLabel for="confirmPassword">{{ 'profile.confirmNewPassword' | translate | async }} *</label>
+        <input
+          cFormControl
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          [class.is-invalid]="getPasswordFieldError('confirmPassword')"
+          [placeholder]="'profile.confirmNewPassword' | translate | async"
+          autocomplete="new-password">
+        <div *ngIf="getPasswordFieldError('confirmPassword')" class="invalid-feedback">
+          {{ getPasswordFieldError('confirmPassword') }}
+        </div>
+      </div>
+
+    </form>
+  </c-modal-body>
+  <c-modal-footer>
+    <button
+      type="button"
+      cButton
+      color="secondary"
+      variant="outline"
+      (click)="closeChangePasswordModal()"
+      [disabled]="changingPassword">
+      {{ 'common.cancel' | translate | async }}
+    </button>
+    <button
+      type="button"
+      cButton
+      color="warning"
+      (click)="changePassword()"
+      [disabled]="!passwordForm.valid || changingPassword">
+      <c-spinner *ngIf="changingPassword" size="sm" class="me-1"></c-spinner>
+      <i *ngIf="!changingPassword" class="bi bi-key me-1"></i>
+      {{ 'profile.changePassword' | translate | async }}
     </button>
   </c-modal-footer>
 </c-modal>

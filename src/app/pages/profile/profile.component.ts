@@ -32,6 +32,7 @@ interface UserProfile {
   firstName: string;
   lastName: string;
   phone?: string;
+  email?: string;
   role: string;
   profilePicture?: string;
   createdAt?: string;
@@ -85,6 +86,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   // Form and data properties
   profileForm!: FormGroup;
+  passwordForm!: FormGroup;
   userProfile: UserProfile | null = null;
   userStats: UserStats = {};
   originalProfile: UserProfile | null = null;
@@ -95,6 +97,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   editMode = false;
   error: string | null = null;
   successMessage: string | null = null;
+
+  // Password change properties
+  changingPassword = false;
+  passwordError: string | null = null;
+  passwordSuccessMessage: string | null = null;
+  showChangePasswordModal = false;
 
   // File upload properties
   selectedFile: File | null = null;
@@ -119,6 +127,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private store: Store
   ) {
     this.initializeForm();
+    this.initializePasswordForm();
   }
 
   ngOnInit(): void {
@@ -135,11 +144,30 @@ export class ProfileComponent implements OnInit, OnDestroy {
       firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       phone: ['', [Validators.pattern(/^[+]?[0-9\s\-\(\)]{10,15}$/)]],
+      email: [{ value: '', disabled: true }], // Email is always disabled (read-only)
       // Add other editable fields as needed
     });
 
     // Disable form initially
     this.profileForm.disable();
+  }
+
+  private initializePasswordForm(): void {
+    this.passwordForm = this.fb.group({
+      oldPassword: ['', [Validators.required]],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  private passwordMatchValidator(formGroup: FormGroup): { [key: string]: any } | null {
+    const newPassword = formGroup.get('newPassword');
+    const confirmPassword = formGroup.get('confirmPassword');
+
+    if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
+      return { passwordMismatch: true };
+    }
+    return null;
   }
 
   private loadUserProfile(): void {
@@ -163,6 +191,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response.status === 0 && response.data) {
+            console.log('response.data',response.data);
             // Convert AdminsDto to UserProfile
             const adminData = response.data;
             this.userProfile = {
@@ -170,6 +199,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
               firstName: adminData.firstName || '',
               lastName: adminData.lastName || '',
               phone: adminData.phoneNumber,
+              email: `${adminData.firstName?.toLowerCase() || 'user'}@company.com`, // Placeholder email
               role: 'admin', // Default role
               profilePicture: adminData.imageUrl || undefined,
               isActive: true,
@@ -197,7 +227,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.profileForm.patchValue({
         firstName: this.userProfile.firstName,
         lastName: this.userProfile.lastName,
-        phone: this.userProfile.phone || ''
+        phone: this.userProfile.phone || '',
+        email: this.userProfile.email || ''
       });
     }
   }
@@ -217,6 +248,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   enableEditMode(): void {
     this.editMode = true;
     this.profileForm.enable();
+    // Keep email field disabled (read-only)
+    this.profileForm.get('email')?.disable();
     this.error = null;
     this.successMessage = null;
   }
@@ -523,5 +556,93 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.userProfile.profilePicture = undefined;
       }
     }
+  }
+
+  // Password change methods
+  openChangePasswordModal(): void {
+    this.showChangePasswordModal = true;
+    this.passwordForm.reset();
+    this.passwordError = null;
+    this.passwordSuccessMessage = null;
+  }
+
+  closeChangePasswordModal(): void {
+    this.showChangePasswordModal = false;
+    this.passwordForm.reset();
+    this.passwordError = null;
+    this.passwordSuccessMessage = null;
+  }
+
+  changePassword(): void {
+    if (this.passwordForm.valid) {
+      this.changingPassword = true;
+      this.passwordError = null;
+
+      const formData = this.passwordForm.value;
+      const changePasswordDto = {
+        oldPassword: formData.oldPassword,
+        newPassword: formData.newPassword
+      };
+
+      this.authService.ChangePassword(changePasswordDto)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response.status === 0) {
+              this.passwordSuccessMessage = 'Password changed successfully';
+              this.passwordForm.reset();
+              setTimeout(() => {
+                this.closeChangePasswordModal();
+              }, 2000);
+            } else {
+              this.passwordError = response.message || 'Failed to change password';
+            }
+            this.changingPassword = false;
+          },
+          error: (error) => {
+            console.error('Error changing password:', error);
+            this.passwordError = 'Failed to change password. Please try again.';
+            this.changingPassword = false;
+          }
+        });
+    } else {
+      this.markPasswordFormGroupTouched();
+    }
+  }
+
+  private markPasswordFormGroupTouched(): void {
+    Object.keys(this.passwordForm.controls).forEach(key => {
+      const control = this.passwordForm.get(key);
+      control?.markAsTouched();
+    });
+  }
+
+  getPasswordFieldError(fieldName: string): string | null {
+    const control = this.passwordForm.get(fieldName);
+    if (control && control.errors && control.touched) {
+      if (control.errors['required']) {
+        if (fieldName === 'oldPassword') return 'Current password is required';
+        if (fieldName === 'newPassword') return 'New password is required';
+        if (fieldName === 'confirmPassword') return 'Password confirmation is required';
+      }
+      if (control.errors['minlength']) {
+        return 'Password must be at least 6 characters long';
+      }
+    }
+
+    // Check for password mismatch
+    if (fieldName === 'confirmPassword' && this.passwordForm.errors?.['passwordMismatch'] && control?.touched) {
+      return 'Passwords do not match';
+    }
+
+    return null;
+  }
+
+  dismissPasswordError(): void {
+    this.passwordError = null;
+  }
+
+  dismissPasswordSuccess(): void {
+    this.passwordSuccessMessage = null;
   }
 }

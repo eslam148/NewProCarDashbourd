@@ -158,6 +158,15 @@
     "inactive": "غير نشط"
   },
   "profile": {
+    "security": "الأمان",
+    "passwordRequirements": "متطلبات كلمة المرور",
+    "enterCurrentPassword": "أدخل كلمة المرور الحالية",
+    "enterNewPassword": "أدخل كلمة المرور الجديدة",
+    "enterConfirmPassword": "أدخل تأكيد كلمة المرور",
+    "currentPassword": "كلمة المرور الحالية",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+    "changePassword": "تغيير كلمة المرور",
     "manageYourProfile": "إدارة معلوماتك الشخصية وإعدادات الحساب",
     "personalInformation": "المعلومات الشخصية",
     "accountInfo": "معلومات الحساب",

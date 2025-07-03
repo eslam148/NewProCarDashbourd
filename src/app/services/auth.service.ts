@@ -34,6 +34,13 @@ export class AuthService {
     return this.http.post<GenericResponse<LoginResponse>>(`${this.apiUrl}/api/Auth/Login`, loginDto);
   }
 
+  ChangePassword(changePasswordDto: { oldPassword: string; newPassword: string }): Observable<GenericResponse<any>> {
+    const token = this.getToken();
+    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Auth/ChangePassword`, changePasswordDto, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+  }
+
   Logout(): Observable<GenericResponse<any>> {
     const token: string = this.getToken() || '';
     const fcmToken = this.getFcmToken();
