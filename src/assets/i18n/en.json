@@ -164,7 +164,9 @@
     "phone": "Phone",
     "role": "Role",
     "active": "Active",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "profile": {
     "security": "Security",
@@ -192,6 +194,7 @@
     "lastName": "Last Name",
     "enterFirstName": "Enter your first name",
     "enterLastName": "Enter your last name",
+    "enterPhone": "Enter your phone number",
     "cancelConfirmation": "Are you sure you want to cancel? All unsaved changes will be lost.",
     "saveConfirmation": "Are you sure you want to save these changes?",
     "profileUpdated": "Profile updated successfully",
@@ -256,7 +259,11 @@
     "phoneError": "Phone Number Error",
     "passwordMinLength": "Password must be at least 6 characters long",
     "phoneRequired": "Phone number is required",
-    "passwordRequired": "Password is required"
+    "passwordRequired": "Password is required",
+    "currentPasswordRequired": "Current password is required",
+    "newPasswordRequired": "New password is required",
+    "confirmPasswordRequired": "Password confirmation is required",
+    "passwordMismatch": "Passwords do not match"
   },
   "admin": {
     "title": "Admins Management",

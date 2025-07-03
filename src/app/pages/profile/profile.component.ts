@@ -104,6 +104,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   passwordSuccessMessage: string | null = null;
   showChangePasswordModal = false;
 
+  // Password visibility properties
+  showOldPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+
   // File upload properties
   selectedFile: File | null = null;
   imagePreview: string | null = null;
@@ -564,6 +569,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.passwordForm.reset();
     this.passwordError = null;
     this.passwordSuccessMessage = null;
+    this.resetPasswordVisibility();
   }
 
   closeChangePasswordModal(): void {
@@ -571,6 +577,26 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.passwordForm.reset();
     this.passwordError = null;
     this.passwordSuccessMessage = null;
+    this.resetPasswordVisibility();
+  }
+
+  // Password visibility toggle methods
+  toggleOldPasswordVisibility(): void {
+    this.showOldPassword = !this.showOldPassword;
+  }
+
+  toggleNewPasswordVisibility(): void {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  private resetPasswordVisibility(): void {
+    this.showOldPassword = false;
+    this.showNewPassword = false;
+    this.showConfirmPassword = false;
   }
 
   changePassword(): void {
@@ -621,18 +647,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const control = this.passwordForm.get(fieldName);
     if (control && control.errors && control.touched) {
       if (control.errors['required']) {
-        if (fieldName === 'oldPassword') return 'Current password is required';
-        if (fieldName === 'newPassword') return 'New password is required';
-        if (fieldName === 'confirmPassword') return 'Password confirmation is required';
+        if (fieldName === 'oldPassword') return 'validation.currentPasswordRequired';
+        if (fieldName === 'newPassword') return 'validation.newPasswordRequired';
+        if (fieldName === 'confirmPassword') return 'validation.confirmPasswordRequired';
       }
       if (control.errors['minlength']) {
-        return 'Password must be at least 6 characters long';
+        return 'validation.passwordMinLength';
       }
     }
 
     // Check for password mismatch
     if (fieldName === 'confirmPassword' && this.passwordForm.errors?.['passwordMismatch'] && control?.touched) {
-      return 'Passwords do not match';
+      return 'validation.passwordMismatch';
     }
 
     return null;

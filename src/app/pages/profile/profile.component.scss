@@ -487,6 +487,258 @@
     }
   }
 
+  // Password visibility toggle styles
+  .password-input {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+
+  .password-toggle-btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 0;
+    background-color: var(--cui-input-group-addon-bg);
+    border-color: var(--cui-input-border-color);
+    color: var(--cui-body-color);
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--cui-gray-200);
+      color: var(--cui-primary);
+      border-color: var(--cui-input-border-color);
+    }
+
+    &:focus {
+      outline: 2px solid var(--cui-primary);
+      outline-offset: -2px;
+      z-index: 3;
+    }
+
+    i {
+      font-size: 1rem;
+      transition: transform 0.2s ease;
+    }
+
+    &:active i {
+      transform: scale(0.95);
+    }
+  }
+
+  // Input group adjustments
+  .input-group {
+    .password-input {
+      flex: 1;
+      min-width: 0;
+
+      &.is-invalid {
+        border-color: var(--cui-form-invalid-border-color);
+        box-shadow: 0 0 0 0.2rem rgba(var(--cui-danger-rgb), 0.25);
+        background-image: none !important; // Remove CoreUI's default validation icon
+
+        ~ .password-toggle-btn {
+          border-color: var(--cui-form-invalid-border-color);
+        }
+      }
+
+      &:focus {
+        border-color: var(--cui-input-focus-border-color);
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(var(--cui-primary-rgb), 0.25);
+        z-index: 3;
+
+        ~ .password-toggle-btn {
+          border-color: var(--cui-input-focus-border-color);
+        }
+      }
+    }
+
+    // Ensure invalid feedback is visible
+    + .invalid-feedback.d-block {
+      display: block !important;
+    }
+  }
+
+  // Fix CoreUI validation icons for all form controls (Global fix)
+  .form-control.is-invalid,
+  input.is-invalid,
+  textarea.is-invalid,
+  select.is-invalid {
+    background-image: none !important; // Remove default validation icon
+    padding-right: 0.75rem !important; // Reset right padding
+    padding-left: 0.75rem !important; // Reset left padding
+    background-position: left 0.75rem center !important; // Reset position
+  }
+
+  // Ensure validation works for input groups
+  .input-group .form-control.is-invalid,
+  .input-group input.is-invalid {
+    background-image: none !important;
+  }
+
+  // Dark mode adjustments for password toggles
+  [data-coreui-theme="dark"] & {
+    .password-toggle-btn {
+      background-color: var(--cui-input-group-addon-bg);
+      border-color: var(--cui-input-border-color);
+      color: var(--cui-body-color);
+
+      &:hover {
+        background-color: var(--cui-gray-700);
+        color: var(--cui-primary);
+      }
+    }
+  }
+
+  // RTL specific styles for password fields
+  :host-context([dir="rtl"]) {
+    .password-input {
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+      border-top-right-radius: var(--cui-border-radius) !important;
+      border-bottom-right-radius: var(--cui-border-radius) !important;
+      text-align: right;
+      direction: rtl;
+
+      &.is-invalid {
+        background-image: none !important; // Ensure no validation icon in RTL
+        padding-left: 0.75rem !important; // Reset left padding for RTL
+        padding-right: 0.75rem !important; // Reset right padding for RTL
+      }
+    }
+
+    // General form control RTL fixes
+    .form-control {
+      text-align: right;
+      direction: rtl;
+
+      &.is-invalid {
+        background-image: none !important; // Remove validation icon
+        background-position: left 0.75rem center !important; // Reset position
+        padding-left: 0.75rem !important; // Standard padding
+        padding-right: 0.75rem !important; // Standard padding
+      }
+
+      &:focus {
+        text-align: right;
+        direction: rtl;
+      }
+    }
+
+    .password-toggle-btn {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: var(--cui-border-radius);
+      border-bottom-left-radius: var(--cui-border-radius);
+      border-right: 0;
+      border-left: 1px solid var(--cui-input-border-color);
+      order: -1; // Move button to the left in RTL
+
+      // RTL icon handling
+      i {
+        transform: scaleX(-1); // Flip icon horizontally for RTL
+        display: inline-block;
+      }
+
+      &:hover i {
+        transform: scaleX(-1) scale(1.05); // Maintain flip on hover with slight scale
+      }
+
+      &:active i {
+        transform: scaleX(-1) scale(0.95); // Maintain flip on active with scale down
+      }
+    }
+
+    .input-group {
+      flex-direction: row-reverse;
+
+      .password-input:focus ~ .password-toggle-btn {
+        border-right-color: var(--cui-input-focus-border-color);
+        border-left-color: var(--cui-input-focus-border-color);
+      }
+
+      .password-input.is-invalid ~ .password-toggle-btn {
+        border-right-color: var(--cui-form-invalid-border-color);
+        border-left-color: var(--cui-form-invalid-border-color);
+      }
+    }
+
+    // Form text and labels in RTL
+    .form-text {
+      text-align: right;
+      direction: rtl;
+    }
+
+    label {
+      text-align: right;
+    }
+
+    // Modal form in RTL
+    c-modal-body {
+      form {
+        direction: rtl;
+        text-align: right;
+
+        .mb-3 {
+          text-align: right;
+        }
+
+        label {
+          text-align: right;
+          display: block;
+        }
+      }
+    }
+
+    // Profile form RTL fixes
+    .name-fields {
+      direction: rtl;
+
+      .form-control {
+        text-align: right;
+        direction: rtl;
+
+        &::placeholder {
+          text-align: right;
+          direction: rtl;
+        }
+      }
+    }
+
+    // Validation feedback RTL positioning
+    .invalid-feedback {
+      text-align: right;
+      direction: rtl;
+    }
+
+    // Labels in RTL
+    label {
+      text-align: right;
+      direction: rtl;
+    }
+
+    // Card content RTL
+    c-card-body {
+      direction: rtl;
+      text-align: right;
+    }
+  }
+
+  // Responsive password field adjustments
+  @media (max-width: 576px) {
+    .password-toggle-btn {
+      min-width: 40px;
+      padding: 0.375rem 0.5rem;
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
   // Print styles
   @media print {
     .d-flex.gap-2,
@@ -499,6 +751,10 @@
       break-inside: avoid;
       box-shadow: none !important;
       border: 1px solid #ddd !important;
+    }
+
+    .password-toggle-btn {
+      display: none !important;
     }
   }
 }

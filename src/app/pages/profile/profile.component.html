@@ -370,32 +370,52 @@
       <!-- Current Password -->
       <div class="mb-3">
         <label cLabel for="oldPassword">{{ 'profile.currentPassword' | translate | async }} *</label>
-        <input
-          cFormControl
-          id="oldPassword"
-          type="password"
-          formControlName="oldPassword"
-          [class.is-invalid]="getPasswordFieldError('oldPassword')"
-          [placeholder]="'profile.enterCurrentPassword' | translate | async"
-          autocomplete="current-password">
-        <div *ngIf="getPasswordFieldError('oldPassword')" class="invalid-feedback">
-          {{ getPasswordFieldError('oldPassword') }}
+        <div class="input-group">
+          <input
+            cFormControl
+            id="oldPassword"
+            [type]="showOldPassword ? 'text' : 'password'"
+            formControlName="oldPassword"
+            [class.is-invalid]="getPasswordFieldError('oldPassword')"
+            [placeholder]="'profile.enterCurrentPassword' | translate | async"
+            autocomplete="current-password"
+            class="password-input">
+          <button
+            type="button"
+            class="btn btn-outline-secondary password-toggle-btn"
+            (click)="toggleOldPasswordVisibility()"
+            [attr.aria-label]="showOldPassword ? ('common.hidePassword' | translate | async) : ('common.showPassword' | translate | async)">
+            <i [class]="showOldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="getPasswordFieldError('oldPassword')" class="invalid-feedback d-block">
+          {{ getPasswordFieldError('oldPassword')! | translate | async }}
         </div>
       </div>
 
       <!-- New Password -->
       <div class="mb-3">
         <label cLabel for="newPassword">{{ 'profile.newPassword' | translate | async }} *</label>
-        <input
-          cFormControl
-          id="newPassword"
-          type="password"
-          formControlName="newPassword"
-          [class.is-invalid]="getPasswordFieldError('newPassword')"
-          [placeholder]="'profile.enterNewPassword' | translate | async"
-          autocomplete="new-password">
-        <div *ngIf="getPasswordFieldError('newPassword')" class="invalid-feedback">
-          {{ getPasswordFieldError('newPassword') }}
+        <div class="input-group">
+          <input
+            cFormControl
+            id="newPassword"
+            [type]="showNewPassword ? 'text' : 'password'"
+            formControlName="newPassword"
+            [class.is-invalid]="getPasswordFieldError('newPassword')"
+            [placeholder]="'profile.enterNewPassword' | translate | async"
+            autocomplete="new-password"
+            class="password-input">
+          <button
+            type="button"
+            class="btn btn-outline-secondary password-toggle-btn"
+            (click)="toggleNewPasswordVisibility()"
+            [attr.aria-label]="showNewPassword ? ('common.hidePassword' | translate | async) : ('common.showPassword' | translate | async)">
+            <i [class]="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="getPasswordFieldError('newPassword')" class="invalid-feedback d-block">
+          {{ getPasswordFieldError('newPassword')! | translate | async }}
         </div>
         <div class="form-text">
           {{ 'profile.passwordRequirements' | translate | async }}
@@ -405,16 +425,26 @@
       <!-- Confirm New Password -->
       <div class="mb-3">
         <label cLabel for="confirmPassword">{{ 'profile.confirmNewPassword' | translate | async }} *</label>
-        <input
-          cFormControl
-          id="confirmPassword"
-          type="password"
-          formControlName="confirmPassword"
-          [class.is-invalid]="getPasswordFieldError('confirmPassword')"
-          [placeholder]="'profile.confirmNewPassword' | translate | async"
-          autocomplete="new-password">
-        <div *ngIf="getPasswordFieldError('confirmPassword')" class="invalid-feedback">
-          {{ getPasswordFieldError('confirmPassword') }}
+        <div class="input-group">
+          <input
+            cFormControl
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            [class.is-invalid]="getPasswordFieldError('confirmPassword')"
+            [placeholder]="'profile.confirmNewPassword' | translate | async"
+            autocomplete="new-password"
+            class="password-input">
+          <button
+            type="button"
+            class="btn btn-outline-secondary password-toggle-btn"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="showConfirmPassword ? ('common.hidePassword' | translate | async) : ('common.showPassword' | translate | async)">
+            <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="getPasswordFieldError('confirmPassword')" class="invalid-feedback d-block">
+          {{ getPasswordFieldError('confirmPassword')! | translate | async }}
         </div>
       </div>
 

@@ -155,7 +155,9 @@
     "phone": "الهاتف",
     "role": "الدور",
     "active": "نشط",
-    "inactive": "غير نشط"
+    "inactive": "غير نشط",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور"
   },
   "profile": {
     "security": "الأمان",
@@ -183,6 +185,7 @@
     "lastName": "الاسم الأخير",
     "enterFirstName": "أدخل اسمك الأول",
     "enterLastName": "أدخل اسمك الأخير",
+    "enterPhone": "أدخل رقم هاتفك",
     "cancelConfirmation": "هل أنت متأكد من أنك تريد الإلغاء؟ ستفقد جميع التغييرات غير المحفوظة.",
     "saveConfirmation": "هل أنت متأكد من أنك تريد حفظ هذه التغييرات؟",
     "profileUpdated": "تم تحديث الملف الشخصي بنجاح",
@@ -247,7 +250,11 @@
     "phoneError": "خطأ في رقم الهاتف",
     "passwordMinLength": "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
     "phoneRequired": "رقم الهاتف مطلوب",
-    "passwordRequired": "كلمة المرور مطلوبة"
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "currentPasswordRequired": "كلمة المرور الحالية مطلوبة",
+    "newPasswordRequired": "كلمة المرور الجديدة مطلوبة",
+    "confirmPasswordRequired": "تأكيد كلمة المرور مطلوب",
+    "passwordMismatch": "كلمة المرور وتأكيد كلمة المرور لا يتطابقان"
   },
   "admin": {
     "password":"كلمة المرور",
