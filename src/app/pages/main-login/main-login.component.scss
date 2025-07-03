@@ -353,6 +353,218 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+// Form Options (Remember Me & Forgot Password)
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem 0;
+
+  .remember-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 0.5rem;
+
+    .checkbox-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+
+      &:checked + .checkbox-custom {
+        background: linear-gradient(135deg, var(--theme-primary, #CD2C4E), var(--theme-success, #40C5AA));
+        border-color: var(--theme-primary, #CD2C4E);
+
+        &::after {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    }
+
+    .checkbox-custom {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #d1d5db;
+      border-radius: 4px;
+      background: transparent;
+      position: relative;
+      transition: all 0.3s ease;
+
+      &::after {
+        content: '\2714';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+    }
+
+    .checkbox-label {
+      font-size: 0.9rem;
+      color: #6b7280;
+      user-select: none;
+    }
+  }
+
+  .forgot-password-link {
+    background: none;
+    border: none;
+    color: var(--theme-primary, #CD2C4E);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: var(--theme-success, #40C5AA);
+      text-decoration: underline;
+    }
+
+    &:focus {
+      outline: 2px solid var(--theme-primary, #CD2C4E);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+}
+
+// Forgot Password Forms
+.forgot-password-form {
+  animation: slideIn 0.3s ease;
+
+  .forgot-password-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+
+    .back-btn {
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: none;
+      border: none;
+      color: #6b7280;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: var(--theme-primary, #CD2C4E);
+        background: rgba(205, 44, 78, 0.1);
+      }
+
+      &:focus {
+        outline: 2px solid var(--theme-primary, #CD2C4E);
+        outline-offset: 2px;
+      }
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 0.5rem 0;
+    }
+
+    p {
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Success Alert
+.success-alert {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.3s ease;
+
+  .success-icon {
+    color: #10b981;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .success-content {
+    flex: 1;
+  }
+
+  .success-message {
+    font-size: 0.85rem;
+    color: #059669;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+// OTP Input
+.otp-input {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+// Resend Button
+.resend-btn {
+  background: none;
+  border: none;
+  color: var(--theme-primary, #CD2C4E);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    color: var(--theme-success, #40C5AA);
+    background: rgba(205, 44, 78, 0.05);
+  }
+
+  &:disabled {
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: 2px solid var(--theme-primary, #CD2C4E);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @media (max-width: 768px) {
   .language-toggle {
     top: 1.5rem;
@@ -480,5 +692,62 @@
 
   .error-message {
     color: var(--theme-danger-hover, #c82333);
+  }
+
+  // Dark theme for forgot password
+  .form-options {
+    .checkbox-label {
+      color: var(--theme-text-muted, #a0aec0);
+    }
+
+    .forgot-password-link {
+      color: var(--theme-primary, #CD2C4E);
+
+      &:hover {
+        color: var(--theme-success, #40C5AA);
+      }
+    }
+  }
+
+  .forgot-password-form {
+    .forgot-password-header {
+      .back-btn {
+        color: var(--theme-text-muted, #a0aec0);
+
+        &:hover {
+          color: var(--theme-primary, #CD2C4E);
+        }
+      }
+
+      h2 {
+        color: var(--theme-text-primary, #f7fafc);
+      }
+
+      p {
+        color: var(--theme-text-muted, #a0aec0);
+      }
+    }
+  }
+
+  .success-alert {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+
+    .success-message {
+      color: #34d399;
+    }
+  }
+
+  .resend-btn {
+    color: var(--theme-primary, #CD2C4E);
+
+    &:hover:not(:disabled) {
+      color: var(--theme-success, #40C5AA);
+      background: rgba(205, 44, 78, 0.1);
+    }
+
+    &:disabled {
+      color: var(--theme-text-muted, #718096);
+    }
   }
 }

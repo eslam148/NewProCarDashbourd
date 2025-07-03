@@ -41,6 +41,26 @@ export class AuthService {
     });
   }
 
+  ForgetPassword(email: string): Observable<GenericResponse<any>> {
+    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Auth/ForgetPassword`, { email });
+  }
+
+  ResendCode(email: string): Observable<GenericResponse<any>> {
+    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Auth/ResendCode`, { email });
+  }
+
+  CheckCode(email: string, code: string): Observable<GenericResponse<any>> {
+    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Auth/CheckCode`, { email, code });
+  }
+
+  ResetPassword(email: string, newPassword: string, resetToken: string): Observable<GenericResponse<any>> {
+    return this.http.post<GenericResponse<any>>(`${this.apiUrl}/api/Auth/ResetPassword`, {
+      email,
+      newPassword,
+      resetToken
+    });
+  }
+
   Logout(): Observable<GenericResponse<any>> {
     const token: string = this.getToken() || '';
     const fcmToken = this.getFcmToken();

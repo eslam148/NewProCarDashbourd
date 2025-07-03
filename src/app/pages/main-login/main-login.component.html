@@ -43,7 +43,7 @@
 
             <!-- Form Section -->
             <div class="login-form-container">
-              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" *ngIf="forgotPasswordStep === 'login'">
 
                 <!-- Loading Spinner -->
                 <div *ngIf="loading$ | async" class="loading-container">
@@ -139,6 +139,12 @@
                     <span class="checkbox-label ms-3 ">{{ 'auth.rememberMe' | translate | async }}</span>
                   </label>
 
+                  <button
+                    type="button"
+                    class="forgot-password-link"
+                    (click)="showForgotPassword()">
+                    {{ 'auth.forgotPassword' | translate | async }}
+                  </button>
                 </div>
 
                 <!-- Submit Button -->
@@ -157,6 +163,293 @@
                 </button>
 
               </form>
+
+              <!-- Forgot Password - Email Step -->
+              <div *ngIf="forgotPasswordStep === 'email'" class="forgot-password-form">
+                <div class="forgot-password-header">
+                  <button type="button" class="back-btn" (click)="backToLogin()">
+                    <i class="bi bi-arrow-left"></i>
+                  </button>
+                  <h2>{{ 'auth.forgotPassword' | translate | async }}</h2>
+                  <p>{{ 'auth.forgotPasswordMessage' | translate | async }}</p>
+                </div>
+
+                <form [formGroup]="forgotPasswordForm" (ngSubmit)="sendOtp()">
+                  <!-- Loading Spinner -->
+                  <div *ngIf="forgotPasswordLoading" class="loading-container">
+                    <div class="modern-spinner">
+                      <div class="spinner-ring"></div>
+                      <div class="spinner-ring"></div>
+                      <div class="spinner-ring"></div>
+                    </div>
+                    <p class="loading-text">{{ 'common.loading' | translate | async }}</p>
+                  </div>
+
+                  <!-- Error/Success Messages -->
+                  <div *ngIf="forgotPasswordError" class="error-alert">
+                    <div class="error-icon">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <div class="error-content">
+                      <p class="error-message">{{ forgotPasswordError }}</p>
+                    </div>
+                  </div>
+
+                  <div *ngIf="forgotPasswordSuccess" class="success-alert">
+                    <div class="success-icon">
+                      <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="success-content">
+                      <p class="success-message">{{ forgotPasswordSuccess }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Email Field -->
+                  <div class="form-group">
+                    <label class="form-label">
+                      <i class="bi bi-envelope-fill"></i>
+                      {{ 'common.email' | translate | async }}
+                    </label>
+                    <div class="input-wrapper">
+                      <input
+                        cFormControl
+                        formControlName="email"
+                        type="email"
+                        class="modern-input"
+                        [placeholder]="'auth.emailPlaceholder' | translate | async"
+                        autocomplete="email"
+                        [ngClass]="{'error': getForgotPasswordFieldError('email')}"
+                      />
+                      <div class="input-focus-border"></div>
+                    </div>
+                    <div *ngIf="getForgotPasswordFieldError('email')" class="field-error">
+                      <i class="bi bi-exclamation-circle"></i>
+                      <span>{{ getForgotPasswordFieldError('email') }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <button
+                    style="margin-top: 10px;"
+                    type="submit"
+                    class="login-button"
+                    [disabled]="forgotPasswordForm.invalid || forgotPasswordLoading">
+                    <span class="button-content">
+                      <span class="button-text">{{ 'auth.sendOtp' | translate | async }}</span>
+                    </span>
+                  </button>
+                </form>
+              </div>
+
+              <!-- Forgot Password - OTP Step -->
+              <div *ngIf="forgotPasswordStep === 'otp'" class="forgot-password-form">
+                <div class="forgot-password-header">
+                  <button type="button" class="back-btn" (click)="backToLogin()">
+                    <i class="bi bi-arrow-left"></i>
+                  </button>
+                  <h2>{{ 'auth.verifyOtp' | translate | async }}</h2>
+                  <p>{{ 'auth.otpSentTo' | translate | async }} {{ forgotPasswordEmail }}</p>
+                </div>
+
+                <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+                  <!-- Loading Spinner -->
+                  <div *ngIf="forgotPasswordLoading" class="loading-container">
+                    <div class="modern-spinner">
+                      <div class="spinner-ring"></div>
+                      <div class="spinner-ring"></div>
+                      <div class="spinner-ring"></div>
+                    </div>
+                    <p class="loading-text">{{ 'common.loading' | translate | async }}</p>
+                  </div>
+
+                  <!-- Error/Success Messages -->
+                  <div *ngIf="forgotPasswordError" class="error-alert">
+                    <div class="error-icon">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <div class="error-content">
+                      <p class="error-message">{{ forgotPasswordError }}</p>
+                    </div>
+                  </div>
+
+                  <div *ngIf="forgotPasswordSuccess" class="success-alert">
+                    <div class="success-icon">
+                      <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="success-content">
+                      <p class="success-message">{{ forgotPasswordSuccess }}</p>
+                    </div>
+                  </div>
+
+                  <!-- OTP Field -->
+                  <div class="form-group">
+                    <label class="form-label">
+                      <i class="bi bi-shield-lock-fill"></i>
+                      {{ 'auth.otpCode' | translate | async }}
+                    </label>
+                    <div class="input-wrapper">
+                      <input
+                        cFormControl
+                        formControlName="code"
+                        type="text"
+                        class="modern-input otp-input"
+                        placeholder="000000"
+                        maxlength="6"
+                        autocomplete="one-time-code"
+                        [ngClass]="{'error': getOtpFieldError('code')}"
+                      />
+                      <div class="input-focus-border"></div>
+                    </div>
+                    <div *ngIf="getOtpFieldError('code')" class="field-error">
+                      <i class="bi bi-exclamation-circle"></i>
+                      <span>{{ getOtpFieldError('code') }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Resend OTP -->
+                  <div class="text-center mb-3">
+                    <button
+                      type="button"
+                      class="resend-btn"
+                      (click)="resendOtp()"
+                      [disabled]="otpCountdown > 0 || forgotPasswordLoading">
+                      <span *ngIf="otpCountdown > 0">
+                        {{ 'auth.resendIn' | translate | async }} {{ otpCountdown }}s
+                      </span>
+                      <span *ngIf="otpCountdown === 0">
+                        {{ 'auth.resendOtp' | translate | async }}
+                      </span>
+                    </button>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <button
+                    type="submit"
+                    class="login-button"
+                    [disabled]="otpForm.invalid || forgotPasswordLoading">
+                    <span class="button-content">
+                      <span class="button-text">{{ 'auth.verifyOtp' | translate | async }}</span>
+                    </span>
+                  </button>
+                </form>
+              </div>
+
+              <!-- Forgot Password - Reset Password Step -->
+              <div *ngIf="forgotPasswordStep === 'reset'" class="forgot-password-form">
+                <div class="forgot-password-header">
+                  <button type="button" class="back-btn" (click)="backToLogin()">
+                    <i class="bi bi-arrow-left"></i>
+                  </button>
+                  <h2>{{ 'auth.resetPassword' | translate | async }}</h2>
+                  <p>{{ 'auth.resetPasswordMessage' | translate | async }}</p>
+                </div>
+
+                <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
+                  <!-- Loading Spinner -->
+                  <div *ngIf="forgotPasswordLoading" class="loading-container">
+                    <div class="modern-spinner">
+                      <div class="spinner-ring"></div>
+                      <div class="spinner-ring"></div>
+                      <div class="spinner-ring"></div>
+                    </div>
+                    <p class="loading-text">{{ 'common.loading' | translate | async }}</p>
+                  </div>
+
+                  <!-- Error/Success Messages -->
+                  <div *ngIf="forgotPasswordError" class="error-alert">
+                    <div class="error-icon">
+                      <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <div class="error-content">
+                      <p class="error-message">{{ forgotPasswordError }}</p>
+                    </div>
+                  </div>
+
+                  <div *ngIf="forgotPasswordSuccess" class="success-alert">
+                    <div class="success-icon">
+                      <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="success-content">
+                      <p class="success-message">{{ forgotPasswordSuccess }}</p>
+                    </div>
+                  </div>
+
+                  <!-- New Password Field -->
+                  <div class="form-group">
+                    <label class="form-label">
+                      <i class="bi bi-lock-fill"></i>
+                      {{ 'auth.newPassword' | translate | async }}
+                    </label>
+                    <div class="input-wrapper password-wrapper">
+                      <input
+                        cFormControl
+                        [type]="showNewPassword ? 'text' : 'password'"
+                        formControlName="newPassword"
+                        class="modern-input password-input"
+                        [placeholder]="'auth.newPasswordPlaceholder' | translate | async"
+                        autocomplete="new-password"
+                        [ngClass]="{'error': getResetPasswordFieldError('newPassword')}"
+                      />
+                      <button
+                        type="button"
+                        class="password-toggle-btn"
+                        (click)="toggleNewPasswordVisibility()"
+                        [attr.aria-label]="showNewPassword ? 'Hide password' : 'Show password'"
+                        tabindex="-1">
+                        <i [class]="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                      </button>
+                      <div class="input-focus-border"></div>
+                    </div>
+                    <div *ngIf="getResetPasswordFieldError('newPassword')" class="field-error">
+                      <i class="bi bi-exclamation-circle"></i>
+                      <span>{{ getResetPasswordFieldError('newPassword') }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Confirm Password Field -->
+                  <div class="form-group">
+                    <label class="form-label">
+                      <i class="bi bi-lock-fill"></i>
+                      {{ 'auth.confirmPassword' | translate | async }}
+                    </label>
+                    <div class="input-wrapper password-wrapper">
+                      <input
+                        cFormControl
+                        [type]="showConfirmPassword ? 'text' : 'password'"
+                        formControlName="confirmPassword"
+                        class="modern-input password-input"
+                        [placeholder]="'auth.confirmPasswordPlaceholder' | translate | async"
+                        autocomplete="new-password"
+                        [ngClass]="{'error': getResetPasswordFieldError('confirmPassword')}"
+                      />
+                      <button
+                        type="button"
+                        class="password-toggle-btn"
+                        (click)="toggleConfirmPasswordVisibility()"
+                        [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
+                        tabindex="-1">
+                        <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                      </button>
+                      <div class="input-focus-border"></div>
+                    </div>
+                    <div *ngIf="getResetPasswordFieldError('confirmPassword')" class="field-error">
+                      <i class="bi bi-exclamation-circle"></i>
+                      <span>{{ getResetPasswordFieldError('confirmPassword') }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <button
+                    type="submit"
+                    class="login-button"
+                    [disabled]="resetPasswordForm.invalid || forgotPasswordLoading">
+                    <span class="button-content">
+                      <span class="button-text">{{ 'auth.resetPassword' | translate | async }}</span>
+                    </span>
+                  </button>
+                </form>
+              </div>
+
             </div>
 
 

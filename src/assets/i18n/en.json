@@ -248,7 +248,21 @@
     "loginFailed": "Login failed. Please try again.",
     "signInMessage": "Sign In to your account",
     "signUpMessage": "Create a new account to get started with our platform. Join us today and experience the benefits of our services.",
-    "registerNow": "Register Now!"
+    "registerNow": "Register Now!",
+    "forgotPasswordMessage": "Enter your email address and we'll send you a verification code to reset your password.",
+    "emailPlaceholder": "Enter your email address",
+    "sendOtp": "Send Verification Code",
+    "verifyOtp": "Verify Code",
+    "otpCode": "Verification Code",
+    "otpSentTo": "We've sent a 6-digit verification code to",
+    "resendOtp": "Resend Code",
+    "resendIn": "Resend in",
+    "resetPassword": "Reset Password",
+    "resetPasswordMessage": "Enter your new password to complete the reset process.",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm your new password"
   },
   "validation": {
     "required": "This field is required",

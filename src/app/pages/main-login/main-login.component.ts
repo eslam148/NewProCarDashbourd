@@ -9,6 +9,7 @@ import { login } from '../../store/auth/auth.actions';
 import { selectAuthLoading, selectAuthError, selectIsAuthenticated } from '../../store/auth/auth.selectors';
 import { selectCurrentLanguage } from '../../store/translation/translation.selectors';
 import { TranslationService } from '../../services/translation.service';
+import { AuthService } from '../../services/auth.service';
 import { Subject, takeUntil, Observable, take } from 'rxjs';
  import { NotificationService } from '../../services/Notification.service';
  import { saveFcmToken } from '../../store/auth/auth.actions';
@@ -29,6 +30,9 @@ import { Subject, takeUntil, Observable, take } from 'rxjs';
 })
 export class MainLoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
+  forgotPasswordForm: FormGroup;
+  otpForm: FormGroup;
+  resetPasswordForm: FormGroup;
   loading$: Observable<boolean>;
   error$: Observable<any>;
   isAuthenticated$: Observable<boolean>;
@@ -37,6 +41,8 @@ export class MainLoginComponent implements OnInit, OnDestroy {
 
   // Password visibility toggle
   showPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
 
   // Enhanced error handling
   loginError: string | null = null;
@@ -44,6 +50,16 @@ export class MainLoginComponent implements OnInit, OnDestroy {
 
   // Current language for toggle
   currentLanguage: string = 'en';
+
+  // Forgot password flow state
+  forgotPasswordStep: 'login' | 'email' | 'otp' | 'reset' = 'login';
+  forgotPasswordEmail: string = '';
+  resetToken: string = '';
+  forgotPasswordLoading = false;
+  forgotPasswordError: string | null = null;
+  forgotPasswordSuccess: string | null = null;
+  otpCountdown = 0;
+  private otpTimer?: any;
 
   // Egyptian phone number pattern
   private readonly EGYPT_PHONE_PATTERN = /^01[0125][0-9]{8}$/;
@@ -55,6 +71,7 @@ export class MainLoginComponent implements OnInit, OnDestroy {
     private store: Store,
     private router: Router,
     private translationService: TranslationService,
+    private authService: AuthService,
     private NotificationService : NotificationService,
    ) {
     this.loginForm = this.fb.group({
@@ -64,6 +81,19 @@ export class MainLoginComponent implements OnInit, OnDestroy {
       ]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+
+    this.forgotPasswordForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+
+    this.otpForm = this.fb.group({
+      code: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
+    });
+
+    this.resetPasswordForm = this.fb.group({
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: this.passwordMatchValidator });
 
     // Initialize observables after store is available
     this.loading$ = this.store.select(selectAuthLoading);
@@ -362,6 +392,237 @@ export class MainLoginComponent implements OnInit, OnDestroy {
         return null;
       }
     }
+    return null;
+  }
+
+  // Password match validator
+  private passwordMatchValidator(formGroup: FormGroup): { [key: string]: any } | null {
+    const newPassword = formGroup.get('newPassword');
+    const confirmPassword = formGroup.get('confirmPassword');
+
+    if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
+      return { passwordMismatch: true };
+    }
+    return null;
+  }
+
+  // Forgot Password Methods
+  showForgotPassword(): void {
+    this.forgotPasswordStep = 'email';
+    this.forgotPasswordForm.reset();
+    this.clearForgotPasswordMessages();
+  }
+
+  backToLogin(): void {
+    this.forgotPasswordStep = 'login';
+    this.clearForgotPasswordMessages();
+    this.clearOtpTimer();
+  }
+
+  sendOtp(): void {
+    if (this.forgotPasswordForm.valid) {
+      this.forgotPasswordLoading = true;
+      this.clearForgotPasswordMessages();
+
+      const email = this.forgotPasswordForm.get('email')?.value;
+      this.forgotPasswordEmail = email;
+
+      this.authService.ForgetPassword(email)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.forgotPasswordLoading = false;
+            if (response.status === 0) {
+              this.forgotPasswordStep = 'otp';
+              this.startOtpCountdown();
+              this.forgotPasswordSuccess = 'OTP sent successfully to your email';
+            } else {
+              this.forgotPasswordError = response.message || 'Failed to send OTP. Please try again.';
+            }
+          },
+          error: (error) => {
+            this.forgotPasswordLoading = false;
+            this.forgotPasswordError = 'Failed to send OTP. Please try again.';
+            console.error('Forgot password error:', error);
+          }
+        });
+    } else {
+      this.markFormGroupTouched(this.forgotPasswordForm);
+    }
+  }
+
+  verifyOtp(): void {
+    if (this.otpForm.valid) {
+      this.forgotPasswordLoading = true;
+      this.clearForgotPasswordMessages();
+
+      const code = this.otpForm.get('code')?.value;
+
+      this.authService.CheckCode(this.forgotPasswordEmail, code)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.forgotPasswordLoading = false;
+            if (response.status === 0) {
+              this.resetToken = response.data?.resetToken || code; // Use resetToken from response or fallback to code
+              this.forgotPasswordStep = 'reset';
+              this.clearOtpTimer();
+              this.forgotPasswordSuccess = 'OTP verified successfully';
+            } else {
+              this.forgotPasswordError = response.message || 'Invalid OTP. Please try again.';
+            }
+          },
+          error: (error) => {
+            this.forgotPasswordLoading = false;
+            this.forgotPasswordError = 'Invalid OTP. Please try again.';
+            console.error('OTP verification error:', error);
+          }
+        });
+    } else {
+      this.markFormGroupTouched(this.otpForm);
+    }
+  }
+
+  resendOtp(): void {
+    this.forgotPasswordLoading = true;
+    this.clearForgotPasswordMessages();
+
+    this.authService.ResendCode(this.forgotPasswordEmail)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.forgotPasswordLoading = false;
+          if (response.status === 0) {
+            this.startOtpCountdown();
+            this.forgotPasswordSuccess = 'OTP resent successfully';
+          } else {
+            this.forgotPasswordError = response.message || 'Failed to resend OTP. Please try again.';
+          }
+        },
+        error: (error) => {
+          this.forgotPasswordLoading = false;
+          this.forgotPasswordError = 'Failed to resend OTP. Please try again.';
+          console.error('Resend OTP error:', error);
+        }
+      });
+  }
+
+  resetPassword(): void {
+    if (this.resetPasswordForm.valid) {
+      this.forgotPasswordLoading = true;
+      this.clearForgotPasswordMessages();
+
+      const newPassword = this.resetPasswordForm.get('newPassword')?.value;
+
+      this.authService.ResetPassword(this.forgotPasswordEmail, newPassword, this.resetToken)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.forgotPasswordLoading = false;
+            if (response.status === 0) {
+              this.forgotPasswordSuccess = 'Password reset successfully. You can now login with your new password.';
+              setTimeout(() => {
+                this.backToLogin();
+              }, 2000);
+            } else {
+              this.forgotPasswordError = response.message || 'Failed to reset password. Please try again.';
+            }
+          },
+          error: (error) => {
+            this.forgotPasswordLoading = false;
+            this.forgotPasswordError = 'Failed to reset password. Please try again.';
+            console.error('Reset password error:', error);
+          }
+        });
+    } else {
+      this.markFormGroupTouched(this.resetPasswordForm);
+    }
+  }
+
+  // Password visibility toggles
+  toggleNewPasswordVisibility(): void {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  // Helper methods
+  private startOtpCountdown(): void {
+    this.otpCountdown = 60;
+    this.otpTimer = setInterval(() => {
+      this.otpCountdown--;
+      if (this.otpCountdown <= 0) {
+        this.clearOtpTimer();
+      }
+    }, 1000);
+  }
+
+  private clearOtpTimer(): void {
+    if (this.otpTimer) {
+      clearInterval(this.otpTimer);
+      this.otpTimer = null;
+    }
+    this.otpCountdown = 0;
+  }
+
+  private clearForgotPasswordMessages(): void {
+    this.forgotPasswordError = null;
+    this.forgotPasswordSuccess = null;
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach(key => {
+      const control = formGroup.get(key);
+      control?.markAsTouched();
+    });
+  }
+
+  // Form field error methods for forgot password
+  getForgotPasswordFieldError(fieldName: string): string | null {
+    const field = this.forgotPasswordForm.get(fieldName);
+    if (field && field.invalid && field.touched) {
+      if (field.errors?.['required']) {
+        return 'Email is required';
+      }
+      if (field.errors?.['email']) {
+        return 'Please enter a valid email address';
+      }
+    }
+    return null;
+  }
+
+  getOtpFieldError(fieldName: string): string | null {
+    const field = this.otpForm.get(fieldName);
+    if (field && field.invalid && field.touched) {
+      if (field.errors?.['required']) {
+        return 'OTP code is required';
+      }
+      if (field.errors?.['pattern']) {
+        return 'Please enter a valid 6-digit code';
+      }
+    }
+    return null;
+  }
+
+  getResetPasswordFieldError(fieldName: string): string | null {
+    const field = this.resetPasswordForm.get(fieldName);
+    if (field && field.invalid && field.touched) {
+      if (field.errors?.['required']) {
+        if (fieldName === 'newPassword') return 'New password is required';
+        if (fieldName === 'confirmPassword') return 'Password confirmation is required';
+      }
+      if (field.errors?.['minlength']) {
+        return 'Password must be at least 6 characters long';
+      }
+    }
+
+    // Check for password mismatch
+    if (fieldName === 'confirmPassword' && this.resetPasswordForm.errors?.['passwordMismatch'] && field?.touched) {
+      return 'Passwords do not match';
+    }
+
     return null;
   }
 }
