@@ -59,9 +59,9 @@ export class AuthEffects {
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(login),
-      mergeMap(({ phonenumber, password ,deviceToken }) => {
+      mergeMap(({ Email, password ,deviceToken }) => {
         const loginDto: LoginDto = {
-          PhoneNumber: phonenumber,
+          Email: Email,
           Password: password,
           deviceToken: deviceToken
         };

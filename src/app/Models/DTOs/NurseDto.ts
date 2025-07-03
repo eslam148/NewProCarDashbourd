@@ -22,5 +22,6 @@ export interface ReviewDto{
   rating: number ;
   patientName:string;
   createdAt: Date;
+  isUsedInPublic: boolean;
 }
- 
+

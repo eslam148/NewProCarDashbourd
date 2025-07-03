@@ -361,7 +361,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
       next: (response) => {
         console.log('Notifications API response:', response);
         if (response.status === 0 && response.data) {
-          const displayItems = this.convertToDisplayItems(response.data.items);
+          const displayItems = this.convertToDisplayItems(response.data.notifications.items);
 
           if (reset) {
             this.notifications = displayItems;
@@ -373,14 +373,14 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
           console.log('Processed notification display items:', displayItems);
 
           // Update pagination info
-          this.totalNotifications = response.data.totalCount || 0;
+          this.totalNotifications = response.data.notifications.totalCount || 0;
           this.hasMoreNotifications = this.notifications.length < this.totalNotifications;
 
           // Update the service observables manually if needed
           this.#notificationService.notifications$.next(this.notifications);
 
           // Update unread count
-          const unreadCount = this.notifications.filter(n => !n.isRead).length;
+          const unreadCount = response.data.unReadNotificationCount || 0;
           this.unreadCount = unreadCount;
           this.#notificationService.unreadCount$.next(unreadCount);
 
@@ -538,13 +538,13 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
       next: (response) => {
         console.log('Load more notifications response:', response);
         if (response.status === 0 && response.data) {
-          const displayItems = this.convertToDisplayItems(response.data.items);
+          const displayItems = this.convertToDisplayItems(response.data.notifications.items);
 
           // Append new notifications
           this.notifications = [...this.notifications, ...displayItems];
 
           // Update pagination info
-          this.totalNotifications = response.data.totalCount || 0;
+          this.totalNotifications = response.data.notifications.totalCount || 0;
           this.hasMoreNotifications = this.notifications.length < this.totalNotifications;
 
           console.log(`Load more completed - Total: ${this.totalNotifications}, Loaded: ${this.notifications.length}, HasMore: ${this.hasMoreNotifications}`);

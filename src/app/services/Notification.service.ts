@@ -367,7 +367,7 @@ export class NotificationService {
       next: (response) => {
         console.log('Notifications API response:', response);
         if (response.status === 0 && response.data) {
-          const displayItems = this.convertToDisplayItems(response.data.items);
+          const displayItems = this.convertToDisplayItems(response.data.notifications.items);
           console.log('Converted display items:', displayItems);
 
           // Force update the observables

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import { IconDirective } from '@coreui/icons-angular';
 import { ContainerComponent, RowComponent, ColComponent, FormControlDirective } from '@coreui/angular';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { login } from '../../store/auth/auth.actions';
@@ -11,10 +10,8 @@ import { selectAuthLoading, selectAuthError, selectIsAuthenticated } from '../..
 import { selectCurrentLanguage } from '../../store/translation/translation.selectors';
 import { TranslationService } from '../../services/translation.service';
 import { Subject, takeUntil, Observable, take } from 'rxjs';
-import { getMessaging, getToken, isSupported } from 'firebase/messaging';
-import { NotificationService } from '../../services/Notification.service';
-import { AuthService } from '../../services/auth.service';
-import { saveFcmToken } from '../../store/auth/auth.actions';
+ import { NotificationService } from '../../services/Notification.service';
+ import { saveFcmToken } from '../../store/auth/auth.actions';
 @Component({
   selector: 'app-main-login',
   standalone: true,
@@ -24,7 +21,6 @@ import { saveFcmToken } from '../../store/auth/auth.actions';
     ContainerComponent,
     RowComponent,
     ColComponent,
-
     FormControlDirective,
     TranslatePipe
   ],
@@ -60,12 +56,11 @@ export class MainLoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private translationService: TranslationService,
     private NotificationService : NotificationService,
-    private authService: AuthService
-  ) {
+   ) {
     this.loginForm = this.fb.group({
-      phonenumber: ['', [
+      Email: ['', [
         Validators.required,
-        Validators.pattern(this.EGYPT_PHONE_PATTERN)
+
       ]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
@@ -171,11 +166,11 @@ export class MainLoginComponent implements OnInit, OnDestroy {
     this.phoneError = null;
 
     if (this.loginForm.valid) {
-      const { phonenumber, password } = this.loginForm.value;
+      const { Email, password } = this.loginForm.value;
 
       // Dispatch login action with FCM token
       this.store.dispatch(login({
-        phonenumber,
+        Email,
         password,
         deviceToken: this.deviceToken
       }));
@@ -253,10 +248,10 @@ export class MainLoginComponent implements OnInit, OnDestroy {
     const field = this.loginForm.get(fieldName);
     if (field && field.invalid && field.touched) {
       if (field.errors?.['required']) {
-        return fieldName === 'phonenumber' ? 'Phone number is required' : 'Password is required';
+        return fieldName === 'Email' ? 'Email is required' : 'Password is required';
       }
       if (field.errors?.['pattern']) {
-        return 'Please enter a valid Egyptian phone number (e.g., 01012345678)';
+        return 'Please enter a valid email address.';
       }
       if (field.errors?.['minlength']) {
         return 'Password must be at least 6 characters long';

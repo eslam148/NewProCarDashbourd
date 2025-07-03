@@ -12,7 +12,7 @@ export interface User {
 
 export const login = createAction(
   '[Auth] Login',
-  props<{ phonenumber: string; password: string,deviceToken:string }>()
+  props<{ Email: string; password: string,deviceToken:string }>()
 );
 
 export const saveFcmToken = createAction(

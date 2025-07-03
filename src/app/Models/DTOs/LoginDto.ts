@@ -1,5 +1,5 @@
 export interface LoginDto {
-  PhoneNumber: string;
+  Email: string;
   Password: string;
   deviceToken:string;
 }

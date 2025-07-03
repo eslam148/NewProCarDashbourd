@@ -23,7 +23,7 @@ import { takeUntil } from 'rxjs/operators';
       <button [caret]="false" class="lang-btn" cDropdownToggle aria-label="Switch language" [disabled]="isChangingLanguage">
 
       <span class="lang-icon m-2 fw-bold"  [class.m-2]="currentLang === 'ar'">
-      {{currentLang === 'en' ? 'English' : 'العربية'}}
+      {{currentLang === 'en' ?'العربية': 'English' }}
       </span>
 
 

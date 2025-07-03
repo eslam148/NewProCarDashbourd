@@ -1,5 +1,6 @@
 {
   "common": {
+    "AddToLandingPage": "Add to Landing Page",
     "dashboard": "Dashboard",
     "settings": "Settings",
     "profile": "Profile",
@@ -406,6 +407,8 @@
     "nameEnRequired": "Specialty name in English is required"
   },
   "nurse": {
+    "addToLandingPageSuccess": "Review added to landing page successfully",
+    "addToLandingPageError": "Error adding review to landing page",
     "title": "Nurses Management",
     "image": "Image",
     "name": "Name",

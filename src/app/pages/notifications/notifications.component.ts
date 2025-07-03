@@ -159,9 +159,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.notificationService.getAllNotifications(0, 100).subscribe({
       next: (response) => {
         if (response.status === 0 && response.data) {
-          const displayItems = this.convertToDisplayItems(response.data.items);
+          const displayItems = this.convertToDisplayItems(response.data.notifications.items);
           this.allNotifications = displayItems;
-          this.totalItems = response.data.totalCount;
+          this.totalItems = response.data.notifications.totalCount;
           this.applyFilters();
         } else {
           this.error = response.message || 'Failed to load notifications';
@@ -180,7 +180,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     return notifications.map(notification => {
       let time: Date;
       const createdAt = notification.createdAt;
-      
+
       try {
         if (typeof createdAt === 'string') {
           if (createdAt.match(/[يناير|فبراير|مارس|أبريل|مايو|يونيو|يوليو|أغسطس|سبتمبر|أكتوبر|نوفمبر|ديسمبر]/)) {
@@ -359,14 +359,14 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
-    
+
     if (this.currentLanguage === 'ar') {
       // Arabic relative time formatting
       if (diffMins < 1) return 'للتو';
       if (diffMins < 60) return `منذ ${diffMins} ${diffMins === 1 ? 'دقيقة' : 'دقائق'}`;
       if (diffHours < 24) return `منذ ${diffHours} ${diffHours === 1 ? 'ساعة' : 'ساعات'}`;
       if (diffDays < 7) return `منذ ${diffDays} ${diffDays === 1 ? 'يوم' : 'أيام'}`;
-      
+
       // Format absolute date for older entries
       return time.toLocaleDateString('ar-EG', {
         year: 'numeric',
@@ -382,7 +382,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       if (diffMins < 60) return `${diffMins}m ago`;
       if (diffHours < 24) return `${diffHours}h ago`;
       if (diffDays < 7) return `${diffDays}d ago`;
-      
+
       // Format absolute date for older entries
       return time.toLocaleDateString('en-US', {
         year: 'numeric',

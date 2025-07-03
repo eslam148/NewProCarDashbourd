@@ -1,4 +1,4 @@
-// Notification DTOs based on the API response structure
+ // Notification DTOs based on the API response structure
 
 export interface NotificationDto {
   id: number;
@@ -29,6 +29,10 @@ export interface NotificationListRequest {
 }
 
 export interface NotificationListResponse {
+  notifications: notificationsModel;
+  unReadNotificationCount: number;
+}
+export interface notificationsModel{
   items: NotificationDto[];
   totalCount: number;
   pageNumber: number;
@@ -38,7 +42,6 @@ export interface NotificationListResponse {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 }
-
 export interface NotificationApiResponse {
   status: number;
   message: string;

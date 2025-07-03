@@ -1,17 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, Pipe } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AdminsDto } from '../../../Models/DTOs/AdminsDto';
 import { RegisterDto } from '../../../Models/DTOs/RegisterDto';
 import { UpdateAdminDto } from '../../../Models/DTOs/UpdateAdminDto';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
-
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 @Component({
   selector: 'app-admin-form',
   templateUrl: './admin-form.component.html',
   styleUrls: ['./admin-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ActionButtonComponent]
+  imports: [CommonModule, ReactiveFormsModule, ActionButtonComponent,TranslatePipe]
 })
 export class AdminFormComponent implements OnInit {
   @Input() admin: AdminsDto | null = null;

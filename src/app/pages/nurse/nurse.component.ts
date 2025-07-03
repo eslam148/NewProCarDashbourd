@@ -1,3 +1,4 @@
+import { LandingPageService } from './../../services/landing-page.service';
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NurseService } from '../../services/nurse.service';
@@ -54,7 +55,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private nurseService: NurseService,
-    private translate: TranslateService
+    private landingPageService: LandingPageService
   ) {
     this.form = this.fb.group({
       id: [''],
@@ -256,6 +257,20 @@ export class NurseComponent implements OnInit, AfterViewInit {
     this.isReviewsModalOpen = false;
     this.selectedNurseReviews = [];
     this.selectedNurseName = '';
+  }
+  addToLandingPage(reviewId: any) {
+    console.log('Adding nurse to landing page with reviewId:', reviewId);
+
+      this.landingPageService.addReviewToLandingPage(reviewId).subscribe({
+        next: () => {
+          this.successMessage = 'nurse.addToLandingPageSuccess';
+          this.loadNurses();
+        },
+        error: (error) => {
+          this.errorMessage = 'nurse.addToLandingPageError';
+          console.error('Error adding nurse to landing page:', error);
+        }
+      });
   }
 
   closeDeleteModal() {

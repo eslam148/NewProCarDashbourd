@@ -268,7 +268,7 @@ export class ServicecategoryComponent implements OnInit {
   showSuccess(message: string): void {
     // You can implement your preferred toast notification system here
     // Example using browser alert (replace with your toast system)
-    alert('Success: ' + message);
+
   }
 
   // Helper method to show error toast
@@ -276,7 +276,7 @@ export class ServicecategoryComponent implements OnInit {
     // You can implement your preferred toast notification system here
     console.error('Error:', message);
     // Example using browser alert (replace with your toast system)
-    alert('Error: ' + message);
+
   }
 
   submit() {
@@ -564,7 +564,8 @@ export class ServicecategoryComponent implements OnInit {
       nameAr: category.nameAr,
       nameEn: category.nameEn,
       descriptionAr: category.descriptionAr,
-      descriptionEn: category.descriptionEn
+      descriptionEn: category.descriptionEn,
+      icon: category.icon
     });
   }
 
@@ -618,5 +619,18 @@ export class ServicecategoryComponent implements OnInit {
   getPagesCount(total: number | null | undefined): number {
     if (!total || total <= 0) return 1;
     return Math.ceil(total / this.pageSize);
+  }
+   
+  onImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.selectedFile = file;
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.iconPreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 }

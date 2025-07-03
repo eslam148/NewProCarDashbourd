@@ -19,6 +19,12 @@ export const navItems: INavData[] = [
       text: 'NEW'
     }
   },
+   {
+    name: 'requests.total',
+    url: '/request',
+    iconComponent: { name: 'cil-inbox' },
+    badge: { color: 'info', text: 'NEW' }
+  },
   {
     name: 'common.notifications',
     url: '/notifications',
@@ -82,12 +88,7 @@ export const navItems: INavData[] = [
       text: 'NEW'
     }
   },
-  {
-    name: 'requests.total',
-    url: '/request',
-    iconComponent: { name: 'cil-inbox' },
-    badge: { color: 'info', text: 'NEW' }
-  },
+
   {
     name: 'nurse.title',
     url: '/nurse',
