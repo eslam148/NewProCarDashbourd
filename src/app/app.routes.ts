@@ -123,6 +123,13 @@ export const routes: Routes = [
         data: {
           title: 'Profile'
         }
+      },
+      {
+        path: 'app-version',
+        loadComponent: () => import('./pages/app-version/app-version.component').then(m => m.AppVersionComponent),
+        data: {
+          title: 'App Version'
+        }
       }
       /*,
       {

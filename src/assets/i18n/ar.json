@@ -157,7 +157,14 @@
     "active": "نشط",
     "inactive": "غير نشط",
     "showPassword": "إظهار كلمة المرور",
-    "hidePassword": "إخفاء كلمة المرور"
+    "hidePassword": "إخفاء كلمة المرور",
+    "all": "الكل",
+    "createdAt": "تاريخ الإنشاء",
+    "createdBy": "أنشئ بواسطة",
+    "noDataFound": "لا توجد بيانات",
+    "validation": {
+      "required": "هذا الحقل مطلوب"
+    }
   },
   "profile": {
     "security": "الأمان",
@@ -875,5 +882,45 @@
     "contact_title": "تواصل معنا",
     "contact_address": "الرياض، المملكة العربية السعودية",
     "copyright": "© 2024 proCare. جميع الحقوق محفوظة."
+  },
+  "appVersion": {
+    "title": "إصدارات التطبيق",
+    "subtitle": "إدارة إصدارات التطبيق الجوال وفرض التحديثات",
+    "filterSubtitle": "البحث والتصفية في إصدارات التطبيق حسب المعايير",
+    "activeFilters": "الفلاتر النشطة",
+    "addVersion": "إضافة إصدار",
+    "editVersion": "تعديل الإصدار",
+    "deleteVersion": "حذف الإصدار",
+    "forceUpdate": "فرض التحديث",
+    "versionsList": "قائمة الإصدارات",
+    "version": "الإصدار",
+    "platform": "المنصة",
+    "versionPlaceholder": "مثال: 1.0.0",
+    "versionFormat": "التنسيق: الرئيسي.الفرعي.التصحيح (مثال: 1.0.0)",
+    "selectPlatform": "اختر المنصة",
+    "forceUpdateWarning": "سيؤدي هذا إلى إجبار جميع المستخدمين على المنصة المحددة للتحديث إلى هذا الإصدار.",
+    "deleteConfirmation": "هل أنت متأكد من حذف هذا الإصدار؟",
+    "noDataFound": "لم يتم العثور على إصدارات",
+    "messages": {
+      "addSuccess": "تم إضافة الإصدار بنجاح",
+      "updateSuccess": "تم تحديث الإصدار بنجاح",
+      "deleteSuccess": "تم حذف الإصدار بنجاح",
+      "forceUpdateSuccess": "تم بدء فرض التحديث بنجاح"
+    },
+    "errors": {
+      "loadFailed": "فشل في تحميل الإصدارات",
+      "addFailed": "فشل في إضافة الإصدار",
+      "updateFailed": "فشل في تحديث الإصدار",
+      "deleteFailed": "فشل في حذف الإصدار",
+      "forceUpdateFailed": "فشل في بدء فرض التحديث"
+    },
+    "validation": {
+      "versionPattern": "يرجى إدخال تنسيق إصدار صالح (مثل: 1.0.0)"
+    },
+    "platforms": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "ويب"
+    }
   }
 }

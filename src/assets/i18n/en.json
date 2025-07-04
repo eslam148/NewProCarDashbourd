@@ -166,7 +166,14 @@
     "active": "Active",
     "inactive": "Inactive",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "all": "All",
+    "createdAt": "Created At",
+    "createdBy": "Created By",
+    "noDataFound": "No data found",
+    "validation": {
+      "required": "This field is required"
+    }
   },
   "profile": {
     "security": "Security",
@@ -869,5 +876,45 @@
     "contact_title": "Contact Us",
     "contact_address": "Riyadh, Kingdom of Saudi Arabia",
     "copyright": "© 2024 proCare. All rights reserved."
+  },
+  "appVersion": {
+    "title": "App Version",
+    "subtitle": "Manage mobile application versions and force updates",
+    "filterSubtitle": "Search and filter app versions by criteria",
+    "activeFilters": "Active Filters",
+    "addVersion": "Add Version",
+    "editVersion": "Edit Version",
+    "deleteVersion": "Delete Version",
+    "forceUpdate": "Force Update",
+    "versionsList": "Versions List",
+    "version": "Version",
+    "platform": "Platform",
+    "versionPlaceholder": "e.g., 1.0.0",
+    "versionFormat": "Format: major.minor.patch (e.g., 1.0.0)",
+    "selectPlatform": "Select Platform",
+    "forceUpdateWarning": "This will force all users on the selected platform to update to this version.",
+    "deleteConfirmation": "Are you sure you want to delete this version?",
+    "noDataFound": "No versions found",
+    "messages": {
+      "addSuccess": "Version added successfully",
+      "updateSuccess": "Version updated successfully",
+      "deleteSuccess": "Version deleted successfully",
+      "forceUpdateSuccess": "Force update initiated successfully"
+    },
+    "errors": {
+      "loadFailed": "Failed to load versions",
+      "addFailed": "Failed to add version",
+      "updateFailed": "Failed to update version",
+      "deleteFailed": "Failed to delete version",
+      "forceUpdateFailed": "Failed to initiate force update"
+    },
+    "validation": {
+      "versionPattern": "Please enter a valid version format (e.g., 1.0.0)"
+    },
+    "platforms": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web"
+    }
   }
 }

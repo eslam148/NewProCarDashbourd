@@ -106,6 +106,12 @@ export const navItems: INavData[] = [
     url: '/reports',
     iconComponent: { name: 'cil-file-medical' },
     badge: { color: 'warning', text: 'NEW' }
+  },
+  {
+    name: 'appVersion.title',
+    url: '/app-version',
+    iconComponent: { name: 'cil-mobile' },
+    badge: { color: 'info', text: 'NEW' }
   }
   /*,
 
