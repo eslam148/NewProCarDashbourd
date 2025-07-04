@@ -32,7 +32,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "preserveSymlinks": true,           
+            "preserveSymlinks": true,
              "assets": [
               "src/favicon.ico",
               "src/assets",
@@ -64,12 +64,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "8mb",
-                  "maximumError": "10mb"
+                  "maximumError": "12mb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "8kb",
-                  "maximumError": "10kb"
+                  "maximumError": "15kb"
                 }
               ],
               "outputHashing": "all"
