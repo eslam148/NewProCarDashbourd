@@ -204,7 +204,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
               firstName: adminData.firstName || '',
               lastName: adminData.lastName || '',
               phone: adminData.phoneNumber,
-              email: `${adminData.firstName?.toLowerCase() || 'user'}@company.com`, // Placeholder email
+              email: adminData.email, // Placeholder email
               role: 'admin', // Default role
               profilePicture: adminData.imageUrl || undefined,
               isActive: true,

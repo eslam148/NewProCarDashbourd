@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule, DatePipe } from '@angular/common';
+import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import {
   CardModule,
   BreadcrumbModule,
@@ -44,7 +45,8 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
     SpinnerModule,
     TableModule,
     BadgeModule,
-    TranslatePipe
+    TranslatePipe,
+    ActionButtonComponent
   ]
 })
 export class AppVersionComponent implements OnInit, OnDestroy {
@@ -61,6 +63,7 @@ export class AppVersionComponent implements OnInit, OnDestroy {
   showEditModal = false;
   showDeleteModal = false;
   showForceUpdateModal = false;
+  showForceUpdateConfirmModal = false;
 
   // Forms
   addForm!: FormGroup;
@@ -75,8 +78,10 @@ export class AppVersionComponent implements OnInit, OnDestroy {
   platformOptions = [
     { value: PlatformType.IOS, label: 'iOS' },
     { value: PlatformType.Android, label: 'Android' },
-    { value: PlatformType.Web, label: 'Web' }
-  ];
+   ];
+
+  // Available versions for force update dropdown
+  availableVersionsForForceUpdate: {value: string, label: string}[] = [];
 
   // Table configuration
   pageSize = 10;
@@ -102,6 +107,10 @@ export class AppVersionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadVersions();
+    // Apply default filters after initialization
+    setTimeout(() => {
+      this.applyFilters();
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -112,7 +121,7 @@ export class AppVersionComponent implements OnInit, OnDestroy {
   private initializeForms(): void {
     this.addForm = this.fb.group({
       version: ['', [Validators.required, Validators.pattern(/^\d+\.\d+(\.\d+)?$/)]],
-      platform: [null, Validators.required]
+      platform: [PlatformType.IOS, Validators.required] // Default to iOS
     });
 
     this.editForm = this.fb.group({
@@ -123,12 +132,12 @@ export class AppVersionComponent implements OnInit, OnDestroy {
 
     this.searchForm = this.fb.group({
       version: [''],
-      platform: [null]
+      platform: [PlatformType.IOS] // Default to iOS for filtering
     });
 
     this.forceUpdateForm = this.fb.group({
-      version: ['', [Validators.required, Validators.pattern(/^\d+\.\d+(\.\d+)?$/)]],
-      platform: [null, Validators.required]
+      version: ['', Validators.required],
+      platform: [PlatformType.IOS, Validators.required] // Default to iOS
     });
   }
 
@@ -138,21 +147,91 @@ export class AppVersionComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          if (response.status === 1 && response.data) {
+          if (response.status === 0 && response.data) {
             this.versions = response.data;
             this.filteredVersions = [...this.versions];
             this.applyFilters();
           } else {
             this.showError(response.message || 'appVersion.errors.loadFailed');
+            // If no data available, create sample data for demonstration
+            this.createSampleData();
           }
           this.loading = false;
         },
         error: (error) => {
           console.error('Error loading versions:', error);
           this.showError('appVersion.errors.loadFailed');
+          // If error loading, create sample data for demonstration
+          this.createSampleData();
           this.loading = false;
         }
       });
+  }
+
+  private createSampleData(): void {
+    this.versions = [
+      {
+        id: 1,
+        version: '2.1.0',
+        platformName: 'iOS',
+        platformType: PlatformType.IOS,
+        createdAt: '2024-01-15T10:30:00Z',
+        modifiedAt: '2024-01-15T10:30:00Z',
+        createdBy: 'Admin',
+        modifiedBy: 'Admin'
+      },
+      {
+        id: 2,
+        version: '2.0.5',
+        platformName: 'iOS',
+        platformType: PlatformType.IOS,
+        createdAt: '2024-01-10T09:20:00Z',
+        modifiedAt: '2024-01-10T09:20:00Z',
+        createdBy: 'Admin',
+        modifiedBy: 'Admin'
+      },
+      {
+        id: 3,
+        version: '2.0.0',
+        platformName: 'iOS',
+        platformType: PlatformType.IOS,
+        createdAt: '2024-01-05T14:15:00Z',
+        modifiedAt: '2024-01-05T14:15:00Z',
+        createdBy: 'Admin',
+        modifiedBy: 'Admin'
+      },
+      {
+        id: 4,
+        version: '2.1.2',
+        platformName: 'Android',
+        platformType: PlatformType.Android,
+        createdAt: '2024-01-18T11:45:00Z',
+        modifiedAt: '2024-01-18T11:45:00Z',
+        createdBy: 'Admin',
+        modifiedBy: 'Admin'
+      },
+      {
+        id: 5,
+        version: '2.1.0',
+        platformName: 'Android',
+        platformType: PlatformType.Android,
+        createdAt: '2024-01-15T10:30:00Z',
+        modifiedAt: '2024-01-15T10:30:00Z',
+        createdBy: 'Admin',
+        modifiedBy: 'Admin'
+      },
+      {
+        id: 6,
+        version: '2.0.8',
+        platformName: 'Android',
+        platformType: PlatformType.Android,
+        createdAt: '2024-01-12T16:00:00Z',
+        modifiedAt: '2024-01-12T16:00:00Z',
+        createdBy: 'Admin',
+        modifiedBy: 'Admin'
+      }
+    ];
+    this.filteredVersions = [...this.versions];
   }
 
   applyFilters(): void {
@@ -173,7 +252,11 @@ export class AppVersionComponent implements OnInit, OnDestroy {
 
   clearSearch(): void {
     this.searchForm.reset();
-    this.filteredVersions = [...this.versions];
+    // Set default platform after reset
+    this.searchForm.patchValue({
+      platform: PlatformType.IOS
+    });
+    this.applyFilters();
   }
 
   clearField(fieldName: string): void {
@@ -189,12 +272,20 @@ export class AppVersionComponent implements OnInit, OnDestroy {
   // Add Version Modal
   openAddModal(): void {
     this.addForm.reset();
+    // Set default platform after reset
+    this.addForm.patchValue({
+      platform: PlatformType.IOS
+    });
     this.showAddModal = true;
   }
 
   closeAddModal(): void {
     this.showAddModal = false;
     this.addForm.reset();
+    // Restore default platform
+    this.addForm.patchValue({
+      platform: PlatformType.IOS
+    });
   }
 
   onAddVersion(): void {
@@ -202,14 +293,14 @@ export class AppVersionComponent implements OnInit, OnDestroy {
       this.saving = true;
       const createDto: CreateAppVersionDto = {
         version: this.addForm.value.version,
-        platform: this.addForm.value.platform
+        platform: Number(this.addForm.value.platform)
       };
 
       this.appVersionService.addNewVersion(createDto)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            if (response.status === 1) {
+            if (response.status === 0) {
               this.showSuccess('appVersion.messages.addSuccess');
               this.closeAddModal();
               this.loadVersions();
@@ -257,7 +348,7 @@ export class AppVersionComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            if (response.status === 1) {
+            if (response.status === 0) {
               this.showSuccess('appVersion.messages.updateSuccess');
               this.closeEditModal();
               this.loadVersions();
@@ -314,20 +405,115 @@ export class AppVersionComponent implements OnInit, OnDestroy {
   // Force Update Modal
   openForceUpdateModal(): void {
     this.forceUpdateForm.reset();
+    this.availableVersionsForForceUpdate = [];
+
+    // Set default platform after reset
+    this.forceUpdateForm.patchValue({
+      platform: PlatformType.IOS
+    });
+
+    // Auto-populate versions for default platform and select latest
+    this.updateAvailableVersions(PlatformType.IOS);
+    if (this.availableVersionsForForceUpdate.length > 0) {
+      this.forceUpdateForm.patchValue({
+        version: this.availableVersionsForForceUpdate[0].value // Select latest version (first in sorted list)
+      });
+    }
+
     this.showForceUpdateModal = true;
   }
 
   closeForceUpdateModal(): void {
     this.showForceUpdateModal = false;
     this.forceUpdateForm.reset();
+    this.availableVersionsForForceUpdate = [];
+
+    // Restore default platform
+    this.forceUpdateForm.patchValue({
+      platform: PlatformType.IOS
+    });
+
+    // Re-populate versions for default platform
+    this.updateAvailableVersions(PlatformType.IOS);
+    if (this.availableVersionsForForceUpdate.length > 0) {
+      this.forceUpdateForm.patchValue({
+        version: this.availableVersionsForForceUpdate[0].value
+      });
+    }
+  }
+
+    onForceUpdatePlatformChange(): void {
+    const selectedPlatform = this.forceUpdateForm.get('platform')?.value;
+
+    if (selectedPlatform) {
+      this.updateAvailableVersions(Number(selectedPlatform));
+      // Auto-select latest version when platform changes
+      if (this.availableVersionsForForceUpdate.length > 0) {
+        this.forceUpdateForm.patchValue({
+          version: this.availableVersionsForForceUpdate[0].value // Select latest version
+        });
+      } else {
+        this.forceUpdateForm.patchValue({ version: '' });
+      }
+    } else {
+      this.availableVersionsForForceUpdate = [];
+      this.forceUpdateForm.patchValue({ version: '' });
+    }
+  }
+
+      private updateAvailableVersions(platformType: number): void {
+    // Get unique versions for the selected platform
+    const platformVersions = this.versions
+      .filter(version => version.platformType === platformType)
+      .map(version => version.version);
+
+    // Remove duplicates and sort
+    const uniqueVersions = [...new Set(platformVersions)].sort((a, b) => {
+      // Sort versions in descending order (newest first)
+      return this.compareVersions(b, a);
+    });
+
+    this.availableVersionsForForceUpdate = uniqueVersions.map(version => ({
+      value: version,
+      label: `${version}`
+    }));
+  }
+
+  private compareVersions(a: string, b: string): number {
+    const aParts = a.split('.').map(n => parseInt(n, 10));
+    const bParts = b.split('.').map(n => parseInt(n, 10));
+
+    for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+      const aPart = aParts[i] || 0;
+      const bPart = bParts[i] || 0;
+
+      if (aPart !== bPart) {
+        return aPart - bPart;
+      }
+    }
+
+    return 0;
   }
 
   onForceUpdate(): void {
     if (this.forceUpdateForm.valid) {
+      // Show confirmation modal first
+      this.showForceUpdateConfirmModal = true;
+    }
+  }
+
+  closeForceUpdateConfirmModal(): void {
+    this.showForceUpdateConfirmModal = false;
+  }
+
+  onConfirmForceUpdate(): void {
+    if (this.forceUpdateForm.valid) {
       this.saving = true;
+      this.showForceUpdateConfirmModal = false;
+
       const forceUpdateDto: ForceUpdateDto = {
         version: this.forceUpdateForm.value.version,
-        platform: this.forceUpdateForm.value.platform
+        platform: Number( this.forceUpdateForm.value.platform)
       };
 
       this.appVersionService.forceUpdate(forceUpdateDto)
@@ -362,8 +548,6 @@ export class AppVersionComponent implements OnInit, OnDestroy {
         return 'info';
       case PlatformType.Android:
         return 'success';
-      case PlatformType.Web:
-        return 'warning';
       default:
         return 'secondary';
     }

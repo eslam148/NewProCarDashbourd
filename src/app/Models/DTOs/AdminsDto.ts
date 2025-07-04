@@ -4,4 +4,5 @@ export interface AdminsDto {
   firstName: string;
   lastName: string;
   imageUrl: string;
+  email: string;
 }

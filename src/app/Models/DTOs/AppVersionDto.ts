@@ -34,12 +34,10 @@ export interface AppVersionSearchDto {
 
 export enum PlatformType {
   IOS = 1,
-  Android = 2,
-  Web = 3
+  Android = 2
 }
 
 export const PlatformNames = {
   [PlatformType.IOS]: 'iOS',
-  [PlatformType.Android]: 'Android',
-  [PlatformType.Web]: 'Web'
+  [PlatformType.Android]: 'Android'
 };
