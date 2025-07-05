@@ -160,6 +160,10 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
       .pipe(takeUntil(this.destroy$))
       .subscribe(lang => {
         this.currentLanguage = lang;
+        // Reload notifications when language changes to get updated content
+        if (this.#authService.isAuthenticated()) {
+          this.loadNotifications(true);
+        }
       });
 
     // Load profile data when auth user is available

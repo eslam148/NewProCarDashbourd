@@ -6,8 +6,8 @@ import { environment } from '../../environments/environment';
 
 import { initializeApp } from 'firebase/app';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { filter, take, takeUntil } from 'rxjs/operators';
 import {
   NotificationDto,
   NotificationListRequest,
@@ -17,6 +17,8 @@ import {
   NotificationType,
   NotificationTypeHelper
 } from '../Models/DTOs/NotificationDto';
+import { TranslationService } from './translation.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +27,7 @@ export class NotificationService {
   private messaging: any;
   messaging2?: Messaging;
   private apiUrl = environment.apiUrl;
+  private destroy$ = new Subject<void>();
 
   // Firebase messaging subjects
   public currentToken$ = new BehaviorSubject<string | null>(null);
@@ -36,7 +39,9 @@ export class NotificationService {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private http: HttpClient
+    private http: HttpClient,
+    private translationService: TranslationService,
+    private authService: AuthService
   ) {
     if (isPlatformBrowser(this.platformId)) {
       initializeApp(environment.firebaseConfig);
@@ -48,6 +53,16 @@ export class NotificationService {
         }
       });
     }
+
+    // Subscribe to language changes and reload notifications
+    this.translationService.getCurrentLang()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(lang => {
+        // Reload notifications when language changes to get updated content
+        if (this.authService.isAuthenticated()) {
+          this.loadNotifications();
+        }
+      });
   }
 
   async requestPermission() {
