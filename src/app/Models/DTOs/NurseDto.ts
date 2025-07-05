@@ -3,6 +3,7 @@ export interface NurseDto {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+  email: string;
   rate: number | null;
   specialization: string;
   specializationId: number;

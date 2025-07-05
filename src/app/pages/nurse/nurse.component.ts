@@ -62,6 +62,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       phoneNumber: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       specialization: ['', Validators.required],
       governorate: ['', Validators.required],
       city: ['', Validators.required],
@@ -183,6 +184,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
       if (formValue.firstName) formData.append('FirstName', formValue.firstName);
       if (formValue.lastName) formData.append('LastName', formValue.lastName);
       if (formValue.phoneNumber) formData.append('PhoneNumber', formValue.phoneNumber);
+      if (formValue.email) formData.append('Email', formValue.email);
       if (formValue.specialization) formData.append('Specialization', formValue.specialization);
       if (formValue.governorate) formData.append('Governorate', formValue.governorate);
       if (formValue.city) formData.append('City', formValue.city);

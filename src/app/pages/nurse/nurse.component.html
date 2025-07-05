@@ -27,6 +27,22 @@
         <input formControlName="phoneNumber" placeholder="{{ 'nurse.phone' | translate | async }}" class="form-control rounded-pill" />
       </div>
       <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.email' | translate | async }}</label>
+        <input
+          formControlName="email"
+          type="email"
+          placeholder="{{ 'nurse.email' | translate | async }}"
+          class="form-control rounded-pill"
+          [ngClass]="{'is-invalid': form.get('email')?.invalid && form.get('email')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.['required']">
+          {{ 'nurse.emailRequired' | translate | async }}
+        </div>
+        <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.['email']">
+          {{ 'nurse.emailInvalid' | translate | async }}
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
         <label class="form-label">{{ 'nurse.specialization' | translate | async }}</label>
         <input formControlName="specialization" placeholder="{{ 'nurse.specialization' | translate | async }}" class="form-control rounded-pill" />
       </div>
@@ -122,6 +138,7 @@
             <th>{{ 'nurse.image' | translate | async }}</th>
             <th>{{ 'nurse.name' | translate | async }}</th>
             <th>{{ 'nurse.phone' | translate | async }}</th>
+            <th>{{ 'nurse.email' | translate | async }}</th>
             <th>{{ 'nurse.specialization' | translate | async }}</th>
             <th>{{ 'nurse.governorate' | translate | async }}</th>
             <th>{{ 'nurse.city' | translate | async }}</th>
@@ -142,6 +159,7 @@
             </td>
             <td>{{ nurse.firstName }} {{ nurse.lastName }}</td>
             <td>{{ nurse.phoneNumber }}</td>
+            <td>{{ nurse.email }}</td>
             <td>{{ nurse.specialization }}</td>
             <td>{{ nurse.governorate }}</td>
             <td>{{ nurse.city }}</td>
@@ -179,7 +197,7 @@
             </td>
           </tr>
           <tr *ngIf="nurses.length === 0" class="empty-row">
-            <td colspan="9">{{ 'nurse.noData' | translate | async }}</td>
+            <td colspan="10">{{ 'nurse.noData' | translate | async }}</td>
           </tr>
         </tbody>
       </table>

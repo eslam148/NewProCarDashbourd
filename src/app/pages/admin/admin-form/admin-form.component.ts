@@ -28,6 +28,7 @@ export class AdminFormComponent implements OnInit {
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required, Validators.pattern('^01[0125][0-9]{8}$')]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', this.isEditMode ? [] : [Validators.required]]
     }, {
@@ -52,7 +53,8 @@ export class AdminFormComponent implements OnInit {
       this.adminForm.patchValue({
         firstName: this.admin.firstName,
         lastName: this.admin.lastName,
-        phoneNumber: this.admin.phoneNumber
+        phoneNumber: this.admin.phoneNumber,
+        email: this.admin.email
       });
       this.imagePreview = this.admin.imageUrl;
       this.adminForm.get('password')?.clearValidators();
@@ -80,7 +82,8 @@ export class AdminFormComponent implements OnInit {
         const updateDto: UpdateAdminDto = {
           id: this.admin.id,
           firstName: formData.firstName,
-          lastName: formData.lastName
+          lastName: formData.lastName,
+          email: formData.email
         };
         if (this.selectedImage) {
           updateDto.image = this.selectedImage;

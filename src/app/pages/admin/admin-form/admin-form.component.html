@@ -51,6 +51,23 @@
         </div>
 
         <div class="col-md-6 mb-3">
+          <label for="email" class="form-label">{{ 'common.email' | translate|async }}</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            formControlName="email"
+            [ngClass]="{'is-invalid': adminForm.get('email')?.invalid && adminForm.get('email')?.touched}"
+          >
+          <div class="invalid-feedback" *ngIf="adminForm.get('email')?.errors?.['required']">
+            {{ 'admin.emailRequired' | translate|async }}
+          </div>
+          <div class="invalid-feedback" *ngIf="adminForm.get('email')?.errors?.['email']">
+            {{ 'auth.validation.emailInvalid' | translate|async }}
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
           <label for="image" class="form-label">{{ 'admin.image' | translate|async }}</label>
           <input
             type="file"
