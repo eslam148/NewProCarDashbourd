@@ -45,9 +45,8 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
     SpinnerModule,
     TableModule,
     BadgeModule,
-    TranslatePipe,
-    ActionButtonComponent
-  ]
+    TranslatePipe
+    ]
 })
 export class AppVersionComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

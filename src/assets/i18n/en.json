@@ -173,7 +173,10 @@
     "noDataFound": "No data found",
     "validation": {
       "required": "This field is required"
-    }
+    },
+    "personalInfo": "Personal Information",
+    "accountCredentials": "Account Credentials",
+    "profileImage": "Profile Image"
   },
   "profile": {
     "security": "Security",
@@ -269,7 +272,11 @@
     "newPassword": "New Password",
     "newPasswordPlaceholder": "Enter your new password",
     "confirmPassword": "Confirm Password",
-    "confirmPasswordPlaceholder": "Confirm your new password"
+    "confirmPasswordPlaceholder": "Confirm your new password",
+    "validation": {
+      "emailInvalid": "Please enter a valid email address",
+      "phoneRequired": "Please enter a valid phone number"
+    }
   },
   "validation": {
     "required": "This field is required",
@@ -287,6 +294,7 @@
     "passwordMismatch": "Passwords do not match"
   },
   "admin": {
+    "email": "Email",
     "title": "Admins Management",
     "searchPlaceholder": "Search by name or phone number",
     "search": "Search",
@@ -307,7 +315,19 @@
     "noResults": "No admins found",
     "tryDifferentSearch": "Try different search",
     "editTooltip": "Edit Admin",
-    "deleteTooltip": "Delete Admin"
+    "deleteTooltip": "Delete Admin",
+    "passwordUpperCase": "Password must contain at least one uppercase letter",
+    "passwordLowerCase": "Password must contain at least one lowercase letter",
+    "passwordSpecialChar": "Password must contain at least one special character",
+    "passwordRequirements": "Password must be at least 8 characters long and contain uppercase, lowercase, and special characters",
+    "createAdmin": "Create Admin",
+    "editAdmin": "Edit Admin",
+    "phoneNumberRequired": "Phone number is required",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 8 characters long",
+    "passwordMismatch": "Passwords do not match",
+    "confirmPasswordRequired": "Please confirm your password"
   },
   "location": {
     "title": "Location Management",
@@ -351,7 +371,8 @@
     "tryDifferentSearch": "Try a different search term",
     "deleteSuccess": "Disease deleted successfully",
     "addSuccess": "Disease added successfully",
-    "updateSuccess": "Disease updated successfully"
+    "updateSuccess": "Disease updated successfully",
+    "update": "Update"
   },
   "serviceCategory": {
     "title": "Service Categories Management",
@@ -444,6 +465,7 @@
     "nameEnRequired": "Specialty name in English is required"
   },
   "nurse": {
+    "email": "Email",
     "addToLandingPageSuccess": "Review added to landing page successfully",
     "addToLandingPageError": "Error adding review to landing page",
     "title": "Nurses Management",
@@ -478,7 +500,32 @@
     "reviews": "Reviews",
     "reviewsFor": "Reviews for",
     "rating": "Rating",
-    "noReviews": "No reviews available for this nurse yet."
+    "noReviews": "No reviews available for this nurse yet.",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "passwordRequired": "Password is required",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordMinLength": "Password must be at least 8 characters long",
+    "passwordUpperCase": "Password must contain at least one uppercase letter",
+    "passwordLowerCase": "Password must contain at least one lowercase letter",
+    "passwordSpecialChar": "Password must contain at least one special character",
+    "passwordMismatch": "Passwords do not match",
+    "passwordRequirements": "Password must be at least 8 characters long and contain uppercase, lowercase, and special characters",
+    "personalInfo": "Personal Information",
+    "accountCredentials": "Account Credentials",
+    "professionalInfo": "Professional Information",
+    "locationInfo": "Location Information",
+    "profileImage": "Profile Image",
+    "mapLocation": "Map Location",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "phoneRequired": "Phone number is required",
+    "specializationRequired": "Specialization is required",
+    "licenseRequired": "License number is required",
+    "governorateRequired": "Governorate is required",
+    "cityRequired": "City is required"
   },
   "map": {
     "instructions": "Click on the map to select a location or drag the marker to adjust position",
@@ -499,7 +546,7 @@
     "current": "Current",
     "previous": "Previous",
     "loading": "Loading...",
-    "total": "Total Requests",
+    "total": "Requests",
     "nurse": "Nurse",
     "phone": "Phone",
     "status": "Status",
@@ -529,7 +576,8 @@
     "view": "View",
     "cancel": "Cancel",
     "confirm": "Confirm",
-    "close": "Close"
+    "close": "Close",
+    "requestDetails": "Request Details"
   },
   "REPORTS": {
     "TITLE": "Reports Management",

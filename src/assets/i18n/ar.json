@@ -164,7 +164,10 @@
     "noDataFound": "لا توجد بيانات",
     "validation": {
       "required": "هذا الحقل مطلوب"
-    }
+    },
+    "personalInfo": "المعلومات الشخصية",
+    "accountCredentials": "بيانات الحساب",
+    "profileImage": "الصورة الشخصية"
   },
   "profile": {
     "security": "الأمان",
@@ -260,7 +263,11 @@
     "newPassword": "كلمة المرور الجديدة",
     "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
     "confirmPassword": "تأكيد كلمة المرور",
-    "confirmPasswordPlaceholder": "أكد كلمة المرور الجديدة"
+    "confirmPasswordPlaceholder": "أكد كلمة المرور الجديدة",
+    "validation": {
+      "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
+      "phoneRequired": "يرجى إدخال رقم هاتف صحيح"
+    }
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
@@ -278,6 +285,7 @@
     "passwordMismatch": "كلمة المرور وتأكيد كلمة المرور لا يتطابقان"
   },
   "admin": {
+    "email": "البريد الإلكتروني",
     "password":"كلمة المرور",
     "confirmPassword":"تأكيد كلمة المرور",
     "passwordRequired":"كلمة المرور مطلوبة",
@@ -308,7 +316,23 @@
     "firstPageTooltip": "الصفحة الأولى",
     "previousPageTooltip": "الصفحة السابقة",
     "nextPageTooltip": "الصفحة التالية",
-    "lastPageTooltip": "الصفحة الأخيرة"
+    "lastPageTooltip": "الصفحة الأخيرة",
+    "passwordUpperCase": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل",
+    "passwordLowerCase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل",
+    "passwordSpecialChar": "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل",
+    "passwordRequirements": "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على أحرف كبيرة وصغيرة ورموز خاصة",
+    "createAdmin": "إنشاء مشرف",
+    "editAdmin": "تعديل المشرف",
+    "phoneNumberRequired": "رقم الهاتف مطلوب",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "passwordUpperCase": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل",
+    "passwordLowerCase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل",
+    "passwordSpecialChar": "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل",
+    "passwordRequirements": "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على أحرف كبيرة وصغيرة ورموز خاصة",
+    "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+    "passwordMismatch": "كلمات المرور غير متطابقة"
   },
   "location": {
     "title": "إدارة المواقع",
@@ -429,6 +453,7 @@
     "nameEnRequired": "اسم التخصص بالإنجليزية مطلوب"
   },
   "nurse": {
+    "email":"البريد الإلكتروني",
     "addToLandingPageSuccess": "تم إضافة التعليق إلى الصفحة الرئيسية بنجاح",
     "addToLandingPageError": "حدث خطأ أثناء إضافة التعليق إلى الصفحة الرئيسية",
     "title": "إدارة الممرضين",
@@ -463,7 +488,32 @@
     "addSuccess": "تم إضافة الممرض بنجاح",
     "deleteSuccess": "تم حذف الممرض بنجاح",
     "location": "الموقع على الخريطة",
-    "add":"اضافه ممرض"
+    "add":"اضافه ممرض",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+    "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "passwordUpperCase": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل",
+    "passwordLowerCase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل",
+    "passwordSpecialChar": "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "passwordRequirements": "يجب أن تكون كلمة المرور 8 أحرف على الأقل وتحتوي على أحرف كبيرة وصغيرة ورموز خاصة",
+    "personalInfo": "المعلومات الشخصية",
+    "accountCredentials": "بيانات الحساب",
+    "professionalInfo": "المعلومات المهنية",
+    "locationInfo": "معلومات الموقع",
+    "profileImage": "الصورة الشخصية",
+    "mapLocation": "الموقع على الخريطة",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "firstNameRequired": "الاسم الأول مطلوب",
+    "lastNameRequired": "اسم العائلة مطلوب",
+    "phoneRequired": "رقم الهاتف مطلوب",
+    "specializationRequired": "التخصص مطلوب",
+    "licenseRequired": "رقم الترخيص مطلوب",
+    "governorateRequired": "المحافظة مطلوبة",
+    "cityRequired": "المدينة مطلوبة"
   },
   "requests": {
     "title": "إدارة الطلبات",
@@ -473,7 +523,7 @@
     "current": "الحالية",
     "previous": "السابقة",
     "loading": "جاري التحميل...",
-    "total": "إجمالي الطلبات",
+    "total": "الطلبات",
     "nurse": "الممرضة",
     "phone": "الهاتف",
     "status": "الحالة",
@@ -503,7 +553,8 @@
     "view": "عرض",
     "cancel": "إلغاء",
     "confirm": "تأكيد",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "requestDetails": "تفاصيل الطلب"
   },
   "REPORTS": {
     "TITLE": "إدارة التقارير",
@@ -566,6 +617,7 @@
   "disease": {
     "title": "إدارة الأمراض",
     "searchPlaceholder": "بحث بإسم المرض",
+
     "create": "إضافة مرض",
     "nameEn": "الاسم بالإنجليزية",
     "nameAr": "الاسم بالعربية",

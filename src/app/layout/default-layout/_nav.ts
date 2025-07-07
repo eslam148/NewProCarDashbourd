@@ -13,105 +13,68 @@ export const navItems: INavData[] = [
   {
     name: 'common.profile',
     url: '/profile',
-    iconComponent: { name: 'cil-user' },
-    badge: {
-      color: 'success',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-user' }
   },
    {
     name: 'requests.total',
     url: '/request',
-    iconComponent: { name: 'cil-inbox' },
-    badge: { color: 'info', text: 'NEW' }
-  },
+    iconComponent: { name: 'cil-inbox' }
+    },
   {
     name: 'common.notifications',
     url: '/notifications',
-    iconComponent: { name: 'cil-bell' },
-    badge: {
-      color: 'danger',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-bell' }
   },
   {
     name: 'admin.title',
     url: '/admins',
-    iconComponent: { name: 'cil-user' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-user' }
   },
   {
     name: 'disease.title',
     url: '/disease',
-    iconComponent: { name: 'cil-user' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-user' }
   },
   {
     name: 'PHARMACY.TITLE',
     url: '/pharmacy',
-    iconComponent: { name: 'cil-user' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-user' }
   },
   {
     name: 'location.title',
     url: '/location',
-    iconComponent: { name: 'cil-location-pin' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-location-pin' }
   },
   {
     name: 'serviceCategory.title',
     url: '/servicecategory',
-    iconComponent: { name: 'cil-list' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-list' }
   },
   {
     name: 'specialty.title',
     url: '/specialty',
-    iconComponent: { name: 'cil-medical-cross' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    iconComponent: { name: 'cil-medical-cross' }
   },
 
   {
     name: 'nurse.title',
     url: '/nurse',
-    iconComponent: { name: 'cil-people' },
-    badge: { color: 'info', text: 'NEW' }
+    iconComponent: { name: 'cil-people' }
   },
   {
     name: 'RESERVATION.TITLE',
     url: '/reservation',
-    iconComponent: { name: 'cil-calendar-check' },
-    badge: { color: 'success', text: 'NEW' }
+    iconComponent: { name: 'cil-calendar-check' }
   },
   {
     name: 'REPORTS.TITLE',
     url: '/reports',
-    iconComponent: { name: 'cil-file-medical' },
-    badge: { color: 'warning', text: 'NEW' }
+    iconComponent: { name: 'cil-file-medical' }
   },
   {
     name: 'appVersion.title',
     url: '/app-version',
-    iconComponent: { name: 'cil-mobile' },
-    badge: { color: 'info', text: 'NEW' }
+    iconComponent: { name: 'cil-mobile' }
   }
   /*,
 

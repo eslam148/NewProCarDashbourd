@@ -75,8 +75,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   tableColumns = [
     { key: 'firstName', label: 'admin.firstName' },
     { key: 'lastName', label: 'admin.lastName' },
-    { key: 'email', label: 'admin.email' },
-    { key: 'phoneNumber', label: 'admin.phone' }
+    { key: 'phoneNumber', label: 'admin.phone' },
+
+    { key: 'email', label: 'admin.email' }
   ];
 
   constructor(

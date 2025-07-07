@@ -64,6 +64,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   pageSize = 10;
   totalItems = 0;
   totalPages = 0;
+  unreadCount = 0;
 
   // Loading and states
   loading = false;
@@ -135,8 +136,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(payload => {
         if (payload) {
-          console.log('New Firebase notification received in notifications page:', payload);
-          // Refresh notifications when new Firebase message arrives
+           // Refresh notifications when new Firebase message arrives
           this.loadNotifications();
         }
       });
@@ -162,6 +162,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           const displayItems = this.convertToDisplayItems(response.data.notifications.items);
           this.allNotifications = displayItems;
           this.totalItems = response.data.notifications.totalCount;
+          this.unreadCount = response.data.unReadNotificationCount;
           this.applyFilters();
         } else {
           this.error = response.message || 'Failed to load notifications';
@@ -342,7 +343,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   getUnreadCount(): number {
-    return this.allNotifications.filter(n => !n.isRead).length;
+    return  this.allNotifications.filter(n => !n.isRead).length;
   }
 
   getTypeDescriptionKey(type: NotificationType): string {

@@ -6,12 +6,14 @@ import { RegisterDto } from '../../../Models/DTOs/RegisterDto';
 import { UpdateAdminDto } from '../../../Models/DTOs/UpdateAdminDto';
 import { ActionButtonComponent } from '../../../shared/components/action-button/action-button.component';
 import { TranslatePipe } from '../../../pipes/translate.pipe';
+import { BootstrapIconComponent } from '../../../components/bootstrap-icon/bootstrap-icon.component';
+
 @Component({
   selector: 'app-admin-form',
   templateUrl: './admin-form.component.html',
   styleUrls: ['./admin-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ActionButtonComponent,TranslatePipe]
+  imports: [CommonModule, ReactiveFormsModule, ActionButtonComponent, TranslatePipe, BootstrapIconComponent]
 })
 export class AdminFormComponent implements OnInit {
   @Input() admin: AdminsDto | null = null;
@@ -22,6 +24,8 @@ export class AdminFormComponent implements OnInit {
   isEditMode = false;
   selectedImage: File | null = null;
   imagePreview: string | null = null;
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(private fb: FormBuilder) {
     this.adminForm = this.fb.group({
@@ -29,11 +33,43 @@ export class AdminFormComponent implements OnInit {
       lastName: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required, Validators.pattern('^01[0125][0-9]{8}$')]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', this.isEditMode ? [] : [Validators.required, Validators.minLength(6)]],
+      password: ['', this.isEditMode ? [] : [
+        Validators.required,
+        Validators.minLength(8),
+        this.passwordStrengthValidator()
+      ]],
       confirmPassword: ['', this.isEditMode ? [] : [Validators.required]]
     }, {
       validators: this.passwordMatchValidator
     });
+  }
+
+  passwordStrengthValidator(): ValidationErrors | null {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+
+      if (!value) {
+        return null;
+      }
+
+      const hasUpperCase = /[A-Z]/.test(value);
+      const hasLowerCase = /[a-z]/.test(value);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+
+      const errors: ValidationErrors = {};
+
+      if (!hasUpperCase) {
+        errors['noUpperCase'] = true;
+      }
+      if (!hasLowerCase) {
+        errors['noLowerCase'] = true;
+      }
+      if (!hasSpecialChar) {
+        errors['noSpecialChar'] = true;
+      }
+
+      return Object.keys(errors).length ? errors : null;
+    };
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -101,5 +137,13 @@ export class AdminFormComponent implements OnInit {
 
   onCancel() {
     this.cancel.emit();
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

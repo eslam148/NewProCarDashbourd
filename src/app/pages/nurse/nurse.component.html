@@ -14,18 +14,40 @@
 
   <!-- Nurse Form -->
   <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="submit()" class="mb-4 card p-3 shadow-sm">
-    <div class="row g-3 align-items-center">
+    <div class="row g-3">
+      <!-- Personal Information Section -->
+      <div class="col-12">
+        <h5 class="mb-3">{{ 'nurse.personalInfo' | translate | async }}</h5>
+      </div>
+
+      <!-- Name Fields -->
       <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.name' | translate | async }}</label>
-        <div class="input-group">
-          <input formControlName="firstName" placeholder="{{ 'nurse.name' | translate | async }}" class="form-control rounded-pill me-1" />
-          <input formControlName="lastName" placeholder="{{ 'nurse.name' | translate | async }}" class="form-control rounded-pill" />
+        <label class="form-label">{{ 'nurse.firstName' | translate | async }}</label>
+        <input
+          formControlName="firstName"
+          placeholder="{{ 'nurse.firstName' | translate | async }}"
+          class="form-control rounded-pill"
+          [ngClass]="{'is-invalid': form.get('firstName')?.invalid && form.get('firstName')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('firstName')?.errors?.['required']">
+          {{ 'nurse.firstNameRequired' | translate | async }}
         </div>
       </div>
+
       <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.phone' | translate | async }}</label>
-        <input formControlName="phoneNumber" placeholder="{{ 'nurse.phone' | translate | async }}" class="form-control rounded-pill" />
+        <label class="form-label">{{ 'nurse.lastName' | translate | async }}</label>
+        <input
+          formControlName="lastName"
+          placeholder="{{ 'nurse.lastName' | translate | async }}"
+          class="form-control rounded-pill"
+          [ngClass]="{'is-invalid': form.get('lastName')?.invalid && form.get('lastName')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('lastName')?.errors?.['required']">
+          {{ 'nurse.lastNameRequired' | translate | async }}
+        </div>
       </div>
+
+      <!-- Contact Information -->
       <div class="col-12 col-md-6">
         <label class="form-label">{{ 'nurse.email' | translate | async }}</label>
         <input
@@ -42,42 +64,181 @@
           {{ 'nurse.emailInvalid' | translate | async }}
         </div>
       </div>
+
       <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.specialization' | translate | async }}</label>
-        <input formControlName="specialization" placeholder="{{ 'nurse.specialization' | translate | async }}" class="form-control rounded-pill" />
-      </div>
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.governorate' | translate | async }}</label>
-        <input formControlName="governorate" placeholder="{{ 'nurse.governorate' | translate | async }}" class="form-control rounded-pill" />
-      </div>
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.city' | translate | async }}</label>
-        <input formControlName="city" placeholder="{{ 'nurse.city' | translate | async }}" class="form-control rounded-pill" />
-      </div>
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.license' | translate | async }}</label>
-        <input formControlName="licenseNumber" placeholder="{{ 'nurse.license' | translate | async }}" class="form-control rounded-pill" />
-      </div>
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.rate' | translate | async }}</label>
-        <input formControlName="rate" placeholder="{{ 'nurse.rate' | translate | async }}" class="form-control rounded-pill" type="number" />
-      </div>
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.image' | translate | async }}</label>
-        <input type="file" (change)="onImageSelected($event)" class="form-control rounded-pill" accept="image/*" />
-        <img *ngIf="imagePreview" [src]="imagePreview" alt="Preview" width="80" class="mt-2 rounded" />
+        <label class="form-label">{{ 'nurse.phone' | translate | async }}</label>
+        <input
+          formControlName="phoneNumber"
+          placeholder="{{ 'nurse.phone' | translate | async }}"
+          class="form-control rounded-pill"
+          [ngClass]="{'is-invalid': form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('phoneNumber')?.errors?.['required']">
+          {{ 'nurse.phoneRequired' | translate | async }}
+        </div>
       </div>
 
-      <!-- Location Section -->
+      <!-- Password Section (Only for new nurses) -->
+      <div class="col-12" *ngIf="!isEditMode">
+        <h5 class="mb-3 mt-2">{{ 'nurse.accountCredentials' | translate | async }}</h5>
+      </div>
+
+      <div class="col-12 col-md-6" *ngIf="!isEditMode">
+        <label class="form-label">{{ 'nurse.password' | translate | async }}</label>
+        <div class="input-group">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="{{ 'nurse.password' | translate | async }}"
+            class="form-control rounded-pill rounded-end"
+            [ngClass]="{'is-invalid': form.get('password')?.invalid && form.get('password')?.touched}"
+          />
+          <button class="btn btn-outline-secondary rounded-pill rounded-start" type="button" (click)="togglePasswordVisibility()">
+            <app-bootstrap-icon [name]="showPassword ? 'eye-slash' : 'eye'"></app-bootstrap-icon>
+          </button>
+          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['required']">
+            {{ 'nurse.passwordRequired' | translate | async }}
+          </div>
+          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['minlength']">
+            {{ 'nurse.passwordMinLength' | translate | async }}
+          </div>
+          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['noUpperCase']">
+            {{ 'nurse.passwordUpperCase' | translate | async }}
+          </div>
+          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['noLowerCase']">
+            {{ 'nurse.passwordLowerCase' | translate | async }}
+          </div>
+          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['noSpecialChar']">
+            {{ 'nurse.passwordSpecialChar' | translate | async }}
+          </div>
+          <small class="form-text text-muted">
+            {{ 'nurse.passwordRequirements' | translate | async }}
+          </small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6" *ngIf="!isEditMode">
+        <label class="form-label">{{ 'nurse.confirmPassword' | translate | async }}</label>
+        <div class="input-group">
+          <input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            placeholder="{{ 'nurse.confirmPassword' | translate | async }}"
+            class="form-control rounded-pill rounded-end"
+            [ngClass]="{'is-invalid': form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched}"
+          />
+          <button class="btn btn-outline-secondary rounded-pill rounded-start" type="button" (click)="toggleConfirmPasswordVisibility()">
+            <app-bootstrap-icon [name]="showConfirmPassword ? 'eye-slash' : 'eye'"></app-bootstrap-icon>
+          </button>
+          <div class="invalid-feedback" *ngIf="form.get('confirmPassword')?.errors?.['required']">
+            {{ 'nurse.confirmPasswordRequired' | translate | async }}
+          </div>
+          <div class="invalid-feedback" *ngIf="form.get('confirmPassword')?.errors?.['passwordMismatch']">
+            {{ 'nurse.passwordMismatch' | translate | async }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional Information Section -->
       <div class="col-12">
+        <h5 class="mb-3 mt-2">{{ 'nurse.professionalInfo' | translate | async }}</h5>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.specialization' | translate | async }}</label>
+        <input
+          formControlName="specialization"
+          placeholder="{{ 'nurse.specialization' | translate | async }}"
+          class="form-control rounded-pill"
+          [ngClass]="{'is-invalid': form.get('specialization')?.invalid && form.get('specialization')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('specialization')?.errors?.['required']">
+          {{ 'nurse.specializationRequired' | translate | async }}
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.license' | translate | async }}</label>
+        <input
+          formControlName="licenseNumber"
+          placeholder="{{ 'nurse.license' | translate | async }}"
+          class="form-control rounded-pill"
+          [ngClass]="{'is-invalid': form.get('licenseNumber')?.invalid && form.get('licenseNumber')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('licenseNumber')?.errors?.['required']">
+          {{ 'nurse.licenseRequired' | translate | async }}
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.rate' | translate | async }}</label>
+        <input
+          formControlName="rate"
+          placeholder="{{ 'nurse.rate' | translate | async }}"
+          class="form-control rounded-pill"
+          type="number"
+          [ngClass]="{'is-invalid': form.get('rate')?.invalid && form.get('rate')?.touched}"
+        />
+      </div>
+
+      <!-- Location Information Section -->
+      <div class="col-12">
+        <h5 class="mb-3 mt-2">{{ 'nurse.locationInfo' | translate | async }}</h5>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.governorate' | translate | async }}</label>
+        <input
+          formControlName="governorate"
+          placeholder="{{ 'nurse.governorate' | translate | async }}"
+          class="form-control rounded-pill"
+          [ngClass]="{'is-invalid': form.get('governorate')?.invalid && form.get('governorate')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('governorate')?.errors?.['required']">
+          {{ 'nurse.governorateRequired' | translate | async }}
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.city' | translate | async }}</label>
+        <input
+          formControlName="city"
+          placeholder="{{ 'nurse.city' | translate | async }}"
+          class="form-control rounded-pill"
+          [ngClass]="{'is-invalid': form.get('city')?.invalid && form.get('city')?.touched}"
+        />
+        <div class="invalid-feedback" *ngIf="form.get('city')?.errors?.['required']">
+          {{ 'nurse.cityRequired' | translate | async }}
+        </div>
+      </div>
+
+      <!-- Image Upload Section -->
+      <div class="col-12">
+        <h5 class="mb-3 mt-2">{{ 'nurse.profileImage' | translate | async }}</h5>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.image' | translate | async }}</label>
+        <input
+          type="file"
+          (change)="onImageSelected($event)"
+          class="form-control rounded-pill"
+          accept="image/*"
+        />
+        <div class="mt-2" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Preview" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+        </div>
+      </div>
+
+      <!-- Map Section -->
+      <div class="col-12">
+        <h5 class="mb-3 mt-2">{{ 'nurse.mapLocation' | translate | async }}</h5>
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <label class="form-label mb-0">{{ 'nurse.location' | translate | async }}</label>
           <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" (click)="toggleMap()">
             {{ showMap ? ('map.hideMap' | translate | async) : ('map.showMap' | translate | async) }}
           </button>
         </div>
 
-        <!-- Map Selector with improved visibility handling -->
         <div class="map-wrapper mb-3" [ngClass]="{'d-block': showMap, 'd-none': !showMap}">
           <app-map-selector
             [initialLatitude]="form.get('latitude')?.value"
@@ -88,7 +249,6 @@
           ></app-map-selector>
         </div>
 
-        <!-- Coordinates Display -->
         <div class="row g-2" *ngIf="form.get('latitude')?.value || form.get('longitude')?.value">
           <div class="col-6">
             <div class="input-group input-group-sm">
@@ -104,25 +264,28 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="mt-3 d-flex flex-column flex-md-row gap-2">
-      <app-action-button
-        color="primary"
-        type="submit"
-        [icon]="isEditMode ? 'cilPencil' : 'cilPlus'"
-        [text]="isEditMode ? 'nurse.edit' : 'common.add'"
-        shape="rounded-pill"
-        [disabled]="form.invalid"
-      ></app-action-button>
+      <!-- Form Actions -->
+      <div class="col-12">
+        <div class="mt-3 d-flex flex-column flex-md-row gap-2">
+          <app-action-button
+            color="primary"
+            type="submit"
+            [icon]="isEditMode ? 'cilPencil' : 'cilPlus'"
+            [text]="isEditMode ? 'nurse.edit' : 'common.add'"
+            shape="rounded-pill"
+            [disabled]="form.invalid"
+          ></app-action-button>
 
-      <app-action-button
-        color="secondary"
-        icon="cilX"
-        text="common.cancel"
-        shape="rounded-pill"
-        (clicked)="cancel()"
-      ></app-action-button>
+          <app-action-button
+            color="secondary"
+            icon="cilX"
+            text="common.cancel"
+            shape="rounded-pill"
+            (clicked)="cancel()"
+          ></app-action-button>
+        </div>
+      </div>
     </div>
   </form>
 

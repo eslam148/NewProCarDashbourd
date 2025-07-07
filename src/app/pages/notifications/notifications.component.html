@@ -18,10 +18,10 @@
     <p class="text-body-secondary mb-0">
       {{ 'notifications.manageAllNotifications' | translate | async }}
       <c-badge
-        *ngIf="getUnreadCount() > 0"
+        *ngIf="unreadCount > 0"
         color="danger"
         class="ms-2">
-        {{ getUnreadCount() }} {{ 'notifications.unread' | translate | async }}
+        {{ unreadCount }} {{ 'notifications.unread' | translate | async }}
       </c-badge>
     </p>
   </div>

@@ -1,6 +1,6 @@
 import { LandingPageService } from './../../services/landing-page.service';
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NurseService } from '../../services/nurse.service';
 import { NurseDto, ReviewDto } from '../../Models/DTOs/NurseDto';
 import { TranslatePipe } from '../../pipes/translate.pipe';
@@ -11,6 +11,7 @@ import { PaginationModule } from '@coreui/angular';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { MapSelectorComponent } from '../../shared/components/map-selector/map-selector.component';
 import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
+import { BootstrapIconComponent } from '../../components/bootstrap-icon/bootstrap-icon.component';
 
 @Component({
   selector: 'app-nurse',
@@ -24,7 +25,8 @@ import { ActionButtonComponent } from '../../shared/components/action-button/act
     PaginationModule,
     PaginationComponent,
     MapSelectorComponent,
-    ActionButtonComponent
+    ActionButtonComponent,
+    BootstrapIconComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
@@ -47,6 +49,8 @@ export class NurseComponent implements OnInit, AfterViewInit {
   pageSize = 10;
   totalCount = 0;
   imagePreview: string | ArrayBuffer | null = null;
+  showPassword = false;
+  showConfirmPassword = false;
 
   // Map-related properties
   showMap = false;
@@ -63,6 +67,12 @@ export class NurseComponent implements OnInit, AfterViewInit {
       lastName: ['', Validators.required],
       phoneNumber: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      password: ['', this.isEditMode ? [] : [
+        Validators.required,
+        Validators.minLength(8),
+        this.passwordStrengthValidator()
+      ]],
+      confirmPassword: ['', this.isEditMode ? [] : [Validators.required]],
       specialization: ['', Validators.required],
       governorate: ['', Validators.required],
       city: ['', Validators.required],
@@ -75,6 +85,8 @@ export class NurseComponent implements OnInit, AfterViewInit {
       latitude: [''],
       longitude: [''],
       medicalLicense: ['']
+    }, {
+      validators: this.passwordMatchValidator
     });
   }
 
@@ -303,5 +315,52 @@ export class NurseComponent implements OnInit, AfterViewInit {
     if (imgElement) {
       imgElement.src = this.defaultAvatarPath;
     }
+  }
+
+  passwordStrengthValidator(): ValidationErrors | null {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+
+      if (!value) {
+        return null;
+      }
+
+      const hasUpperCase = /[A-Z]/.test(value);
+      const hasLowerCase = /[a-z]/.test(value);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+
+      const errors: ValidationErrors = {};
+
+      if (!hasUpperCase) {
+        errors['noUpperCase'] = true;
+      }
+      if (!hasLowerCase) {
+        errors['noLowerCase'] = true;
+      }
+      if (!hasSpecialChar) {
+        errors['noSpecialChar'] = true;
+      }
+
+      return Object.keys(errors).length ? errors : null;
+    };
+  }
+
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    }
+    return null;
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }
