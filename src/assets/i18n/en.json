@@ -67,7 +67,6 @@
     "markAllRead": "Mark All Read",
     "noNotifications": "No notifications",
     "viewAll": "View All",
-    "loading": "Loading...",
     "notificationTypes": {
       "newRequest": "New Request",
       "requestAccepted": "Request Accepted",
@@ -218,22 +217,29 @@
     "phoneInvalid": "Please enter a valid phone number"
   },
   "notifications": {
-    "manageAllNotifications": "Manage all your notifications",
+    "title": "Notifications",
+    "manageAllNotifications": "Manage your notifications",
     "unread": "unread",
     "searchPlaceholder": "Search notifications...",
     "filterByType": "Filter by Type",
     "filterByStatus": "Filter by Status",
-    "noNotificationsFound": "No notifications found",
+    "noNotificationsFound": "No Notifications Found",
     "tryDifferentFilters": "Try adjusting your filters or search terms",
     "noNotificationsYet": "You don't have any notifications yet",
     "clearFilters": "Clear Filters",
     "showingResults": "Showing",
-    "pageSize": "Page size",
+    "pageSize": "Items per page",
     "new": "New",
     "markRead": "Mark as Read",
     "read": "Read",
     "allTypes": "All Types",
-    "allStatus": "All Status"
+    "allStatus": "All Status",
+    "timeFormat": {
+      "justNow": "Just now",
+      "minutesAgo": "{0}m ago",
+      "hoursAgo": "{0}h ago",
+      "daysAgo": "{0}d ago"
+    }
   },
   "theme": {
     "light": "Light",

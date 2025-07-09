@@ -209,22 +209,22 @@
     "phoneInvalid": "يرجى إدخال رقم هاتف صالح"
   },
   "notifications": {
-    "manageAllNotifications": "إدارة جميع الإشعارات",
+    "title": "الإشعارات",
+    "manageAllNotifications": "إدارة الإشعارات الخاصة بك",
     "unread": "غير مقروء",
-    "searchPlaceholder": "البحث في الإشعارات...",
-    "filterByType": "تصفية حسب النوع",
-    "filterByStatus": "تصفية حسب الحالة",
-    "noNotificationsFound": "لم يتم العثور على إشعارات",
-    "tryDifferentFilters": "جرب تعديل المرشحات أو مصطلحات البحث",
-    "noNotificationsYet": "ليس لديك أي إشعارات بعد",
-    "clearFilters": "مسح المرشحات",
+    "noNotificationsFound": "لا توجد إشعارات",
+    "noNotificationsYet": "ليس لديك أي إشعارات حتى الآن",
     "showingResults": "عرض",
-    "pageSize": "حجم الصفحة",
+    "pageSize": "عدد العناصر في الصفحة",
     "new": "جديد",
     "markRead": "تحديد كمقروء",
     "read": "مقروء",
-    "allTypes": "جميع الأنواع",
-    "allStatus": "جميع الحالات"
+    "timeFormat": {
+      "justNow": "الآن",
+      "minutesAgo": "منذ {0} دقيقة",
+      "hoursAgo": "منذ {0} ساعة",
+      "daysAgo": "منذ {0} يوم"
+    }
   },
   "theme": {
     "light": "فاتح",

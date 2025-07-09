@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, Observable, map } from 'rxjs';
 
 // CoreUI imports
 import {
@@ -21,7 +21,8 @@ import { NotificationService } from '../../services/Notification.service';
 import { TranslationService } from '../../services/translation.service';
 import {
   NotificationDisplayItem,
-  NotificationType
+  NotificationType,
+  NotificationTypeHelper
 } from '../../Models/DTOs/NotificationDto';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
@@ -67,8 +68,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   // Breadcrumb items
   breadcrumbItems = [
-    { label: 'Dashboard', url: '/dashboard' },
-    { label: 'Notifications', active: true }
+    { label: 'common.dashboard', url: '/dashboard' },
+    { label: 'notifications.title', active: true }
   ];
 
   // Current language for date formatting
@@ -90,14 +91,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   private setupSubscriptions(): void {
-    // Subscribe to notification updates from service
-    this.notificationService.notifications$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(notifications => {
-        this.notifications = notifications;
-        this.updatePaginatedNotifications();
-      });
-
     // Subscribe to real-time Firebase notifications
     this.notificationService.message$
       .pipe(takeUntil(this.destroy$))
@@ -120,13 +113,16 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = null;
 
-    this.notificationService.getAllNotifications(0, 100).subscribe({
+    // Convert to 0-based index for API
+    const pageIndex = this.currentPage - 1;
+
+    this.notificationService.getAllNotifications(pageIndex, this.pageSize).subscribe({
       next: (response) => {
         if (response.status === 0 && response.data) {
           this.notifications = this.convertToDisplayItems(response.data.notifications.items);
           this.totalItems = response.data.notifications.totalCount;
           this.unreadCount = response.data.unReadNotificationCount;
-          this.updatePaginatedNotifications();
+          this.totalPages = Math.ceil(this.totalItems / this.pageSize);
         } else {
           this.error = response.message || 'Failed to load notifications';
         }
@@ -184,16 +180,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updatePaginatedNotifications(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-  }
-
   onPageChange(page: number): void {
     if (page >= 1 && page <= this.totalPages && !this.loading) {
       this.currentPage = page;
-      this.updatePaginatedNotifications();
+      this.loadNotifications();
     }
   }
 
@@ -212,6 +202,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   refreshNotifications(): void {
+    this.currentPage = 1; // Reset to first page on refresh
     this.loadNotifications();
   }
 
@@ -220,11 +211,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   getTypeDescriptionKey(type: NotificationType): string {
-    return `common.notificationTypes.${type}`;
+    return NotificationTypeHelper.getTypeDescriptionKey(type);
   }
 
-  formatTime(time: Date): string {
-    if (!time) return '';
+  formatTime(time: Date): Observable<string> {
+    if (!time) return this.translationService.translate('');
 
     const now = new Date();
     const diff = now.getTime() - time.getTime();
@@ -233,59 +224,42 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
+    // Get the translation key and parameters based on time difference
+    let translationKey: string;
+    let params: any[] = [];
+
     if (days > 7) {
-      return time.toLocaleDateString(this.currentLanguage === 'ar' ? 'ar-EG' : 'en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
+      // For dates older than a week, use the locale-specific date format
+      return this.translationService.translate('', []).pipe(
+        map(() => time.toLocaleDateString(this.currentLanguage === 'ar' ? 'ar-EG' : 'en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        }))
+      );
     } else if (days > 0) {
-      return `${days}d ago`;
+      translationKey = 'notifications.timeFormat.daysAgo';
+      params = [days];
     } else if (hours > 0) {
-      return `${hours}h ago`;
+      translationKey = 'notifications.timeFormat.hoursAgo';
+      params = [hours];
     } else if (minutes > 0) {
-      return `${minutes}m ago`;
+      translationKey = 'notifications.timeFormat.minutesAgo';
+      params = [minutes];
     } else {
-      return 'Just now';
+      translationKey = 'notifications.timeFormat.justNow';
     }
+
+    // Get the translated string
+    return this.translationService.translate(translationKey, params);
   }
 
   private getNotificationColor(type: NotificationType): string {
-    switch (type) {
-      case NotificationType.NewRequest:
-        return 'primary';
-      case NotificationType.RequestAccepted:
-        return 'success';
-      case NotificationType.RequestRejected:
-        return 'danger';
-      case NotificationType.RequestCancelled:
-        return 'warning';
-      case NotificationType.RequestCompleted:
-        return 'info';
-      case NotificationType.NewReservation:
-        return 'primary';
-      default:
-        return 'secondary';
-    }
+    return NotificationTypeHelper.getTypeColor(type);
   }
 
   private getNotificationIcon(type: NotificationType): string {
-    switch (type) {
-      case NotificationType.NewRequest:
-        return 'plus-circle';
-      case NotificationType.RequestAccepted:
-        return 'check-circle';
-      case NotificationType.RequestRejected:
-        return 'x-circle';
-      case NotificationType.RequestCancelled:
-        return 'slash-circle';
-      case NotificationType.RequestCompleted:
-        return 'check2-all';
-      case NotificationType.NewReservation:
-        return 'calendar-plus';
-      default:
-        return 'bell';
-    }
+    return NotificationTypeHelper.getTypeIcon(type);
   }
 
   trackByNotificationId(index: number, notification: NotificationDisplayItem): number {

@@ -106,7 +106,7 @@
               </h6>
               <div class="d-flex align-items-center gap-2 flex-shrink-0">
                 <small class="text-body-secondary">
-                  {{ formatTime(notification.time) }}
+                  {{ formatTime(notification.time) | async }}
                 </small>
                 <c-badge
                   *ngIf="!notification.isRead"
