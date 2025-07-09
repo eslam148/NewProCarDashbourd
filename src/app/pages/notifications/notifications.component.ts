@@ -12,7 +12,6 @@ import {
   PaginationModule,
   BadgeModule,
   SpinnerModule,
-  DropdownModule,
   BreadcrumbModule,
   AlertModule
 } from '@coreui/angular';
@@ -22,8 +21,7 @@ import { NotificationService } from '../../services/Notification.service';
 import { TranslationService } from '../../services/translation.service';
 import {
   NotificationDisplayItem,
-  NotificationType,
-  NotificationTypeHelper
+  NotificationType
 } from '../../Models/DTOs/NotificationDto';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 
@@ -40,7 +38,6 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
     PaginationModule,
     BadgeModule,
     SpinnerModule,
-    DropdownModule,
     BreadcrumbModule,
     AlertModule,
     TranslatePipe
@@ -56,42 +53,17 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   // Data properties
   notifications: NotificationDisplayItem[] = [];
-  filteredNotifications: NotificationDisplayItem[] = [];
-  allNotifications: NotificationDisplayItem[] = [];
-
-  // Pagination
-  currentPage = 1;
-  pageSize = 10;
   totalItems = 0;
   totalPages = 0;
   unreadCount = 0;
 
+  // Pagination
+  currentPage = 1;
+  pageSize = 10;
+
   // Loading and states
   loading = false;
-  loadingMarkAll = false;
   error: string | null = null;
-
-  // Filters and search
-  selectedTypeFilter: NotificationType | 'all' = 'all';
-  selectedStatusFilter: 'all' | 'read' | 'unread' = 'all';
-
-  // Notification types for filter dropdown - Only the main 6 types from original enum
-  notificationTypes = [
-    { value: 'all', label: 'notifications.allTypes' },
-    { value: NotificationType.NewRequest, label: 'common.notificationTypes.newRequest' },
-    { value: NotificationType.RequestAccepted, label: 'common.notificationTypes.requestAccepted' },
-    { value: NotificationType.RequestRejected, label: 'common.notificationTypes.requestRejected' },
-    { value: NotificationType.RequestCancelled, label: 'common.notificationTypes.requestCancelled' },
-    { value: NotificationType.RequestCompleted, label: 'common.notificationTypes.requestCompleted' },
-    { value: NotificationType.NewReservation, label: 'common.notificationTypes.newReservation' }
-  ];
-
-  // Status filters
-  statusFilters = [
-    { value: 'all', label: 'notifications.allStatus' },
-    { value: 'unread', label: 'notifications.unread' },
-    { value: 'read', label: 'notifications.read' }
-  ];
 
   // Breadcrumb items
   breadcrumbItems = [
@@ -99,7 +71,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     { label: 'Notifications', active: true }
   ];
 
-  // Add currentLanguage property - public so it can be accessed from template
+  // Current language for date formatting
   currentLanguage: string = 'en';
 
   constructor(
@@ -108,7 +80,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.initializeComponent();
     this.setupSubscriptions();
     this.loadNotifications();
   }
@@ -118,17 +89,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private initializeComponent(): void {
-    // Empty function - no search to initialize
-  }
-
   private setupSubscriptions(): void {
     // Subscribe to notification updates from service
     this.notificationService.notifications$
       .pipe(takeUntil(this.destroy$))
       .subscribe(notifications => {
-        this.allNotifications = notifications;
-        this.applyFilters();
+        this.notifications = notifications;
+        this.updatePaginatedNotifications();
       });
 
     // Subscribe to real-time Firebase notifications
@@ -136,17 +103,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(payload => {
         if (payload) {
-           // Refresh notifications when new Firebase message arrives
           this.loadNotifications();
         }
       });
 
     // Subscribe to language changes
-   this.translationService.getCurrentLang()
+    this.translationService.getCurrentLang()
       .pipe(takeUntil(this.destroy$))
       .subscribe(lang => {
         this.currentLanguage = lang;
-        // Refresh notifications to update time formatting
         this.loadNotifications();
       });
   }
@@ -155,15 +120,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.error = null;
 
-    // Load more notifications for the dedicated page (up to 100)
     this.notificationService.getAllNotifications(0, 100).subscribe({
       next: (response) => {
         if (response.status === 0 && response.data) {
-          const displayItems = this.convertToDisplayItems(response.data.notifications.items);
-          this.allNotifications = displayItems;
+          this.notifications = this.convertToDisplayItems(response.data.notifications.items);
           this.totalItems = response.data.notifications.totalCount;
           this.unreadCount = response.data.unReadNotificationCount;
-          this.applyFilters();
+          this.updatePaginatedNotifications();
         } else {
           this.error = response.message || 'Failed to load notifications';
         }
@@ -200,142 +163,52 @@ export class NotificationsComponent implements OnInit, OnDestroy {
               'يوليو': 6, 'أغسطس': 7, 'سبتمبر': 8, 'أكتوبر': 9, 'نوفمبر': 10, 'ديسمبر': 11
             };
 
-            let adjustedHours = hours;
-            if (isPM && hours !== 12) {
-              adjustedHours = hours + 12;
-            } else if (!isPM && hours === 12) {
-              adjustedHours = 0;
-            }
-
-            time = new Date(year, monthMap[month], day, adjustedHours, minutes);
+            time = new Date(year, monthMap[month], day, isPM ? hours + 12 : hours, minutes);
           } else {
-            // Try parsing as English format or ISO
             time = new Date(createdAt);
           }
-        } else if (createdAt instanceof Date) {
-          time = createdAt;
         } else {
-          time = new Date(); // Fallback to current time
+          time = new Date(createdAt);
         }
-
-        // Validate the parsed date
-        if (isNaN(time.getTime())) {
-          console.warn('Invalid date created from:', createdAt);
-          time = new Date();
-        }
-      } catch (error) {
-        console.error('Error parsing date:', error, createdAt);
+      } catch (e) {
+        console.error('Error parsing date:', e);
         time = new Date();
       }
 
       return {
-        id: notification.id,
-        title: notification.title,
-        body: notification.body,
+        ...notification,
         time,
-        type: notification.type as NotificationType,
-        isRead: notification.isRead,
-        icon: NotificationTypeHelper.getTypeIcon(notification.type),
-        color: NotificationTypeHelper.getTypeColor(notification.type),
-        requestId: notification.requestId || undefined,
-        reservationId: notification.reservationId || undefined
+        color: this.getNotificationColor(notification.type),
+        icon: this.getNotificationIcon(notification.type)
       };
     });
   }
 
-  clearFilters(): void {
-    this.selectedTypeFilter = 'all';
-    this.selectedStatusFilter = 'all';
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  private applyFilters(): void {
-    let filtered = [...this.allNotifications];
-
-    // Apply type filter
-    if (this.selectedTypeFilter !== 'all') {
-      const typeFilter = typeof this.selectedTypeFilter === 'string'
-        ? parseInt(this.selectedTypeFilter)
-        : this.selectedTypeFilter;
-      filtered = filtered.filter(notification =>
-        notification.type === typeFilter
-      );
-    }
-
-    // Apply status filter
-    if (this.selectedStatusFilter !== 'all') {
-      filtered = filtered.filter(notification => {
-        if (this.selectedStatusFilter === 'read') {
-          return notification.isRead;
-        } else {
-          return !notification.isRead;
-        }
-      });
-    }
-
-    this.filteredNotifications = filtered;
-    this.totalItems = filtered.length;
-    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-
-    // Reset to first page if current page is out of bounds
-    if (this.currentPage > this.totalPages && this.totalPages > 0) {
-      this.currentPage = 1;
-    }
-
-    this.updatePaginatedNotifications();
-  }
-
   private updatePaginatedNotifications(): void {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.notifications = this.filteredNotifications.slice(startIndex, endIndex);
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
   }
 
   onPageChange(page: number): void {
-    this.currentPage = page;
-    this.updatePaginatedNotifications();
-  }
-
-  onTypeFilterChange(): void {
-    this.currentPage = 1;
-    this.applyFilters();
-  }
-
-  onStatusFilterChange(): void {
-    this.currentPage = 1;
-    this.applyFilters();
+    if (page >= 1 && page <= this.totalPages && !this.loading) {
+      this.currentPage = page;
+      this.updatePaginatedNotifications();
+    }
   }
 
   markAsRead(notification: NotificationDisplayItem): void {
-    if (notification.isRead) return;
-
-    this.notificationService.markAsRead(notification.id);
-
-    // Update local state immediately for better UX
-    notification.isRead = true;
-    this.applyFilters();
-  }
-
-  markAllAsRead(): void {
-    const unreadNotifications = this.allNotifications.filter(n => !n.isRead);
-
-    if (unreadNotifications.length === 0) return;
-
-    this.loadingMarkAll = true;
-    this.notificationService.markAllAsRead();
-
-    // Update local state immediately for better UX
-    this.allNotifications = this.allNotifications.map(notification => ({
-      ...notification,
-      isRead: true
-    }));
-
-    this.applyFilters();
-
-    setTimeout(() => {
-      this.loadingMarkAll = false;
-    }, 1000);
+    if (!notification.isRead) {
+      this.notificationService.markNotificationAsRead(notification.id).subscribe({
+        next: () => {
+          notification.isRead = true;
+          this.unreadCount = Math.max(0, this.unreadCount - 1);
+        },
+        error: (error) => {
+          console.error('Error marking notification as read:', error);
+        }
+      });
+    }
   }
 
   refreshNotifications(): void {
@@ -343,56 +216,75 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   getUnreadCount(): number {
-    return  this.allNotifications.filter(n => !n.isRead).length;
+    return this.notifications.filter(n => !n.isRead).length;
   }
 
   getTypeDescriptionKey(type: NotificationType): string {
-    return NotificationTypeHelper.getTypeDescriptionKey(type);
+    return `common.notificationTypes.${type}`;
   }
 
   formatTime(time: Date): string {
-    if (!time || isNaN(time.getTime())) {
-      return '';
-    }
+    if (!time) return '';
 
     const now = new Date();
-    const diffMs = now.getTime() - time.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
+    const diff = now.getTime() - time.getTime();
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
 
-    if (this.currentLanguage === 'ar') {
-      // Arabic relative time formatting
-      if (diffMins < 1) return 'للتو';
-      if (diffMins < 60) return `منذ ${diffMins} ${diffMins === 1 ? 'دقيقة' : 'دقائق'}`;
-      if (diffHours < 24) return `منذ ${diffHours} ${diffHours === 1 ? 'ساعة' : 'ساعات'}`;
-      if (diffDays < 7) return `منذ ${diffDays} ${diffDays === 1 ? 'يوم' : 'أيام'}`;
-
-      // Format absolute date for older entries
-      return time.toLocaleDateString('ar-EG', {
+    if (days > 7) {
+      return time.toLocaleDateString(this.currentLanguage === 'ar' ? 'ar-EG' : 'en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
+        day: 'numeric'
       });
+    } else if (days > 0) {
+      return `${days}d ago`;
+    } else if (hours > 0) {
+      return `${hours}h ago`;
+    } else if (minutes > 0) {
+      return `${minutes}m ago`;
     } else {
-      // English relative time formatting
-      if (diffMins < 1) return 'Just now';
-      if (diffMins < 60) return `${diffMins}m ago`;
-      if (diffHours < 24) return `${diffHours}h ago`;
-      if (diffDays < 7) return `${diffDays}d ago`;
+      return 'Just now';
+    }
+  }
 
-      // Format absolute date for older entries
-      return time.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-      });
+  private getNotificationColor(type: NotificationType): string {
+    switch (type) {
+      case NotificationType.NewRequest:
+        return 'primary';
+      case NotificationType.RequestAccepted:
+        return 'success';
+      case NotificationType.RequestRejected:
+        return 'danger';
+      case NotificationType.RequestCancelled:
+        return 'warning';
+      case NotificationType.RequestCompleted:
+        return 'info';
+      case NotificationType.NewReservation:
+        return 'primary';
+      default:
+        return 'secondary';
+    }
+  }
+
+  private getNotificationIcon(type: NotificationType): string {
+    switch (type) {
+      case NotificationType.NewRequest:
+        return 'plus-circle';
+      case NotificationType.RequestAccepted:
+        return 'check-circle';
+      case NotificationType.RequestRejected:
+        return 'x-circle';
+      case NotificationType.RequestCancelled:
+        return 'slash-circle';
+      case NotificationType.RequestCompleted:
+        return 'check2-all';
+      case NotificationType.NewReservation:
+        return 'calendar-plus';
+      default:
+        return 'bell';
     }
   }
 
@@ -403,18 +295,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   getPageNumbers(): number[] {
     const pages: number[] = [];
     const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
 
-    if (this.totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= this.totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      const startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
-      const endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
 
-      for (let i = startPage; i <= endPage; i++) {
-        pages.push(i);
-      }
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
     }
 
     return pages;

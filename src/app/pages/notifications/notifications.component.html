@@ -25,7 +25,7 @@
       </c-badge>
     </p>
   </div>
-  <div class="d-flex gap-2">
+  <div>
     <button
       cButton
       color="primary"
@@ -35,69 +35,8 @@
       <i class="bi bi-arrow-clockwise me-1"></i>
       {{ 'common.refresh' | translate | async }}
     </button>
-    <button
-      cButton
-      color="success"
-      (click)="markAllAsRead()"
-      [disabled]="loadingMarkAll || getUnreadCount() === 0">
-      <c-spinner
-        *ngIf="loadingMarkAll"
-        size="sm"
-        class="me-1">
-      </c-spinner>
-      <i *ngIf="!loadingMarkAll" class="bi bi-check-all me-1"></i>
-      {{ 'common.markAllRead' | translate | async }}
-    </button>
   </div>
 </div>
-
-<!-- Filters and Search -->
-<c-card class="mb-4">
-  <c-card-body>
-    <div class="row g-3">
-      <!-- Type Filter -->
-      <div class="col-md-5">
-        <label cLabel for="typeFilter">{{ 'notifications.filterByType' | translate | async }}</label>
-        <select
-          cSelect
-          id="typeFilter"
-          [(ngModel)]="selectedTypeFilter"
-          (change)="onTypeFilterChange()">
-          <option *ngFor="let type of notificationTypes" [value]="type.value">
-            {{ type.label | translate | async }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Status Filter -->
-      <div class="col-md-5">
-        <label cLabel for="statusFilter">{{ 'notifications.filterByStatus' | translate | async }}</label>
-        <select
-          cSelect
-          id="statusFilter"
-          [(ngModel)]="selectedStatusFilter"
-          (change)="onStatusFilterChange()">
-          <option *ngFor="let status of statusFilters" [value]="status.value">
-            {{ status.label | translate | async }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Clear Filters -->
-      <div class="col-md-2 d-flex align-items-end">
-        <button
-          cButton
-          color="secondary"
-          variant="outline"
-          (click)="clearFilters()"
-          class="w-100">
-          <i class="bi bi-x-circle me-1"></i>
-          {{ 'common.clear' | translate | async }}
-        </button>
-      </div>
-    </div>
-  </c-card-body>
-</c-card>
 
 <!-- Loading State -->
 <div *ngIf="loading" class="text-center py-5">
@@ -116,26 +55,13 @@
 </c-alert>
 
 <!-- Empty State -->
-<c-card *ngIf="!loading && !error && filteredNotifications.length === 0">
+<c-card *ngIf="!loading && !error && notifications.length === 0">
   <c-card-body class="text-center py-5">
     <i class="bi bi-bell-slash text-muted mb-3" style="font-size: 3rem;"></i>
     <h5 class="text-muted mb-2">{{ 'notifications.noNotificationsFound' | translate | async }}</h5>
     <p class="text-body-secondary mb-3">
-      <span *ngIf="selectedTypeFilter !== 'all' || selectedStatusFilter !== 'all'">
-        {{ 'notifications.tryDifferentFilters' | translate | async }}
-      </span>
-      <span *ngIf="selectedTypeFilter === 'all' && selectedStatusFilter === 'all'">
-        {{ 'notifications.noNotificationsYet' | translate | async }}
-      </span>
+      {{ 'notifications.noNotificationsYet' | translate | async }}
     </p>
-    <button
-      *ngIf="selectedTypeFilter !== 'all' || selectedStatusFilter !== 'all'"
-      cButton
-      color="primary"
-      variant="outline"
-      (click)="clearFilters()">
-      {{ 'notifications.clearFilters' | translate | async }}
-    </button>
   </c-card-body>
 </c-card>
 
