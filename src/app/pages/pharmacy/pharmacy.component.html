@@ -112,7 +112,7 @@
               class="form-control"
             />
             <div *ngIf="pharmacyForm.get('name')?.invalid && pharmacyForm.get('name')?.touched" class="text-danger small mt-1">
-              {{ 'PHARMACY.FORM.NAME_REQUIRED' | translate }}
+              {{ 'PHARMACY.FORM.NAME_REQUIRED' | translate | async }}
             </div>
           </div>
 
