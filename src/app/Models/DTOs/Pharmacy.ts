@@ -11,7 +11,7 @@ export interface PharmacyModel {
   notes: string;
   addressNotes?: string;
 }
-export interface PharmacyResponseModel { 
+export interface PharmacyResponseModel {
   id: number;
   name: string;
   phoneNumber: string;
@@ -20,7 +20,9 @@ export interface PharmacyResponseModel {
   latitude: string;
   longitude: string;
   cityId: number;
+  cityName?: string;
   governorateId: number;
+  governorateName?: string;
   notes: string;
   addressNotes?: string;
 }
