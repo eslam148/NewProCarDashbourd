@@ -36,10 +36,9 @@ export class RequestsComponent implements OnInit {
   Math = Math;
 
   constructor(private requestService: RequestService, private fb: FormBuilder) {
-    const today = new Date().toISOString().substring(0, 10);
-    this.filterForm = this.fb.group({
-      fromDate: [today],
-      toDate: [today],
+     this.filterForm = this.fb.group({
+      fromDate: [],
+      toDate: [],
       status: ['']
     });
   }
