@@ -264,7 +264,7 @@
     "sendOtp": "Send Verification Code",
     "verifyOtp": "Verify Code",
     "otpCode": "Verification Code",
-    "otpSentTo": "We've sent a 6-digit verification code to",
+    "otpSentTo": "We've sent a 4-digit verification code to",
     "resendOtp": "Resend Code",
     "resendIn": "Resend in",
     "resetPassword": "Reset Password",

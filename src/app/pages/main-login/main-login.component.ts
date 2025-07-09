@@ -83,11 +83,12 @@ export class MainLoginComponent implements OnInit, OnDestroy {
     });
 
     this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required]]
+     // , Validators.email
     });
 
     this.otpForm = this.fb.group({
-      code: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
+      code: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]]
     });
 
     this.resetPasswordForm = this.fb.group({

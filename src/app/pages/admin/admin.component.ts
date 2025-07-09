@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, filter } from 'rxjs/operators';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { ModalModule, ButtonModule, TooltipModule } from '@coreui/angular';
+import { ModalModule, ButtonModule, TooltipModule, AlertModule } from '@coreui/angular';
 import { IconModule } from '@coreui/icons-angular';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -13,9 +13,11 @@ import { AdminsDto } from '../../Models/DTOs/AdminsDto';
 import { RegisterDto } from '../../Models/DTOs/RegisterDto';
 import { UpdateAdminDto } from '../../Models/DTOs/UpdateAdminDto';
 import { AdminState } from '../../store/admin/admin.reducer';
-import { loadAdmins, deleteAdmin, registerAdmin, updateAdmin } from '../../store/admin/admin.actions';
+import { loadAdmins, deleteAdmin, registerAdmin, updateAdmin, clearAdminError } from '../../store/admin/admin.actions';
 import { selectAdmins, selectAdminLoading, selectAdminError } from '../../store/admin/admin.selectors';
 import { AdminFormComponent } from './admin-form/admin-form.component';
+import { Actions, ofType } from '@ngrx/effects';
+import { registerAdminSuccess, updateAdminSuccess } from '../../store/admin/admin.actions';
 
 // Import shared components
 import {
@@ -46,6 +48,7 @@ interface PaginatedResponse<T> {
     ButtonModule,
     IconModule,
     TooltipModule,
+    AlertModule,
     AdminFormComponent,
     TranslatePipe,
     DataTableComponent,
@@ -67,6 +70,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   adminToDelete: string | null = null;
   protected readonly Math = Math; // Make Math available in template
   private destroy$ = new Subject<void>();
+  private operationInProgress = false;
 
   // Default avatar path - update to use an existing avatar image
   defaultAvatarPath = 'assets/images/avatars/8.jpg';
@@ -82,7 +86,8 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<{ admin: AdminState }>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private actions$: Actions
   ) {
     this.admins$ = this.store.select(selectAdmins).pipe(
       map((response: PaginatedResponse<AdminsDto> | null) => {
@@ -99,6 +104,36 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.error$ = this.store.select(selectAdminError);
     this.searchForm = this.fb.group({
       SearchKey: new FormControl('')
+    });
+
+    // Subscribe to success actions to close form
+    this.actions$.pipe(
+      ofType(registerAdminSuccess, updateAdminSuccess),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.showForm = false;
+      this.selectedAdmin = null;
+      this.operationInProgress = false;
+    });
+
+    // Subscribe to error changes to handle operation completion
+    this.error$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(error => {
+      if (error) {
+        // Operation failed
+        this.operationInProgress = false;
+      }
+    });
+
+    // Subscribe to loading changes
+    this.loading$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(loading => {
+      if (!loading && this.operationInProgress) {
+        // Additional check to ensure operation is complete
+        this.operationInProgress = false;
+      }
     });
   }
 
@@ -170,13 +205,17 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   onFormSubmit(data: RegisterDto | UpdateAdminDto): void {
+    if (this.operationInProgress) {
+      return; // Prevent multiple submissions
+    }
+
+    this.operationInProgress = true;
+
     if ('id' in data) {
       this.store.dispatch(updateAdmin({ updateAdminDto: data }));
     } else {
       this.store.dispatch(registerAdmin({ registerDto: data }));
     }
-    this.showForm = false;
-    this.selectedAdmin = null;
   }
 
   onFormCancel(): void {
@@ -185,7 +224,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   dismissError(): void {
-    // Handle error dismissal
+    this.store.dispatch(clearAdminError());
   }
 
   /**

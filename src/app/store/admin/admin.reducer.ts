@@ -86,7 +86,8 @@ export const adminReducer = createReducer(
     ...state,
     admins: state.admins ? {
       ...state.admins,
-      items: state.admins.items.filter(a => a.id !== id)
+      items: state.admins.items.filter(a => a.id !== id),
+      totalCount: state.admins.totalCount - 1
     } : null,
     loading: false,
     error: null
@@ -100,6 +101,16 @@ export const adminReducer = createReducer(
     ...state,
     loading: true,
     error: null
+  })),
+  on(AdminActions.registerAdminSuccess, (state) => ({
+    ...state,
+    loading: false,
+    error: null
+  })),
+  on(AdminActions.registerAdminFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
   })),
   on(AdminActions.clearAdminError, (state) => ({
     ...state,

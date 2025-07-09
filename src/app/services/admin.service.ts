@@ -43,6 +43,7 @@ export class AdminService {
     formData.append('Id', updateAdminDto.id);
     formData.append('FirstName', updateAdminDto.firstName);
     formData.append('LastName', updateAdminDto.lastName);
+    formData.append('Email', updateAdminDto.email);
     if (updateAdminDto.image) {
       formData.append('Image', updateAdminDto.image);
     }
@@ -79,6 +80,7 @@ export class AdminService {
     formData.append('FirstName', updateData.firstName || '');
     formData.append('LastName', updateData.lastName || '');
     formData.append('Phone', updateData.phone || '');
+    formData.append('Email', updateData.email || '');
 
     // Include image file if provided
     if (updateData.image) {

@@ -32,6 +32,17 @@
   </c-modal-footer>
 </c-modal>
 
+<!-- Error Alert -->
+<c-alert
+  *ngIf="error$ | async as error"
+  color="danger"
+  [dismissible]="true"
+  (visible)="dismissError()"
+  class="mb-3"
+>
+  {{ error }}
+</c-alert>
+
 @if(!showForm){
 <!-- Main Content using DataTableComponent -->
 <app-data-table

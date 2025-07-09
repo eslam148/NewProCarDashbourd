@@ -71,7 +71,7 @@ export const registerAdmin = createAction(
 
 export const registerAdminSuccess = createAction(
   '[Admin] Register Admin Success',
-  props<{ admin: string }>()
+  props<{ adminId: string }>()
 );
 
 export const registerAdminFailure = createAction(
