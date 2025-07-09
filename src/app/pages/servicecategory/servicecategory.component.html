@@ -106,8 +106,7 @@
                   *ngIf="category.id != null"
                   color="info"
                   icon="cilList"
-                  text="serviceCategory.viewSubCategories"
-                  shape="rounded-pill"
+                   shape="rounded-pill"
                   size="sm"
                   (clicked)="selectCategory(category.id)"
                 ></app-action-button>
@@ -115,7 +114,7 @@
                 <app-action-button
                   color="primary"
                   icon="cilPencil"
-                  text="common.edit"
+
                   shape="rounded-pill"
                   size="sm"
                   (clicked)="editCategory(category)"
@@ -125,7 +124,7 @@
                   *ngIf="category.id != null"
                   color="danger"
                   icon="cilTrash"
-                  text="common.delete"
+
                   shape="rounded-pill"
                   size="sm"
                   (clicked)="openDeleteModal(category.id)"
