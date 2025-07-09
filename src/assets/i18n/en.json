@@ -392,6 +392,7 @@
     "descriptionAr": "Category Description (Arabic)",
     "descriptionEn": "Category Description (English)",
     "icon": "Category Icon",
+    "image": "Category Image",
     "actions": "Available Actions",
     "confirmDelete": "Are you sure you want to delete this category?",
     "noData": "No service categories available",

@@ -23,32 +23,32 @@
                 <label class="form-label fw-semibold">{{ 'serviceCategory.nameAr' | translate | async }}</label>
                 <input type="text" class="form-control rounded-pill" formControlName="nameAr">
                 <div *ngIf="form.get('nameAr')?.invalid && form.get('nameAr')?.touched" class="text-danger mt-1 small">
-                  {{ 'common.fieldRequired' | translate | async }}
+                  {{ 'serviceCategory.nameRequired' | translate | async }}
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-semibold">{{ 'serviceCategory.nameEn' | translate | async }}</label>
                 <input type="text" class="form-control rounded-pill" formControlName="nameEn">
                 <div *ngIf="form.get('nameEn')?.invalid && form.get('nameEn')?.touched" class="text-danger mt-1 small">
-                  {{ 'common.fieldRequired' | translate | async }}
+                  {{ 'serviceCategory.nameRequired' | translate | async }}
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-semibold">{{ 'serviceCategory.descriptionAr' | translate | async }}</label>
                 <textarea class="form-control rounded-3" formControlName="descriptionAr" rows="3"></textarea>
                 <div *ngIf="form.get('descriptionAr')?.invalid && form.get('descriptionAr')?.touched" class="text-danger mt-1 small">
-                  {{ 'common.fieldRequired' | translate | async }}
+                  {{ 'serviceCategory.descriptionRequired' | translate | async }}
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-semibold">{{ 'serviceCategory.descriptionEn' | translate | async }}</label>
                 <textarea class="form-control rounded-3" formControlName="descriptionEn" rows="3"></textarea>
                 <div *ngIf="form.get('descriptionEn')?.invalid && form.get('descriptionEn')?.touched" class="text-danger mt-1 small">
-                  {{ 'common.fieldRequired' | translate | async }}
+                  {{ 'serviceCategory.descriptionRequired' | translate | async }}
                 </div>
               </div>
                 <div class="col-md-12 mb-3">
-                <label for="image" class="form-label">{{ 'admin.image' | translate|async }}</label>
+                <label for="image" class="form-label">{{ 'serviceCategory.image' | translate|async }}</label>
                 <input
                   type="file"
                   class="form-control"
@@ -82,27 +82,7 @@
             </div>
           </form>
 
-          <!-- Search Bar -->
-          <div class="search-container mb-4" *ngIf="!showCategoryForm">
-            <div class="input-group">
-              <span class="input-group-text bg-transparent border-end-0">
-                <i class="bi bi-search"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control border-start-0 ps-0"
-                [placeholder]="'serviceCategory.searchPlaceholder' | translate | async"
-                [(ngModel)]="searchKey"
-                (keyup.enter)="onSearch()"
-              >
-              <app-action-button
-                color="primary"
-                icon="cilSearch"
-                text="common.search"
-                (clicked)="onSearch()"
-              ></app-action-button>
-            </div>
-          </div>
+
 
           <!-- Categories List -->
           <div class="list-group list-group-flush custom-table" *ngIf="!showCategoryForm">
@@ -215,28 +195,28 @@
                 <label class="form-label fw-semibold">{{ 'serviceCategory.nameAr' | translate | async }}</label>
                 <input type="text" class="form-control rounded-pill" formControlName="nameAr">
                 <div *ngIf="subCategoryForm.get('nameAr')?.invalid && subCategoryForm.get('nameAr')?.touched" class="text-danger mt-1 small">
-                  {{ 'common.fieldRequired' | translate | async }}
+                  {{ 'serviceCategory.nameRequired' | translate | async }}
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-semibold">{{ 'serviceCategory.nameEn' | translate | async }}</label>
                 <input type="text" class="form-control rounded-pill" formControlName="nameEn">
                 <div *ngIf="subCategoryForm.get('nameEn')?.invalid && subCategoryForm.get('nameEn')?.touched" class="text-danger mt-1 small">
-                  {{ 'common.fieldRequired' | translate | async }}
+                  {{ 'serviceCategory.nameRequired' | translate | async }}
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-semibold">{{ 'serviceCategory.descriptionAr' | translate | async }}</label>
                 <textarea class="form-control rounded-3" formControlName="descriptionAr" rows="3"></textarea>
                 <div *ngIf="subCategoryForm.get('descriptionAr')?.invalid && subCategoryForm.get('descriptionAr')?.touched" class="text-danger mt-1 small">
-                  {{ 'common.fieldRequired' | translate | async }}
+                  {{ 'serviceCategory.descriptionRequired' | translate | async }}
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-semibold">{{ 'serviceCategory.descriptionEn' | translate | async }}</label>
                 <textarea class="form-control rounded-3" formControlName="descriptionEn" rows="3"></textarea>
                 <div *ngIf="subCategoryForm.get('descriptionEn')?.invalid && subCategoryForm.get('descriptionEn')?.touched" class="text-danger mt-1 small">
-                  {{ 'common.fieldRequired' | translate | async }}
+                  {{ 'serviceCategory.descriptionRequired' | translate | async }}
                 </div>
               </div>
               <div class="col-12 mb-3">
