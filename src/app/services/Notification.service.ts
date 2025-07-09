@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 import { initializeApp } from 'firebase/app';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { filter, take, takeUntil, tap } from 'rxjs/operators';
 import {
   NotificationDto,
   NotificationListRequest,
@@ -402,10 +402,11 @@ export class NotificationService {
 
   /**
    * Mark notification as read and update local state
+   * @returns Observable of the mark as read operation
    */
-  markAsRead(notificationId: number): void {
-    this.markNotificationAsRead(notificationId).subscribe({
-      next: (response) => {
+  markAsRead(notificationId: number): Observable<SingleNotificationApiResponse> {
+    return this.markNotificationAsRead(notificationId).pipe(
+      tap((response) => {
         if (response.status === 0) {
           // Update local state
           const currentNotifications = this.notifications$.value;
@@ -417,40 +418,11 @@ export class NotificationService {
           this.notifications$.next(updatedNotifications);
           this.updateUnreadCount(updatedNotifications);
         }
-      },
-      error: (error) => {
-        console.error('Error marking notification as read:', error);
-      }
-    });
+      })
+    );
   }
 
-  /**
-   * Mark all notifications as read
-   */
-  markAllAsRead(): void {
-    const currentNotifications = this.notifications$.value;
-    const unreadNotifications = currentNotifications.filter(n => !n.isRead);
 
-    // Mark each unread notification as read
-    unreadNotifications.forEach(notification => {
-      this.markNotificationAsRead(notification.id).subscribe({
-        next: () => {
-          // Notification marked as read successfully
-        },
-        error: (error) => {
-          console.error(`Error marking notification ${notification.id} as read:`, error);
-        }
-      });
-    });
-
-    // Update local state immediately for better UX
-    const updatedNotifications = currentNotifications.map(notification => ({
-      ...notification,
-      isRead: true
-    }));
-    this.notifications$.next(updatedNotifications);
-    this.updateUnreadCount(updatedNotifications);
-  }
 
   /**
    * Convert API DTOs to display items

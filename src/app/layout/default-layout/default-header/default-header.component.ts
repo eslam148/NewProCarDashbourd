@@ -315,35 +315,38 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
     this.#store.dispatch(logout());
   }
 
-  // Notification methods
-  markAllAsRead() {
-    // Immediately update local state for instant UI feedback
-    this.notifications.forEach(notification => {
-      notification.isRead = true;
-    });
-    this.unreadCount = 0;
-    console.log('Immediately marked all as read, unread count:', this.unreadCount);
 
-    // Force change detection
-    this.#cdr.detectChanges();
-
-    // Update via service (for backend sync)
-    this.#notificationService.markAllAsRead();
-  }
 
   markAsRead(notification: any) {
-    // Immediately update local state for instant UI feedback
-    if (!notification.isRead) {
-      notification.isRead = true;
-      this.unreadCount = Math.max(0, this.unreadCount - 1);
-      console.log('Immediately marked as read, new unread count:', this.unreadCount);
-
-      // Force change detection
-      this.#cdr.detectChanges();
+    if (notification.isRead) {
+      return; // Already read
     }
 
-    // Update via service (for backend sync)
-    this.#notificationService.markAsRead(notification.id);
+    // Show loading state
+    this.loading = true;
+
+    // Call service to mark as read
+    this.#notificationService.markAsRead(notification.id).subscribe({
+      next: () => {
+        // Update local state after server confirms
+        notification.isRead = true;
+        this.unreadCount = Math.max(0, this.unreadCount - 1);
+
+        // Update notifications list
+        const updatedNotifications = this.notifications.map(n =>
+          n.id === notification.id ? { ...n, isRead: true } : n
+        );
+        this.notifications = updatedNotifications;
+
+        // Force change detection
+        this.#cdr.detectChanges();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error marking notification as read:', error);
+        this.loading = false;
+      }
+    });
   }
 
     private loadNotifications(reset: boolean = true) {
