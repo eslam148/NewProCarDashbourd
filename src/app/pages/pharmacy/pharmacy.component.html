@@ -87,7 +87,7 @@
       <h5 class="mb-0">
         <i class="fas fa-plus-circle me-2" *ngIf="!isEditing"></i>
         <i class="fas fa-edit me-2" *ngIf="isEditing"></i>
-        {{ (isEditing ? 'PHARMACY.EDIT_TITLE' : 'PHARMACY.ADD_TITLE') | translate }}
+        {{ (isEditing ? 'PHARMACY.EDIT_TITLE' : 'PHARMACY.ADD_TITLE') | translate | async }}
       </h5>
       <button
         class="btn btn-outline-secondary btn-sm"
@@ -95,11 +95,11 @@
         type="button"
       >
         <i class="fas fa-times me-1"></i>
-        {{ 'PHARMACY.BUTTONS.CANCEL' | translate }}
+        {{ 'PHARMACY.BUTTONS.CANCEL' | translate | async }}
       </button>
     </c-card-header>
     <c-card-body>
-      <form [formGroup]="pharmacyForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="pharmacyForm" (ngSubmit)="onSubmit()" #pharmacyFormElement="ngForm">
         <!-- Basic Information Row -->
         <div class="row">
           <div class="col-md-6 mb-3">

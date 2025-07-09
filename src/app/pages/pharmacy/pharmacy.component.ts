@@ -190,8 +190,22 @@ export class PharmacyComponent implements OnInit {
     });
   }
 
-  loadCitiesByGovernorate(governorateId: number): void {
-    this.cityService.getCityByGovernorateId(governorateId).subscribe({
+  private isLoadingCities = false;
+
+  loadCitiesByGovernorate(governorateId: number | string): void {
+    // Convert to number if string
+    const govId = typeof governorateId === 'string' ? +governorateId : governorateId;
+
+    // If no governorate ID or already loading, clear cities and return
+    if (!govId || this.isLoadingCities) {
+      this.cities = [];
+      return;
+    }
+
+    // Set loading flag
+    this.isLoadingCities = true;
+
+    this.cityService.getCityByGovernorateId(govId).subscribe({
       next: (response) => {
         if (response && response.data) {
           // Ensure cities is always an array
@@ -208,49 +222,21 @@ export class PharmacyComponent implements OnInit {
         } else {
           this.cities = [];
         }
+        this.isLoadingCities = false;
       },
       error: () => {
         this.cities = [];
         this.translate.get('PHARMACY.MESSAGES.ERROR.LOAD_CITIES').subscribe((msg: string) => {
           this.showAlertMessage(msg, 'danger');
         });
+        this.isLoadingCities = false;
       }
     });
   }
 
   onGovernorateChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    const governorateId = +target.value;
-
-    if (governorateId) {
-      this.cityService.getCityByGovernorateId(governorateId).subscribe({
-        next: (response) => {
-          if (response && response.data) {
-            // Ensure cities is always an array
-            if (Array.isArray(response.data)) {
-              this.cities = response.data;
-            } else {
-              const paginatedData = response.data as any;
-              if (paginatedData.items && Array.isArray(paginatedData.items)) {
-                this.cities = paginatedData.items;
-              } else {
-                this.cities = [];
-              }
-            }
-          } else {
-            this.cities = [];
-          }
-        },
-        error: () => {
-          this.cities = [];
-          this.translate.get('PHARMACY.MESSAGES.ERROR.LOAD_CITIES').subscribe((msg: string) => {
-            this.showAlertMessage(msg, 'danger');
-          });
-        }
-      });
-    } else {
-      this.cities = [];
-    }
+    this.loadCitiesByGovernorate(target.value);
   }
 
   getGovernorateName(governorateId: number): string {
@@ -314,8 +300,15 @@ export class PharmacyComponent implements OnInit {
     this.cities = [];
   }
 
+  private isSubmitting = false;
+
   onSubmit(): void {
+    if (this.isSubmitting) {
+      return; // Prevent double submission
+    }
+
     if (this.pharmacyForm.valid) {
+      this.isSubmitting = true;
       const formValue = this.pharmacyForm.value;
 
       // Map form data to the correct API structure
@@ -373,12 +366,14 @@ export class PharmacyComponent implements OnInit {
                 this.showAlertMessage(response.message || msg, 'danger');
               });
             }
+            this.isSubmitting = false;
           },
           error: (error) => {
             console.error('Update error:', error);
             this.translate.get('PHARMACY.MESSAGES.ERROR.UPDATE').subscribe((msg: string) => {
               this.showAlertMessage(msg, 'danger');
             });
+            this.isSubmitting = false;
           }
         });
       } else {
@@ -388,31 +383,9 @@ export class PharmacyComponent implements OnInit {
               this.translate.get('PHARMACY.MESSAGES.ADD_SUCCESS').subscribe((msg: string) => {
                 this.showAlertMessage(msg, 'success');
               });
-
-              // Add the new pharmacy to the list immediately
-              if (response.data) {
-                // Create a new pharmacy object with the response data
-                const newPharmacy: PharmacyResponseModel = {
-                  id: response.data.id || Date.now(), // Use response ID or fallback
-                  name: pharmacyData.name,
-                  phoneNumber: pharmacyData.phoneNumber,
-                  email: pharmacyData.email,
-                  lineNumber: pharmacyData.lineNumber,
-                  addressNotes: pharmacyData.addressNotes,
-                  latitude: pharmacyData.latitude,
-                  longitude: pharmacyData.longitude,
-                  governorateId: pharmacyData.governorateId,
-                  cityId: pharmacyData.cityId,
-                  notes: pharmacyData.notes
-                };
-
-                // Add to the beginning of the list
-                this.pharmacies = [newPharmacy, ...this.pharmacies];
-                this.totalItems = this.totalItems + 1;
-              } else {
-                // Fallback: reload the list if no data in response
-                this.loadPharmacies();
-              }
+              // Add the new pharmacy to the list
+              this.loadPharmacies();
+              this.totalItems = this.totalItems + 1;
 
               this.closeForm();
             } else {
@@ -420,12 +393,14 @@ export class PharmacyComponent implements OnInit {
                 this.showAlertMessage(response.message || msg, 'danger');
               });
             }
+            this.isSubmitting = false;
           },
           error: (error) => {
             console.error('Add error:', error);
             this.translate.get('PHARMACY.MESSAGES.ERROR.ADD').subscribe((msg: string) => {
               this.showAlertMessage(msg, 'danger');
             });
+            this.isSubmitting = false;
           }
         });
       }
