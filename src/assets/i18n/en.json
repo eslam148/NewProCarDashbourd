@@ -247,6 +247,7 @@
     "auto": "Auto"
   },
   "auth": {
+    "email": "Email",
     "login": "Sign In",
     "signIn": "Sign In",
     "signUp": "Sign Up",
