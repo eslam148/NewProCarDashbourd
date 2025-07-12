@@ -20,6 +20,44 @@
         <h5 class="mb-3">{{ 'nurse.personalInfo' | translate | async }}</h5>
       </div>
 
+      <!-- Profile Picture Section -->
+      <div class="col-12 mb-4">
+        <label class="form-label">{{ 'nurse.profilePicture' | translate | async }}</label>
+        <div class="d-flex align-items-center gap-3">
+          <div class="position-relative" style="width: 100px; height: 100px;">
+            <img
+              [src]="imagePreview || form.get('imageUrl')?.value || defaultAvatarPath"
+              alt="Profile Preview"
+              class="rounded-circle w-100 h-100"
+              style="object-fit: cover;"
+              (error)="handleImageError($event)"
+            >
+            <div class="position-absolute top-0 end-0" *ngIf="imagePreview || form.get('imageUrl')?.value">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm rounded-circle"
+                style="width: 24px; height: 24px; padding: 0;"
+                (click)="clearImage()"
+              >
+                <i class="cil-x" style="font-size: 12px;"></i>
+              </button>
+            </div>
+          </div>
+          <div class="flex-grow-1">
+            <input
+              type="file"
+              class="form-control"
+              accept="image/*"
+              (change)="onImageSelected($event)"
+              #fileInput
+            >
+            <small class="text-muted d-block mt-1">
+              {{ 'nurse.imageRequirements' | translate | async }}
+            </small>
+          </div>
+        </div>
+      </div>
+
       <!-- Name Fields -->
       <div class="col-12 col-md-6">
         <label class="form-label">{{ 'nurse.firstName' | translate | async }}</label>
@@ -27,10 +65,10 @@
           formControlName="firstName"
           placeholder="{{ 'nurse.firstName' | translate | async }}"
           class="form-control rounded-pill"
-          [ngClass]="{'is-invalid': form.get('firstName')?.invalid && form.get('firstName')?.touched}"
+          [ngClass]="{'is-invalid': isFieldInvalid('firstName')}"
         />
-        <div class="invalid-feedback" *ngIf="form.get('firstName')?.errors?.['required']">
-          {{ 'nurse.firstNameRequired' | translate | async }}
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('firstName')">
+          {{ getErrorMessage('firstName') | translate | async }}
         </div>
       </div>
 
@@ -40,10 +78,10 @@
           formControlName="lastName"
           placeholder="{{ 'nurse.lastName' | translate | async }}"
           class="form-control rounded-pill"
-          [ngClass]="{'is-invalid': form.get('lastName')?.invalid && form.get('lastName')?.touched}"
+          [ngClass]="{'is-invalid': isFieldInvalid('lastName')}"
         />
-        <div class="invalid-feedback" *ngIf="form.get('lastName')?.errors?.['required']">
-          {{ 'nurse.lastNameRequired' | translate | async }}
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('lastName')">
+          {{ getErrorMessage('lastName') | translate | async }}
         </div>
       </div>
 
@@ -55,13 +93,10 @@
           type="email"
           placeholder="{{ 'nurse.email' | translate | async }}"
           class="form-control rounded-pill"
-          [ngClass]="{'is-invalid': form.get('email')?.invalid && form.get('email')?.touched}"
+          [ngClass]="{'is-invalid': isFieldInvalid('email')}"
         />
-        <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.['required']">
-          {{ 'nurse.emailRequired' | translate | async }}
-        </div>
-        <div class="invalid-feedback" *ngIf="form.get('email')?.errors?.['email']">
-          {{ 'nurse.emailInvalid' | translate | async }}
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+          {{ getErrorMessage('email') | translate | async }}
         </div>
       </div>
 
@@ -71,10 +106,10 @@
           formControlName="phoneNumber"
           placeholder="{{ 'nurse.phone' | translate | async }}"
           class="form-control rounded-pill"
-          [ngClass]="{'is-invalid': form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched}"
+          [ngClass]="{'is-invalid': isFieldInvalid('phoneNumber')}"
         />
-        <div class="invalid-feedback" *ngIf="form.get('phoneNumber')?.errors?.['required']">
-          {{ 'nurse.phoneRequired' | translate | async }}
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('phoneNumber')">
+          {{ getErrorMessage('phoneNumber') | translate | async }}
         </div>
       </div>
 
@@ -91,29 +126,14 @@
             formControlName="password"
             placeholder="{{ 'nurse.password' | translate | async }}"
             class="form-control rounded-pill rounded-end"
-            [ngClass]="{'is-invalid': form.get('password')?.invalid && form.get('password')?.touched}"
+            [ngClass]="{'is-invalid': isFieldInvalid('password')}"
           />
           <button class="btn btn-outline-secondary rounded-pill rounded-start" type="button" (click)="togglePasswordVisibility()">
             <app-bootstrap-icon [name]="showPassword ? 'eye-slash' : 'eye'"></app-bootstrap-icon>
           </button>
-          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['required']">
-            {{ 'nurse.passwordRequired' | translate | async }}
+          <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
+            {{ getErrorMessage('password') | translate | async }}
           </div>
-          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['minlength']">
-            {{ 'nurse.passwordMinLength' | translate | async }}
-          </div>
-          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['noUpperCase']">
-            {{ 'nurse.passwordUpperCase' | translate | async }}
-          </div>
-          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['noLowerCase']">
-            {{ 'nurse.passwordLowerCase' | translate | async }}
-          </div>
-          <div class="invalid-feedback" *ngIf="form.get('password')?.errors?.['noSpecialChar']">
-            {{ 'nurse.passwordSpecialChar' | translate | async }}
-          </div>
-          <small class="form-text text-muted">
-            {{ 'nurse.passwordRequirements' | translate | async }}
-          </small>
         </div>
       </div>
 
@@ -125,16 +145,13 @@
             formControlName="confirmPassword"
             placeholder="{{ 'nurse.confirmPassword' | translate | async }}"
             class="form-control rounded-pill rounded-end"
-            [ngClass]="{'is-invalid': form.get('confirmPassword')?.invalid && form.get('confirmPassword')?.touched}"
+            [ngClass]="{'is-invalid': isFieldInvalid('confirmPassword')}"
           />
           <button class="btn btn-outline-secondary rounded-pill rounded-start" type="button" (click)="toggleConfirmPasswordVisibility()">
             <app-bootstrap-icon [name]="showConfirmPassword ? 'eye-slash' : 'eye'"></app-bootstrap-icon>
           </button>
-          <div class="invalid-feedback" *ngIf="form.get('confirmPassword')?.errors?.['required']">
-            {{ 'nurse.confirmPasswordRequired' | translate | async }}
-          </div>
-          <div class="invalid-feedback" *ngIf="form.get('confirmPassword')?.errors?.['passwordMismatch']">
-            {{ 'nurse.passwordMismatch' | translate | async }}
+          <div class="invalid-feedback" *ngIf="isFieldInvalid('confirmPassword')">
+            {{ getErrorMessage('confirmPassword') | translate | async }}
           </div>
         </div>
       </div>
@@ -148,17 +165,17 @@
       <div class="col-12 col-md-6">
         <label class="form-label">{{ 'nurse.specialization' | translate | async }}</label>
         <select
-          formControlName="specialization"
+          formControlName="specialtyId"
           class="form-select rounded-pill"
-          [ngClass]="{'is-invalid': form.get('specialization')?.invalid && form.get('specialization')?.touched}"
+          [ngClass]="{'is-invalid': isFieldInvalid('specialtyId')}"
         >
           <option value="" disabled selected>{{ 'nurse.selectSpecialization' | translate | async }}</option>
           <option *ngFor="let specialty of specialties" [value]="specialty.id">
             {{ specialty.nameEn }}
           </option>
         </select>
-        <div class="invalid-feedback" *ngIf="form.get('specialization')?.errors?.['required']">
-          {{ 'nurse.specializationRequired' | translate | async }}
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('specialtyId')">
+          {{ getErrorMessage('specialtyId') | translate | async }}
         </div>
       </div>
 
@@ -168,15 +185,15 @@
         <select
           formControlName="governorateId"
           class="form-select rounded-pill"
-          [ngClass]="{'is-invalid': form.get('governorateId')?.invalid && form.get('governorateId')?.touched}"
+          [ngClass]="{'is-invalid': isFieldInvalid('governorateId')}"
         >
           <option value="" disabled selected>{{ 'nurse.selectGovernorate' | translate | async }}</option>
           <option *ngFor="let governorate of governorates" [value]="governorate.id">
             {{ governorate.nameEn }}
           </option>
         </select>
-        <div class="invalid-feedback" *ngIf="form.get('governorateId')?.errors?.['required']">
-          {{ 'nurse.governorateRequired' | translate | async }}
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('governorateId')">
+          {{ getErrorMessage('governorateId') | translate | async }}
         </div>
       </div>
 
@@ -186,7 +203,7 @@
         <select
           formControlName="cityId"
           class="form-select rounded-pill"
-          [ngClass]="{'is-invalid': form.get('cityId')?.invalid && form.get('cityId')?.touched}"
+          [ngClass]="{'is-invalid': isFieldInvalid('cityId')}"
           [disabled]="!form.get('governorateId')?.value"
         >
           <option value="" disabled selected>{{ 'nurse.selectCity' | translate | async }}</option>
@@ -194,33 +211,22 @@
             {{ city.nameEn }}
           </option>
         </select>
-        <div class="invalid-feedback" *ngIf="form.get('cityId')?.errors?.['required']">
-          {{ 'nurse.cityRequired' | translate | async }}
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('cityId')">
+          {{ getErrorMessage('cityId') | translate | async }}
         </div>
       </div>
 
       <div class="col-12 col-md-6">
         <label class="form-label">{{ 'nurse.license' | translate | async }}</label>
         <input
-          formControlName="licenseNumber"
+          formControlName="medicalLicense"
           placeholder="{{ 'nurse.license' | translate | async }}"
           class="form-control rounded-pill"
-          [ngClass]="{'is-invalid': form.get('licenseNumber')?.invalid && form.get('licenseNumber')?.touched}"
+          [ngClass]="{'is-invalid': isFieldInvalid('medicalLicense')}"
         />
-        <div class="invalid-feedback" *ngIf="form.get('licenseNumber')?.errors?.['required']">
-          {{ 'nurse.licenseRequired' | translate | async }}
+        <div class="invalid-feedback" *ngIf="isFieldInvalid('medicalLicense')">
+          {{ getErrorMessage('medicalLicense') | translate | async }}
         </div>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.rate' | translate | async }}</label>
-        <input
-          formControlName="rate"
-          placeholder="{{ 'nurse.rate' | translate | async }}"
-          class="form-control rounded-pill"
-          type="number"
-          [ngClass]="{'is-invalid': form.get('rate')?.invalid && form.get('rate')?.touched}"
-        />
       </div>
 
       <!-- Location Information Section -->
@@ -304,7 +310,6 @@
             <th>{{ 'nurse.governorate' | translate | async }}</th>
             <th>{{ 'nurse.city' | translate | async }}</th>
             <th>{{ 'nurse.license' | translate | async }}</th>
-            <th>{{ 'nurse.rate' | translate | async }}</th>
             <th class="actions-cell">{{ 'nurse.actions' | translate | async }}</th>
           </tr>
         </thead>
@@ -325,7 +330,6 @@
             <td>{{ nurse.governorate }}</td>
             <td>{{ nurse.city }}</td>
             <td>{{ nurse.licenseNumber }}</td>
-            <td>{{ nurse.rate !== null ? nurse.rate : '-' }}</td>
             <td class="actions-cell">
               <div class="d-flex gap-2">
                 <app-action-button

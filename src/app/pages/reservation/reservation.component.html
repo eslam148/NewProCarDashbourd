@@ -19,7 +19,7 @@
         [dismissible]="true"
         (alertChange)="clearMessages()">
         <i class="fas fa-exclamation-triangle me-2"></i>
-        {{ error | translate }}
+        {{ error | translate | async }}
       </c-alert>
 
       <c-alert
@@ -28,7 +28,7 @@
         [dismissible]="true"
         (alertChange)="clearMessages()">
         <i class="fas fa-check-circle me-2"></i>
-        {{ success | translate }}
+        {{ success | translate | async }}
       </c-alert>
     </div>
   </div>
@@ -48,7 +48,7 @@
       <select formControlName="status">
         <option value="0">{{ 'RESERVATION.FILTERS.ALL_STATUS' | translate | async }}</option>
         <option *ngFor="let status of statusOptions" [value]="status.value+1">
-          {{ status.label | translate }}
+          {{ status.label | translate | async }}
         </option>
       </select>
     </label>
@@ -176,7 +176,9 @@
                   </button>
 
                   <!-- Delete -->
-                  <button
+                   <!--
+
+ <button
                     cButton
                     size="sm"
                     color="danger"
@@ -185,6 +187,8 @@
                     [title]="'RESERVATION.BUTTONS.DELETE' | translate | async">
                     <i class="fas fa-trash"></i>
                   </button>
+                   -->
+
                 </div>
               </td>
             </tr>
@@ -380,7 +384,7 @@
         <i class="fas fa-times me-2"></i>
         {{ 'common.close' | translate | async }}
       </button>
-       
+
     </div>
   </c-modal-footer>
 </c-modal>

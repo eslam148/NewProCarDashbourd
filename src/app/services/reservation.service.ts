@@ -12,7 +12,7 @@ import {
   providedIn: 'root'
 })
 export class ReservationService {
-  private baseUrl = 'http://procare.runasp.net/api/Reservation/Admin';
+  private baseUrl = 'http://procare.runasp.net/api/Reservation';
 
   constructor(private http: HttpClient) {}
 
@@ -20,7 +20,7 @@ export class ReservationService {
    * Get all reservations with pagination and filters
    */
   getAllReservations(request: GetAllReservationsRequest): Observable<ApiResponse<ReservationResponseModel>> {
-    const url = `${this.baseUrl}/GetAll`;
+    const url = `${this.baseUrl}/Admin/GetAll`;
     return this.http.post<ApiResponse<ReservationResponseModel>>(url, request);
   }
 
@@ -28,7 +28,7 @@ export class ReservationService {
    * Get reservation by ID
    */
   getReservationById(id: number): Observable<ApiResponse<ReservationModel>> {
-    const url = `${this.baseUrl}/GetById/${id}`;
+    const url = `${this.baseUrl}/Admin/GetById/${id}`;
     return this.http.get<ApiResponse<ReservationModel>>(url);
   }
 
@@ -36,7 +36,7 @@ export class ReservationService {
    * Complete a reservation
    */
   completeReservation(id: number): Observable<ApiResponse<boolean>> {
-    const url = `${this.baseUrl}/Complete/${id}`;
+    const url = `${this.baseUrl}/Admin/Complete/${id}`;
     return this.http.put<ApiResponse<boolean>>(url, {});
   }
 
@@ -45,7 +45,7 @@ export class ReservationService {
    */
   cancelReservation(id: number): Observable<ApiResponse<boolean>> {
     const url = `${this.baseUrl}/Cancel/${id}`;
-    return this.http.put<ApiResponse<boolean>>(url, {});
+    return this.http.delete<ApiResponse<boolean>>(url, {});
   }
 
   /**

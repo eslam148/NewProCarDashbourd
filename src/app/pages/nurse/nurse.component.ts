@@ -1,6 +1,6 @@
 import { LandingPageService } from './../../services/landing-page.service';
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { NurseService } from '../../services/nurse.service';
 import { NurseDto, ReviewDto } from '../../Models/DTOs/NurseDto';
 import { TranslatePipe } from '../../pipes/translate.pipe';
@@ -38,9 +38,10 @@ import { CityDto } from '../../Models/DTOs/CityDto';
 })
 export class NurseComponent implements OnInit, AfterViewInit {
   @ViewChild('mapSelector') mapSelector?: MapSelectorComponent;
+  @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
 
   nurses: NurseDto[] = [];
-  form: FormGroup;
+  form!: FormGroup; // Using definite assignment assertion
   showForm = false;
   isEditMode = false;
   successMessage = '';
@@ -74,43 +75,108 @@ export class NurseComponent implements OnInit, AfterViewInit {
     private governorateService: GovernorateService,
     private cityService: CityService
   ) {
-    this.form = this.fb.group({
-      id: [''],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', this.isEditMode ? [] : [
-        Validators.required,
-        Validators.minLength(8),
-        this.passwordStrengthValidator()
+    this.initializeForm();
+  }
+
+  private initializeForm() {
+    // Create base form group with validators
+    const baseControls = {
+      firstName: ['', [
+        Validators.required
       ]],
-      confirmPassword: ['', this.isEditMode ? [] : [Validators.required]],
-      specialization: ['', Validators.required],
-      governorateId: ['', Validators.required],
-      city: ['', Validators.required],
-      licenseNumber: ['', Validators.required],
-      rate: [null],
-      imageUrl: [''],
-      cityId: [''],
-      specialtyId: [''],
-      latitude: [''],
-      longitude: [''],
-      medicalLicense: ['']
-    }, {
-      validators: this.passwordMatchValidator
-    });
+      lastName: ['', [
+        Validators.required
+      ]],
+      email: ['', [
+        Validators.required,
+        Validators.email
+      ]],
+      phoneNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^01[0125][0-9]{8}$/)
+      ]],
+      specialtyId: [null, [
+        Validators.required
+      ]],
+      governorateId: [null, [
+        Validators.required
+      ]],
+      cityId: [null, [
+        Validators.required
+      ]],
+      medicalLicense: ['', [
+        Validators.required
+      ]],
+      latitude: ['', [
+        Validators.required
+      ]],
+      longitude: ['', [
+        Validators.required
+      ]],
+      imageUrl: ['']
+    };
+
+    if (this.isEditMode) {
+      this.form = this.fb.group({
+        ...baseControls,
+        Id: [''] // Add Id field for edit mode
+      });
+    } else {
+      // Create mode - add password fields
+      this.form = this.fb.group({
+        ...baseControls,
+        password: ['', [
+          Validators.required,
+          Validators.minLength(8)
+        ]],
+        confirmPassword: ['', [
+          Validators.required
+        ]]
+      }, {
+        validators: this.passwordMatchValidator.bind(this)
+      });
+    }
 
     // Listen to governorate changes
     this.form.get('governorateId')?.valueChanges.subscribe(governorateId => {
-      // Reset city when governorate changes
-      this.form.patchValue({ cityId: '' });
+      const cityControl = this.form.get('cityId');
+      if (cityControl) {
+        cityControl.setValue(null);
+        cityControl.markAsUntouched();
+      }
       this.cities = [];
 
       if (governorateId) {
         this.loadCities(governorateId);
       }
     });
+  }
+
+  // Helper method to check if a field has errors
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.form.get(fieldName);
+    return field ? (field.invalid && (field.dirty || field.touched)) : false;
+  }
+
+  // Helper method to get field error message
+  getErrorMessage(fieldName: string): string {
+    const control = this.form.get(fieldName);
+    if (!control || !control.errors) return '';
+
+    const errors = control.errors;
+
+    if (errors['required']) return `${fieldName} is required`;
+    if (errors['email']) return 'Invalid email format';
+    if (errors['pattern']) {
+      if (fieldName === 'phoneNumber') return 'Invalid phone number format';
+      if (fieldName === 'password') return 'Password must contain at least 8 characters';
+    }
+    if (errors['min']) return `Minimum value is ${errors['min'].min}`;
+    if (errors['max']) return `Maximum value is ${errors['max'].max}`;
+    if (errors['minlength']) return `Minimum length is ${errors['minlength'].requiredLength}`;
+    if (errors['passwordMismatch']) return 'Passwords do not match';
+
+    return 'Invalid value';
   }
 
   ngOnInit() {
@@ -120,7 +186,9 @@ export class NurseComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Component view has been initialized
+    if (this.showMap && this.mapSelector) {
+      this.mapSelector.refreshMap();
+    }
   }
 
   loadNurses() {
@@ -151,21 +219,49 @@ export class NurseComponent implements OnInit, AfterViewInit {
 
   showAddForm() {
     this.isEditMode = false;
-    this.form.reset();
+    this.initializeForm();  // Initialize form after setting isEditMode
     this.showForm = true;
     this.showMap = true;
+    this.imagePreview = null;
+    this.selectedImageFile = null;
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   editNurse(nurse: NurseDto) {
     this.isEditMode = true;
+    this.initializeForm();  // Initialize form after setting isEditMode
+
+    // Patch values after form is initialized
     this.form.patchValue({
-      ...nurse,
-      id: nurse.id
+      Id: nurse.id, // Set Id with correct casing
+      firstName: nurse.firstName,
+      lastName: nurse.lastName,
+      phoneNumber: nurse.phoneNumber,
+      email: nurse.email,
+      specialtyId: nurse.specialization,
+      governorateId: nurse.governorateId,
+      cityId: nurse.cityId,
+      medicalLicense: nurse.licenseNumber,
+      latitude: nurse.latitude,
+      longitude: nurse.longitude,
+      imageUrl: nurse.imageUrl
     });
+
+    // Set image preview if nurse has an image
+    if (nurse.imageUrl) {
+      this.imagePreview = nurse.imageUrl;
+    }
+
+    if (nurse.governorateId) {
+      this.loadCities(nurse.governorateId);
+    }
+
     this.showForm = true;
     this.showMap = true;
 
-    // Set timeout to ensure the map is initialized before updating the marker
+    // Update map after a short delay to ensure it's rendered
     setTimeout(() => {
       if (nurse.latitude && nurse.longitude && this.mapSelector) {
         this.mapSelector.refreshMap();
@@ -177,16 +273,41 @@ export class NurseComponent implements OnInit, AfterViewInit {
     }, 500);
   }
 
-  onImageSelected(event: any) {
-    if (event.target.files && event.target.files.length > 0) {
-      this.selectedImageFile = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.imagePreview = e.target && 'result' in e.target ? e.target.result : null;
-      };
-      if (this.selectedImageFile) {
-        reader.readAsDataURL(this.selectedImageFile);
+  onImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        this.errorMessage = 'nurse.invalidImageType';
+        return;
       }
+
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        this.errorMessage = 'nurse.imageTooLarge';
+        return;
+      }
+
+      this.selectedImageFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (e.target?.result) {
+          this.imagePreview = e.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearImage() {
+    this.imagePreview = null;
+    this.selectedImageFile = null;
+    this.form.patchValue({ imageUrl: '' });
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
     }
   }
 
@@ -217,27 +338,46 @@ export class NurseComponent implements OnInit, AfterViewInit {
       const formValue = this.form.value;
       const formData = new FormData();
 
-      if (formValue.id) formData.append('Id', formValue.id);
-      if (formValue.firstName) formData.append('FirstName', formValue.firstName);
-      if (formValue.lastName) formData.append('LastName', formValue.lastName);
-      if (formValue.phoneNumber) formData.append('PhoneNumber', formValue.phoneNumber);
-      if (formValue.email) formData.append('Email', formValue.email);
-      if (formValue.specialization) formData.append('Specialization', formValue.specialization);
-      if (formValue.governorateId) formData.append('GovernorateId', formValue.governorateId.toString());
-      if (formValue.city) formData.append('City', formValue.city);
+      // Append UserData fields
+      formData.append('UserData.FirstName', (formValue.firstName || '').trim());
+      formData.append('UserData.LastName', (formValue.lastName || '').trim());
+      formData.append('UserData.Email', (formValue.email || '').trim());
+      formData.append('UserData.PhoneNumber', formValue.phoneNumber || '');
 
-      // Add latitude and longitude from the map
-      if (formValue.latitude) formData.append('Latitude', formValue.latitude);
-      if (formValue.longitude) formData.append('Longitude', formValue.longitude);
-
-      if (this.selectedImageFile) {
-        formData.append('Image', this.selectedImageFile);
+      if (!this.isEditMode) {
+        formData.append('UserData.Password', formValue.password || '');
+        formData.append('UserData.ConfirmPassword', formValue.confirmPassword || '');
       }
-      if (formValue.cityId) formData.append('CityId', formValue.cityId.toString());
-      if (formValue.governorateId) formData.append('GovernorateId', formValue.governorateId.toString());
-      if (formValue.medicalLicense || formValue.licenseNumber) formData.append('MedicalLicense', formValue.medicalLicense || formValue.licenseNumber);
-      if (formValue.specialtyId) formData.append('SpecialtyId', formValue.specialtyId.toString());
-      if (formValue.rate) formData.append('Rate', formValue.rate.toString());
+
+      // Append other fields
+      if (formValue.specialtyId) {
+        formData.append('SpecialtyId', formValue.specialtyId.toString());
+      }
+      if (formValue.governorateId) {
+        formData.append('GovernorateId', formValue.governorateId.toString());
+      }
+      if (formValue.cityId) {
+        formData.append('CityId', formValue.cityId.toString());
+      }
+      if (formValue.medicalLicense) {
+        formData.append('MedicalLicense', formValue.medicalLicense.trim());
+      }
+      if (formValue.latitude) {
+        formData.append('Latitude', formValue.latitude.toString());
+      }
+      if (formValue.longitude) {
+        formData.append('Longitude', formValue.longitude.toString());
+      }
+
+      // Add image if selected
+      if (this.selectedImageFile) {
+        formData.append('ProfilePicture', this.selectedImageFile);
+      }
+
+      // Add Id for edit mode with correct casing
+      if (this.isEditMode && formValue.Id) {
+        formData.append('Id', formValue.Id.toString());
+      }
 
       if (this.isEditMode) {
         this.nurseService.updateNurse(formData).subscribe({
@@ -247,8 +387,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
             this.cancel();
           },
           error: (error) => {
-            this.errorMessage = 'nurse.updateError';
-            console.error('Error updating nurse:', error);
+            this.handleError(error);
           }
         });
       } else {
@@ -259,12 +398,40 @@ export class NurseComponent implements OnInit, AfterViewInit {
             this.cancel();
           },
           error: (error) => {
-            this.errorMessage = 'nurse.addError';
-            console.error('Error adding nurse:', error);
+            this.handleError(error);
           }
         });
       }
+    } else {
+      this.markFormAsTouched();
+      this.errorMessage = 'nurse.formValidationError';
     }
+  }
+
+  private handleError(error: any) {
+    console.error('API Error:', error);
+    if (error.error?.errors) {
+      // Handle validation errors from API
+      const errorMessages = [];
+      for (const key in error.error.errors) {
+        errorMessages.push(error.error.errors[key].join(', '));
+      }
+      this.errorMessage = errorMessages.join('\n');
+    } else {
+      this.errorMessage = error.error?.message || 'nurse.generalError';
+    }
+  }
+
+  private markFormAsTouched() {
+    Object.keys(this.form.controls).forEach(key => {
+      const control = this.form.get(key);
+      if (control) {
+        control.markAsTouched();
+        if (control.invalid) {
+          console.log(`${key} validation errors:`, control.errors);
+        }
+      }
+    });
   }
 
   cancel() {
@@ -273,6 +440,10 @@ export class NurseComponent implements OnInit, AfterViewInit {
     this.form.reset();
     this.isEditMode = false;
     this.imagePreview = null;
+    this.selectedImageFile = null;
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   openDeleteModal(id: string) {
@@ -344,13 +515,10 @@ export class NurseComponent implements OnInit, AfterViewInit {
     }
   }
 
-  passwordStrengthValidator(): ValidationErrors | null {
+  passwordStrengthValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
-
-      if (!value) {
-        return null;
-      }
+      if (!value) return null;
 
       const hasUpperCase = /[A-Z]/.test(value);
       const hasLowerCase = /[a-z]/.test(value);
@@ -358,15 +526,9 @@ export class NurseComponent implements OnInit, AfterViewInit {
 
       const errors: ValidationErrors = {};
 
-      if (!hasUpperCase) {
-        errors['noUpperCase'] = true;
-      }
-      if (!hasLowerCase) {
-        errors['noLowerCase'] = true;
-      }
-      if (!hasSpecialChar) {
-        errors['noSpecialChar'] = true;
-      }
+      if (!hasUpperCase) errors['noUpperCase'] = true;
+      if (!hasLowerCase) errors['noLowerCase'] = true;
+      if (!hasSpecialChar) errors['noSpecialChar'] = true;
 
       return Object.keys(errors).length ? errors : null;
     };
@@ -380,6 +542,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
       confirmPassword.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
+
     return null;
   }
 
