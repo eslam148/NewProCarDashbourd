@@ -118,8 +118,8 @@ export class NurseComponent implements OnInit, AfterViewInit {
 
     if (this.isEditMode) {
       this.form = this.fb.group({
-        ...baseControls,
-        Id: [''] // Add Id field for edit mode
+        id: [''], // Changed from Id to id to match API
+        ...baseControls
       });
     } else {
       // Create mode - add password fields
@@ -235,7 +235,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
 
     // Patch values after form is initialized
     this.form.patchValue({
-      Id: nurse.id, // Set Id with correct casing
+      id: nurse.id, // Changed from Id to id
       firstName: nurse.firstName,
       lastName: nurse.lastName,
       phoneNumber: nurse.phoneNumber,
@@ -249,28 +249,9 @@ export class NurseComponent implements OnInit, AfterViewInit {
       imageUrl: nurse.imageUrl
     });
 
-    // Set image preview if nurse has an image
-    if (nurse.imageUrl) {
-      this.imagePreview = nurse.imageUrl;
-    }
-
-    if (nurse.governorateId) {
-      this.loadCities(nurse.governorateId);
-    }
-
     this.showForm = true;
     this.showMap = true;
-
-    // Update map after a short delay to ensure it's rendered
-    setTimeout(() => {
-      if (nurse.latitude && nurse.longitude && this.mapSelector) {
-        this.mapSelector.refreshMap();
-        this.mapSelector.updateMarkerPosition(
-          parseFloat(nurse.latitude),
-          parseFloat(nurse.longitude)
-        );
-      }
-    }, 500);
+    this.imagePreview = nurse.imageUrl || null;
   }
 
   onImageSelected(event: Event) {
@@ -334,77 +315,96 @@ export class NurseComponent implements OnInit, AfterViewInit {
   }
 
   submit() {
-    if (this.form.valid) {
-      const formValue = this.form.value;
-      const formData = new FormData();
+    if (this.form.invalid) {
+      this.markFormAsTouched();
+      return;
+    }
 
-      // Append UserData fields
-      formData.append('UserData.FirstName', (formValue.firstName || '').trim());
-      formData.append('UserData.LastName', (formValue.lastName || '').trim());
-      formData.append('UserData.Email', (formValue.email || '').trim());
+    const formData = new FormData();
+    const formValue = this.form.value;
+
+    if (this.isEditMode) {
+      // Edit mode - match exact API structure
+      formData.append('Id', formValue.id?.toString() || '');
+      formData.append('FirstName', formValue.firstName?.trim() || '');
+      formData.append('LastName', formValue.lastName?.trim() || '');
+      formData.append('PhoneNumber', formValue.phoneNumber || '');
+      formData.append('SpecialtyId', formValue.specialtyId?.toString() || '0');
+      formData.append('GovernorateId', formValue.governorateId?.toString() || '0');
+      formData.append('CityId', formValue.cityId?.toString() || '0');
+      formData.append('MedicalLicense', formValue.medicalLicense?.trim() || '');
+
+      // Handle image - API expects 'Image' field
+      if (this.selectedImageFile) {
+        formData.append('Image', this.selectedImageFile);
+      } else if (formValue.imageUrl) {
+        // If there's an existing image URL but no new file selected
+        const existingImageBlob = new Blob([formValue.imageUrl], { type: 'text/plain' });
+        formData.append('Image', existingImageBlob, 'existing-image-url.txt');
+      } else {
+        // If no image at all, send empty string
+        formData.append('Image', '');
+      }
+
+      // Log the form data for debugging
+      formData.forEach((value, key) => {
+        console.log(`${key}:`, value);
+      });
+
+      this.nurseService.updateNurse(formData).subscribe({
+        next: () => {
+          this.successMessage = 'nurse.success.edit';
+          this.loadNurses();
+          this.showForm = false;
+          this.form.reset();
+          this.selectedImageFile = null;
+          this.imagePreview = null;
+        },
+        error: (error) => {
+          console.error('Update error:', error);
+          this.handleError(error);
+        }
+      });
+    } else {
+      // Add mode - nested UserData structure
+      formData.append('UserData.FirstName', formValue.firstName?.trim() || '');
+      formData.append('UserData.LastName', formValue.lastName?.trim() || '');
+      formData.append('UserData.Email', formValue.email?.trim() || '');
       formData.append('UserData.PhoneNumber', formValue.phoneNumber || '');
+      formData.append('UserData.Password', formValue.password || '');
+      formData.append('UserData.ConfirmPassword', formValue.confirmPassword || '');
 
-      if (!this.isEditMode) {
-        formData.append('UserData.Password', formValue.password || '');
-        formData.append('UserData.ConfirmPassword', formValue.confirmPassword || '');
-      }
+      formData.append('SpecialtyId', formValue.specialtyId?.toString() || '0');
+      formData.append('GovernorateId', formValue.governorateId?.toString() || '0');
+      formData.append('CityId', formValue.cityId?.toString() || '0');
+      formData.append('MedicalLicense', formValue.medicalLicense?.trim() || '');
+      formData.append('Latitude', formValue.latitude?.toString() || '0');
+      formData.append('Longitude', formValue.longitude?.toString() || '0');
 
-      // Append other fields
-      if (formValue.specialtyId) {
-        formData.append('SpecialtyId', formValue.specialtyId.toString());
-      }
-      if (formValue.governorateId) {
-        formData.append('GovernorateId', formValue.governorateId.toString());
-      }
-      if (formValue.cityId) {
-        formData.append('CityId', formValue.cityId.toString());
-      }
-      if (formValue.medicalLicense) {
-        formData.append('MedicalLicense', formValue.medicalLicense.trim());
-      }
-      if (formValue.latitude) {
-        formData.append('Latitude', formValue.latitude.toString());
-      }
-      if (formValue.longitude) {
-        formData.append('Longitude', formValue.longitude.toString());
-      }
-
-      // Add image if selected
+      // Handle profile picture
       if (this.selectedImageFile) {
         formData.append('ProfilePicture', this.selectedImageFile);
       }
 
-      // Add Id for edit mode with correct casing
-      if (this.isEditMode && formValue.Id) {
-        formData.append('Id', formValue.Id.toString());
-      }
+      // Log the form data for debugging
+      formData.forEach((value, key) => {
+        console.log(`${key}:`, value);
+      });
 
-      if (this.isEditMode) {
-        this.nurseService.updateNurse(formData).subscribe({
-          next: () => {
-            this.successMessage = 'nurse.updateSuccess';
-            this.loadNurses();
-            this.cancel();
-          },
-          error: (error) => {
-            this.handleError(error);
-          }
-        });
-      } else {
-        this.nurseService.addNurse(formData).subscribe({
-          next: () => {
-            this.successMessage = 'nurse.addSuccess';
-            this.loadNurses();
-            this.cancel();
-          },
-          error: (error) => {
-            this.handleError(error);
-          }
-        });
-      }
-    } else {
-      this.markFormAsTouched();
-      this.errorMessage = 'nurse.formValidationError';
+      this.nurseService.addNurse(formData).subscribe({
+        next: () => {
+          this.successMessage = 'nurse.success.add';
+          this.loadNurses();
+          this.showForm = false;
+          this.form.reset();
+          this.selectedImageFile = null;
+          this.imagePreview = null;
+        },
+        error: (error) => {
+          console.error('Add error:', error);
+          this.handleError(error);
+        }
+      });
     }
   }
 
@@ -468,7 +468,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
     this.selectedNurseReviews = [];
     this.selectedNurseName = '';
   }
-  addToLandingPage(review: any) {
+  addToLandingPage(review: ReviewDto) {
 
       this.landingPageService.addReviewToLandingPage(review.id).subscribe({
         next: (data: any) => {
