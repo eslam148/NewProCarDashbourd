@@ -144,16 +144,58 @@
         <h5 class="mb-3 mt-2">{{ 'nurse.professionalInfo' | translate | async }}</h5>
       </div>
 
+      <!-- Specialization Dropdown -->
       <div class="col-12 col-md-6">
         <label class="form-label">{{ 'nurse.specialization' | translate | async }}</label>
-        <input
+        <select
           formControlName="specialization"
-          placeholder="{{ 'nurse.specialization' | translate | async }}"
-          class="form-control rounded-pill"
+          class="form-select rounded-pill"
           [ngClass]="{'is-invalid': form.get('specialization')?.invalid && form.get('specialization')?.touched}"
-        />
+        >
+          <option value="" disabled selected>{{ 'nurse.selectSpecialization' | translate | async }}</option>
+          <option *ngFor="let specialty of specialties" [value]="specialty.id">
+            {{ specialty.nameEn }}
+          </option>
+        </select>
         <div class="invalid-feedback" *ngIf="form.get('specialization')?.errors?.['required']">
           {{ 'nurse.specializationRequired' | translate | async }}
+        </div>
+      </div>
+
+      <!-- Governorate Dropdown -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.governorate' | translate | async }}</label>
+        <select
+          formControlName="governorateId"
+          class="form-select rounded-pill"
+          [ngClass]="{'is-invalid': form.get('governorateId')?.invalid && form.get('governorateId')?.touched}"
+        >
+          <option value="" disabled selected>{{ 'nurse.selectGovernorate' | translate | async }}</option>
+          <option *ngFor="let governorate of governorates" [value]="governorate.id">
+            {{ governorate.nameEn }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="form.get('governorateId')?.errors?.['required']">
+          {{ 'nurse.governorateRequired' | translate | async }}
+        </div>
+      </div>
+
+      <!-- City Dropdown -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">{{ 'nurse.city' | translate | async }}</label>
+        <select
+          formControlName="cityId"
+          class="form-select rounded-pill"
+          [ngClass]="{'is-invalid': form.get('cityId')?.invalid && form.get('cityId')?.touched}"
+          [disabled]="!form.get('governorateId')?.value"
+        >
+          <option value="" disabled selected>{{ 'nurse.selectCity' | translate | async }}</option>
+          <option *ngFor="let city of cities" [value]="city.id">
+            {{ city.nameEn }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="form.get('cityId')?.errors?.['required']">
+          {{ 'nurse.cityRequired' | translate | async }}
         </div>
       </div>
 
@@ -184,50 +226,6 @@
       <!-- Location Information Section -->
       <div class="col-12">
         <h5 class="mb-3 mt-2">{{ 'nurse.locationInfo' | translate | async }}</h5>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.governorate' | translate | async }}</label>
-        <input
-          formControlName="governorate"
-          placeholder="{{ 'nurse.governorate' | translate | async }}"
-          class="form-control rounded-pill"
-          [ngClass]="{'is-invalid': form.get('governorate')?.invalid && form.get('governorate')?.touched}"
-        />
-        <div class="invalid-feedback" *ngIf="form.get('governorate')?.errors?.['required']">
-          {{ 'nurse.governorateRequired' | translate | async }}
-        </div>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.city' | translate | async }}</label>
-        <input
-          formControlName="city"
-          placeholder="{{ 'nurse.city' | translate | async }}"
-          class="form-control rounded-pill"
-          [ngClass]="{'is-invalid': form.get('city')?.invalid && form.get('city')?.touched}"
-        />
-        <div class="invalid-feedback" *ngIf="form.get('city')?.errors?.['required']">
-          {{ 'nurse.cityRequired' | translate | async }}
-        </div>
-      </div>
-
-      <!-- Image Upload Section -->
-      <div class="col-12">
-        <h5 class="mb-3 mt-2">{{ 'nurse.profileImage' | translate | async }}</h5>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <label class="form-label">{{ 'nurse.image' | translate | async }}</label>
-        <input
-          type="file"
-          (change)="onImageSelected($event)"
-          class="form-control rounded-pill"
-          accept="image/*"
-        />
-        <div class="mt-2" *ngIf="imagePreview">
-          <img [src]="imagePreview" alt="Preview" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
-        </div>
       </div>
 
       <!-- Map Section -->
@@ -431,13 +429,13 @@
                 <small class="text-muted">{{ 'nurse.rating' | translate | async }}: {{ review.rating }}/5</small>
               </div>
               <app-action-button
-                color="success"
-                icon="cilPlus"
+                [color]="review.isUsedInPublic ? 'danger' : 'success'"
+                [icon]="review.isUsedInPublic ? 'cilTrash' : 'cilPlus'"
                 [text]="''"
-                (clicked)="addToLandingPage(review.id)"
+                (clicked)="addToLandingPage(review)"
                 size="sm"
                 shape="rounded-pill"
-                [disabled]="review.isUsedInPublic"
+
               ></app-action-button>
               </div>
               <p class="mb-1 mt-2">{{ review.comment }}</p>

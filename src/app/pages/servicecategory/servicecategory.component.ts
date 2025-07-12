@@ -1,7 +1,5 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewEncapsulation } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import {
   ButtonModule,
@@ -16,23 +14,19 @@ import {
   PaginationModule
 } from '@coreui/angular';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
+import { Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { cilPlus, cilPencil, cilTrash, cilList, cilSearch, cilFolder, cilLayers, cilPhone, cilX, cilWarning, cilCloudUpload } from '@coreui/icons';
 
 import { ServiceCategoryDto } from '../../Models/DTOs/ServiceCategoryDto';
 import { ServiceCatalogDto } from '../../Models/DTOs/ServiceCatalogDto';
 import { SubCategoryDto } from '../../Models/DTOs/SubCategoryDto';
-import { selectAllCategories, selectServiceCategoryLoading, selectServiceCategoryError } from '../../store/service-category/service-category.selectors';
-import * as ServiceCategoryActions from '../../store/service-category/service-category.actions';
-import { selectAllServices, selectServiceCatalogLoading, selectServiceCatalogError, selectServiceCatalogTotalCount } from '../../store/service-catalog/service-catalog.selectors';
-import * as ServiceCatalogActions from '../../store/service-catalog/service-catalog.actions';
-import { selectAllSubCategories, selectSubCategoryLoading, selectSubCategoryError } from '../../store/sub-category/sub-category.selectors';
-import * as SubCategoryActions from '../../store/sub-category/sub-category.actions';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import { GenericResponse } from '../../Models/Responses/GenericResponse';
 import { ServiceCategoryService } from '../../services/service-category.service';
 import { SubCategoryService } from '../../services/sub-category.service';
+import { ServiceCatalogService } from '../../services/service-catalog.service';
 
 @Component({
   selector: 'app-servicecategory',
@@ -64,19 +58,20 @@ import { SubCategoryService } from '../../services/sub-category.service';
 })
 export class ServicecategoryComponent implements OnInit {
   // Service Category
-  categories$: Observable<ServiceCategoryDto[]>;
-  loading$: Observable<boolean>;
-  error$: Observable<string | null>;
+  categories: ServiceCategoryDto[] = [];
+  isLoading = false;
+  error: string | null = null;
 
   // Service Catalog
-  serviceCatalogs$: Observable<ServiceCatalogDto[]>;
-  serviceCatalogLoading$: Observable<boolean>;
-  serviceCatalogError$: Observable<any>;
+  serviceCatalogs: ServiceCatalogDto[] = [];
+  isServiceCatalogLoading = false;
+  serviceCatalogError: any = null;
+  totalItems = 0;
 
   // Sub Category
-  subCategories$: Observable<SubCategoryDto[]>;
-  subCategoryLoading$: Observable<boolean>;
-  subCategoryError$: Observable<any>;
+  subCategories: SubCategoryDto[] = [];
+  isSubCategoryLoading = false;
+  subCategoryError: any = null;
 
   form: FormGroup;
   subCategoryForm: FormGroup;
@@ -105,41 +100,22 @@ export class ServicecategoryComponent implements OnInit {
   // Pagination for services
   currentPage = 1;
   pageSize = 2;
-  totalItems = 0;
 
   searchKey = '';
 
-  // Declare the property without initializing it
-  totalItems$: Observable<number>;
-
   constructor(
-    private store: Store,
     private fb: FormBuilder,
     private categoryService: ServiceCategoryService,
     private subCategoryService: SubCategoryService,
+    private serviceCatalogService: ServiceCatalogService,
     private iconSetService: IconSetService
   ) {
-    // Initialize the property here
-    this.totalItems$ = this.store.select(selectServiceCatalogTotalCount);
-
     // Register Icons
     iconSetService.icons = {
       cilPlus, cilPencil, cilTrash, cilList, cilSearch, cilFolder,
       cilLayers, cilPhone, cilX, cilWarning, cilCloudUpload
     };
 
-    // Service Category
-    this.categories$ = this.store.select(selectAllCategories);
-    this.loading$ = this.store.select(selectServiceCategoryLoading);
-    this.error$ = this.store.select(selectServiceCategoryError);
-    // Service Catalog
-    this.serviceCatalogs$ = this.store.select(selectAllServices);
-    this.serviceCatalogLoading$ = this.store.select(selectServiceCatalogLoading);
-    this.serviceCatalogError$ = this.store.select(selectServiceCatalogError);
-    // Sub Category
-    this.subCategories$ = this.store.select(selectAllSubCategories);
-    this.subCategoryLoading$ = this.store.select(selectSubCategoryLoading);
-    this.subCategoryError$ = this.store.select(selectSubCategoryError);
     // Form
     this.form = this.fb.group({
       nameAr: ['', Validators.required],
@@ -148,6 +124,7 @@ export class ServicecategoryComponent implements OnInit {
       descriptionEn: ['', Validators.required],
       icon: [null]
     });
+
     // Sub Category Form
     this.subCategoryForm = this.fb.group({
       nameAr: ['', Validators.required],
@@ -162,26 +139,66 @@ export class ServicecategoryComponent implements OnInit {
 
   ngOnInit() {
     this.loadData();
-    this.serviceCatalogs$.subscribe(data => {
-      console.log('Service Catalogs:', data);
-    });
-    this.totalItems$.subscribe(count => {
-      console.log('Total Items:', count);
-    });
   }
 
   loadData(): void {
     this.loadServices();
-    this.store.dispatch(ServiceCategoryActions.loadAllCategories());
-    this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+    this.loadCategories();
+    this.loadSubCategories();
+  }
+
+  loadCategories() {
+    this.isLoading = true;
+    this.categoryService.getAllCategories().subscribe({
+      next: (response) => {
+        console.log('Categories:', response.data);
+        this.categories = response.data;
+        this.isLoading = false;
+        this.error = null;
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+        this.isLoading = false;
+        this.error = 'Failed to load categories';
+      }
+    });
+  }
+
+  loadSubCategories() {
+    this.isSubCategoryLoading = true;
+    this.subCategoryService.getAllSubCategories().subscribe({
+      next: (subCategories) => {
+        this.subCategories = subCategories;
+        this.isSubCategoryLoading = false;
+        this.subCategoryError = null;
+      },
+      error: (error) => {
+        console.error('Error loading sub-categories:', error);
+        this.isSubCategoryLoading = false;
+        this.subCategoryError = 'Failed to load sub-categories';
+      }
+    });
   }
 
   loadServices() {
-    this.store.dispatch(ServiceCatalogActions.loadAllServices({
-      page: this.currentPage,
-      pageSize: this.pageSize,
-      searchKey: this.searchKey
-    }));
+    this.isServiceCatalogLoading = true;
+    this.serviceCatalogService.getAllServices({
+      SearchKey: this.searchKey,
+      PageNumber: this.currentPage,
+      PageSize: this.pageSize
+    }).subscribe({
+      next: (response) => {
+        this.serviceCatalogs = response.data;
+        this.totalItems = response.totalCount;
+        this.isServiceCatalogLoading = false;
+        this.serviceCatalogError = null;
+      },
+      error: (error) => {
+        console.error('Error loading services:', error);
+        this.isServiceCatalogLoading = false;
+        this.serviceCatalogError = 'Failed to load services';
+      }
+    });
   }
 
   onPageChange(page: number | Event) {
@@ -264,26 +281,18 @@ export class ServicecategoryComponent implements OnInit {
     this.previewIconUrl = null;
   }
 
-  // Helper method to show success toast
   showSuccess(message: string): void {
-    // You can implement your preferred toast notification system here
-    // Example using browser alert (replace with your toast system)
-
+    // Implement your toast notification system here
+    console.log('Success:', message);
   }
 
-  // Helper method to show error toast
   showError(message: string): void {
-    // You can implement your preferred toast notification system here
+    // Implement your toast notification system here
     console.error('Error:', message);
-    // Example using browser alert (replace with your toast system)
-
   }
 
   submit() {
     if (this.form.valid) {
-      console.log(this.selectedCategoryId);
-
-      // Create category data object
       const categoryData: ServiceCategoryDto = {
         nameAr: this.form.value.nameAr,
         nameEn: this.form.value.nameEn,
@@ -293,32 +302,30 @@ export class ServicecategoryComponent implements OnInit {
       };
 
       if (this.isEditMode && this.selectedCategoryId !== null) {
-        // Use the existing updateCategory method
         categoryData.id = this.selectedCategoryId;
         this.categoryService.updateCategory(categoryData).subscribe({
-          next: (response: GenericResponse<ServiceCategoryDto>) => {
-            console.log('Category updated successfully:', response);
-            this.store.dispatch(ServiceCategoryActions.loadAllCategories());
+          next: (response) => {
+            this.loadCategories();
             this.showCategoryForm = false;
             this.form.reset();
             this.showSuccess('Category updated successfully');
+            this.closeModal();
           },
-          error: (error: any) => {
+          error: (error) => {
             console.error('Error updating category:', error);
             this.showError('Failed to update category');
           }
         });
       } else {
-        // Use the existing addCategory method
         this.categoryService.addCategory(categoryData).subscribe({
-          next: (response: GenericResponse<ServiceCategoryDto>) => {
-            console.log('Category created successfully:', response);
-            this.store.dispatch(ServiceCategoryActions.loadAllCategories());
+          next: (response) => {
+            this.loadCategories();
             this.showCategoryForm = false;
             this.form.reset();
             this.showSuccess('Category created successfully');
+            this.closeModal();
           },
-          error: (error: any) => {
+          error: (error) => {
             console.error('Error creating category:', error);
             this.showError('Failed to create category');
           }
@@ -340,18 +347,16 @@ export class ServicecategoryComponent implements OnInit {
   confirmDelete() {
     if (this.selectedCategoryId !== null) {
       this.categoryService.deleteCategory(this.selectedCategoryId).subscribe({
-        next: (response: GenericResponse<any>) => {
-          console.log('Category deleted successfully:', response);
-          this.store.dispatch(ServiceCategoryActions.loadAllCategories());
+        next: (response) => {
+          this.loadCategories();
           this.closeDeleteModal();
           this.showSuccess('Category deleted successfully');
 
-          // Clear selected category if the deleted one was selected
           if (this.selectedCategoryId === this.selectedCategoryId) {
             this.selectedCategoryId = null;
           }
         },
-        error: (error: any) => {
+        error: (error) => {
           console.error('Error deleting category:', error);
           this.closeDeleteModal();
           this.showError('Failed to delete category');
@@ -361,13 +366,13 @@ export class ServicecategoryComponent implements OnInit {
   }
 
   getSubCategories(categoryId: number): Observable<SubCategoryDto[]> {
-    return this.subCategories$.pipe(
+    return of(this.subCategories).pipe(
       map(subCategories => subCategories.filter(sub => sub.serviceCategoryId === categoryId))
     );
   }
 
   getServiceCatalogs(categoryId: number): Observable<ServiceCatalogDto[]> {
-    return this.serviceCatalogs$.pipe(
+    return of(this.serviceCatalogs).pipe(
       map(catalogs => {
         if (!Array.isArray(catalogs)) {
           console.error('Expected catalogs to be an array, but got:', catalogs);
@@ -376,7 +381,7 @@ export class ServicecategoryComponent implements OnInit {
         return catalogs;
       }),
       mergeMap(catalogs =>
-        this.subCategories$.pipe(
+        of(this.subCategories).pipe(
           map(subCategories => {
             const categorySubCategories = subCategories.filter(sub => sub.serviceCategoryId === categoryId);
             return catalogs.filter(catalog =>
@@ -419,8 +424,6 @@ export class ServicecategoryComponent implements OnInit {
 
   submitSubCategory() {
     if (this.subCategoryForm.valid && this.selectedCategoryId !== null) {
-
-      // Create subcategory data object
       const subCategoryData: SubCategoryDto = {
         nameAr: this.subCategoryForm.value.nameAr,
         nameEn: this.subCategoryForm.value.nameEn,
@@ -432,7 +435,6 @@ export class ServicecategoryComponent implements OnInit {
       };
 
       if (this.isEditSubMode && this.editingSubCategoryId !== null) {
-        // For update with icon, use updateSubCategoryWithIcon method
         if (this.subCategoryIconFile) {
           const formData = new FormData();
           formData.append('nameAr', this.subCategoryForm.value.nameAr);
@@ -444,35 +446,31 @@ export class ServicecategoryComponent implements OnInit {
           formData.append('icon', this.subCategoryIconFile);
 
           this.subCategoryService.updateSubCategoryWithIcon(this.editingSubCategoryId, formData).subscribe({
-            next: (response: any) => {
-              console.log('Subcategory updated successfully:', response);
-              this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+            next: (response) => {
+              this.loadSubCategories();
               this.cancelSubCategoryForm();
               this.showSuccess('Subcategory updated successfully');
             },
-            error: (error: any) => {
+            error: (error) => {
               console.error('Error updating subcategory:', error);
               this.showError('Failed to update subcategory');
             }
           });
         } else {
-          // For update without icon, use updateSubCategory method
           subCategoryData.id = this.editingSubCategoryId;
           this.subCategoryService.updateSubCategory(subCategoryData).subscribe({
-            next: (response: any) => {
-              console.log('Subcategory updated successfully:', response);
-              this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+            next: (response) => {
+              this.loadSubCategories();
               this.cancelSubCategoryForm();
               this.showSuccess('Subcategory updated successfully');
             },
-            error: (error: any) => {
+            error: (error) => {
               console.error('Error updating subcategory:', error);
               this.showError('Failed to update subcategory');
             }
           });
         }
       } else {
-        // For create with icon, use addSubCategoryWithIcon method
         if (this.subCategoryIconFile) {
           const formData = new FormData();
           formData.append('nameAr', this.subCategoryForm.value.nameAr);
@@ -484,27 +482,24 @@ export class ServicecategoryComponent implements OnInit {
           formData.append('icon', this.subCategoryIconFile);
 
           this.subCategoryService.addSubCategoryWithIcon(formData).subscribe({
-            next: (response: any) => {
-              console.log('Subcategory created successfully:', response);
-              this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+            next: (response) => {
+              this.loadSubCategories();
               this.cancelSubCategoryForm();
               this.showSuccess('Subcategory created successfully');
             },
-            error: (error: any) => {
+            error: (error) => {
               console.error('Error creating subcategory:', error);
               this.showError('Failed to create subcategory');
             }
           });
         } else {
-          // For create without icon, use addSubCategory method
           this.subCategoryService.addSubCategory(subCategoryData).subscribe({
-            next: (response: any) => {
-              console.log('Subcategory created successfully:', response);
-              this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+            next: (response) => {
+              this.loadSubCategories();
               this.cancelSubCategoryForm();
               this.showSuccess('Subcategory created successfully');
             },
-            error: (error: any) => {
+            error: (error) => {
               console.error('Error creating subcategory:', error);
               this.showError('Failed to create subcategory');
             }
@@ -512,7 +507,6 @@ export class ServicecategoryComponent implements OnInit {
         }
       }
     } else {
-      // Mark all form controls as touched to trigger validation messages
       Object.keys(this.subCategoryForm.controls).forEach(key => {
         const control = this.subCategoryForm.get(key);
         control?.markAsTouched();
@@ -526,7 +520,6 @@ export class ServicecategoryComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.subCategoryIconFile = file;
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.subCategoryIconPreview = e.target.result;
@@ -596,13 +589,12 @@ export class ServicecategoryComponent implements OnInit {
   confirmDeleteSubCategory() {
     if (this.selectedSubCategoryId !== null) {
       this.subCategoryService.deleteSubCategory(this.selectedSubCategoryId).subscribe({
-        next: (response: any) => {
-          console.log('Subcategory deleted successfully:', response);
-          this.store.dispatch(SubCategoryActions.loadAllSubCategories());
+        next: (response) => {
+          this.loadSubCategories();
           this.closeDeleteSubCategoryModal();
           this.showSuccess('Subcategory deleted successfully');
         },
-        error: (error: any) => {
+        error: (error) => {
           console.error('Error deleting subcategory:', error);
           this.closeDeleteSubCategoryModal();
           this.showError('Failed to delete subcategory');
@@ -620,12 +612,11 @@ export class ServicecategoryComponent implements OnInit {
     if (!total || total <= 0) return 1;
     return Math.ceil(total / this.pageSize);
   }
-   
+
   onImageSelected(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       this.selectedFile = file;
-      // Create preview
       const reader = new FileReader();
       reader.onload = () => {
         this.iconPreview = reader.result as string;

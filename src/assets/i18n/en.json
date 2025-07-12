@@ -533,7 +533,10 @@
     "specializationRequired": "Specialization is required",
     "licenseRequired": "License number is required",
     "governorateRequired": "Governorate is required",
-    "cityRequired": "City is required"
+    "cityRequired": "City is required",
+    "selectSpecialization": "Select Specialization",
+    "selectGovernorate": "Select Governorate",
+    "selectCity": "Select City"
   },
   "map": {
     "instructions": "Click on the map to select a location or drag the marker to adjust position",

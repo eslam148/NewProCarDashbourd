@@ -12,6 +12,12 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 import { MapSelectorComponent } from '../../shared/components/map-selector/map-selector.component';
 import { ActionButtonComponent } from '../../shared/components/action-button/action-button.component';
 import { BootstrapIconComponent } from '../../components/bootstrap-icon/bootstrap-icon.component';
+import { SpecialtyService } from '../../services/specialty.service';
+import { SpecialtyDto } from '../../Models/DTOs/SpecialtyDto';
+import { GovernorateService } from '../../services/governorate.service';
+import { GovernorateDto } from '../../Models/DTOs/GovernorateDto';
+import { CityService } from '../../services/city.service';
+import { CityDto } from '../../Models/DTOs/CityDto';
 
 @Component({
   selector: 'app-nurse',
@@ -56,10 +62,17 @@ export class NurseComponent implements OnInit, AfterViewInit {
   showMap = false;
   defaultAvatarPath = 'assets/images/avatars/8.jpg';
 
+  specialties: SpecialtyDto[] = [];
+  governorates: GovernorateDto[] = [];
+  cities: CityDto[] = [];
+
   constructor(
     private fb: FormBuilder,
     private nurseService: NurseService,
-    private landingPageService: LandingPageService
+    private landingPageService: LandingPageService,
+    private specialtyService: SpecialtyService,
+    private governorateService: GovernorateService,
+    private cityService: CityService
   ) {
     this.form = this.fb.group({
       id: [''],
@@ -74,13 +87,12 @@ export class NurseComponent implements OnInit, AfterViewInit {
       ]],
       confirmPassword: ['', this.isEditMode ? [] : [Validators.required]],
       specialization: ['', Validators.required],
-      governorate: ['', Validators.required],
+      governorateId: ['', Validators.required],
       city: ['', Validators.required],
       licenseNumber: ['', Validators.required],
       rate: [null],
       imageUrl: [''],
       cityId: [''],
-      governorateId: [''],
       specialtyId: [''],
       latitude: [''],
       longitude: [''],
@@ -88,10 +100,23 @@ export class NurseComponent implements OnInit, AfterViewInit {
     }, {
       validators: this.passwordMatchValidator
     });
+
+    // Listen to governorate changes
+    this.form.get('governorateId')?.valueChanges.subscribe(governorateId => {
+      // Reset city when governorate changes
+      this.form.patchValue({ cityId: '' });
+      this.cities = [];
+
+      if (governorateId) {
+        this.loadCities(governorateId);
+      }
+    });
   }
 
   ngOnInit() {
     this.loadNurses();
+    this.loadSpecialties();
+    this.loadGovernorates();
   }
 
   ngAfterViewInit() {
@@ -198,7 +223,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
       if (formValue.phoneNumber) formData.append('PhoneNumber', formValue.phoneNumber);
       if (formValue.email) formData.append('Email', formValue.email);
       if (formValue.specialization) formData.append('Specialization', formValue.specialization);
-      if (formValue.governorate) formData.append('Governorate', formValue.governorate);
+      if (formValue.governorateId) formData.append('GovernorateId', formValue.governorateId.toString());
       if (formValue.city) formData.append('City', formValue.city);
 
       // Add latitude and longitude from the map
@@ -272,12 +297,14 @@ export class NurseComponent implements OnInit, AfterViewInit {
     this.selectedNurseReviews = [];
     this.selectedNurseName = '';
   }
-  addToLandingPage(reviewId: any) {
-    console.log('Adding nurse to landing page with reviewId:', reviewId);
+  addToLandingPage(review: any) {
 
-      this.landingPageService.addReviewToLandingPage(reviewId).subscribe({
-        next: () => {
+      this.landingPageService.addReviewToLandingPage(review.id).subscribe({
+        next: (data: any) => {
+          console.log('Data:', data.data.isUsedInPublic);
           this.successMessage = 'nurse.addToLandingPageSuccess';
+          this.selectedNurseReviews.find(r => r.id === review.id)!.isUsedInPublic = !review.isUsedInPublic;
+
           this.loadNurses();
         },
         error: (error) => {
@@ -362,5 +389,38 @@ export class NurseComponent implements OnInit, AfterViewInit {
 
   toggleConfirmPasswordVisibility() {
     this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  loadSpecialties() {
+    this.specialtyService.getAllSpecialties().subscribe({
+      next: (response) => {
+        this.specialties = response.data;
+      },
+      error: (error) => {
+        console.error('Error loading specialties:', error);
+      }
+    });
+  }
+
+  loadGovernorates() {
+    this.governorateService.getAllGovernorates().subscribe({
+      next: (response) => {
+        this.governorates = response.data;
+      },
+      error: (error) => {
+        console.error('Error loading governorates:', error);
+      }
+    });
+  }
+
+  loadCities(governorateId: number) {
+    this.cityService.getCityByGovernorateId(governorateId).subscribe({
+      next: (response) => {
+        this.cities = response.data;
+      },
+      error: (error) => {
+        console.error('Error loading cities:', error);
+      }
+    });
   }
 }

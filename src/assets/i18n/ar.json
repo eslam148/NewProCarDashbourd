@@ -515,7 +515,10 @@
     "specializationRequired": "التخصص مطلوب",
     "licenseRequired": "رقم الترخيص مطلوب",
     "governorateRequired": "المحافظة مطلوبة",
-    "cityRequired": "المدينة مطلوبة"
+    "cityRequired": "المدينة مطلوبة",
+    "selectSpecialization": "اختر التخصص",
+    "selectGovernorate": "اختر المحافظة",
+    "selectCity": "اختر المدينة"
   },
   "requests": {
     "title": "إدارة الطلبات",

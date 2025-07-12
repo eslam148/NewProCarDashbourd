@@ -5,4 +5,5 @@ export interface ServiceCategoryDto {
   descriptionAr: string;
   descriptionEn: string;
   icon?: File | null;
+  iconUrl?: string | null;
 }

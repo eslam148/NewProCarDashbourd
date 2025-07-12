@@ -7,4 +7,5 @@ export interface SubCategoryDto {
   descriptionAr: string;
   descriptionEn: string;
   icon?: File | null;
+  iconUrl?: string | null;
 }
