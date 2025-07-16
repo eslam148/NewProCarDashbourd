@@ -2,10 +2,7 @@
 <div class="login-container">
   <!-- Language Toggle -->
   <div class="language-toggle">
-    <button
-      type="button"
-      class="lang-switch-btn"
-      (click)="toggleLanguage()"
+    <button type="button" class="lang-switch-btn" (click)="toggleLanguage()"
       [attr.aria-label]="'common.switchLanguage' | translate | async">
       <i class="bi bi-translate"></i>
       <span class="lang-text">
@@ -43,7 +40,8 @@
 
             <!-- Form Section -->
             <div class="login-form-container">
-              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" *ngIf="forgotPasswordStep === 'login'">
+              <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form"
+                *ngIf="forgotPasswordStep === 'login'">
 
                 <!-- Loading Spinner -->
                 <div *ngIf="loading$ | async" class="loading-container">
@@ -83,14 +81,9 @@
                     {{ 'auth.email' | translate | async }}
                   </label>
                   <div class="input-wrapper">
-                    <input
-                      cFormControl
-                      formControlName="Email"
-                      class="modern-input"
-                      [placeholder]="'auth.phoneNumberPlaceholder' | translate | async"
-                      autocomplete="tel"
-                      [ngClass]="{'error': hasFieldError('phonenumber')}"
-                    />
+                    <input cFormControl formControlName="Email" class="modern-input"
+                      [placeholder]="'auth.EmailPlaceholder' | translate | async" autocomplete="tel"
+                      [ngClass]="{'error': hasFieldError('phonenumber')}" />
                     <div class="input-focus-border"></div>
                   </div>
                   <div *ngIf="getFieldError('phonenumber')" class="field-error">
@@ -106,21 +99,11 @@
                     {{ 'auth.password' | translate | async }}
                   </label>
                   <div class="input-wrapper password-wrapper">
-                    <input
-                      cFormControl
-                      [type]="showPassword ? 'text' : 'password'"
-                      formControlName="password"
-                      class="modern-input password-input"
-                      [placeholder]="'auth.passwordPlaceholder' | translate | async"
-                      autocomplete="current-password"
-                      [ngClass]="{'error': hasFieldError('password')}"
-                    />
-                    <button
-                      type="button"
-                      class="password-toggle-btn"
-                      (click)="togglePasswordVisibility()"
-                      [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
-                      tabindex="-1">
+                    <input cFormControl [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                      class="modern-input password-input" [placeholder]="'auth.passwordPlaceholder' | translate | async"
+                      autocomplete="current-password" [ngClass]="{'error': hasFieldError('password')}" />
+                    <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()"
+                      [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'" tabindex="-1">
                       <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                     </button>
                     <div class="input-focus-border"></div>
@@ -139,19 +122,13 @@
                     <span class="checkbox-label ms-3 ">{{ 'auth.rememberMe' | translate | async }}</span>
                   </label>
 
-                  <button
-                    type="button"
-                    class="forgot-password-link"
-                    (click)="showForgotPassword()">
+                  <button type="button" class="forgot-password-link" (click)="showForgotPassword()">
                     {{ 'auth.forgotPassword' | translate | async }}
                   </button>
                 </div>
 
                 <!-- Submit Button -->
-                <button
-                  type="submit"
-                  class="login-button"
-                  [disabled]="loginForm.invalid || !!(loading$ | async)"
+                <button type="submit" class="login-button" [disabled]="loginForm.invalid || !!(loading$ | async)"
                   [ngClass]="{'loading': loading$ | async}">
                   <span class="button-content">
 
@@ -211,15 +188,9 @@
                       {{ 'common.email' | translate | async }}
                     </label>
                     <div class="input-wrapper">
-                      <input
-                        cFormControl
-                        formControlName="email"
-                        type="email"
-                        class="modern-input"
-                        [placeholder]="'auth.emailPlaceholder' | translate | async"
-                        autocomplete="email"
-                        [ngClass]="{'error': getForgotPasswordFieldError('email')}"
-                      />
+                      <input cFormControl formControlName="email" type="email" class="modern-input"
+                        [placeholder]="'auth.emailPlaceholder' | translate | async" autocomplete="email"
+                        [ngClass]="{'error': getForgotPasswordFieldError('email')}" />
                       <div class="input-focus-border"></div>
                     </div>
                     <div *ngIf="getForgotPasswordFieldError('email')" class="field-error">
@@ -229,10 +200,7 @@
                   </div>
 
                   <!-- Submit Button -->
-                  <button
-                    style="margin-top: 10px;"
-                    type="submit"
-                    class="login-button"
+                  <button style="margin-top: 10px;" type="submit" class="login-button"
                     [disabled]="forgotPasswordForm.invalid || forgotPasswordLoading">
                     <span class="button-content">
                       <span class="button-text">{{ 'auth.sendOtp' | translate | async }}</span>
@@ -288,16 +256,9 @@
                       {{ 'auth.otpCode' | translate | async }}
                     </label>
                     <div class="input-wrapper">
-                      <input
-                        cFormControl
-                        formControlName="code"
-                        type="text"
-                        class="modern-input otp-input"
-                        placeholder="0000"
-                        maxlength="4"
-                        autocomplete="one-time-code"
-                        [ngClass]="{'error': getOtpFieldError('code')}"
-                      />
+                      <input cFormControl formControlName="code" type="text" class="modern-input otp-input"
+                        placeholder="0000" maxlength="4" autocomplete="one-time-code"
+                        [ngClass]="{'error': getOtpFieldError('code')}" />
                       <div class="input-focus-border"></div>
                     </div>
                     <div *ngIf="getOtpFieldError('code')" class="field-error">
@@ -308,10 +269,7 @@
 
                   <!-- Resend OTP -->
                   <div class="text-center mb-3">
-                    <button
-                      type="button"
-                      class="resend-btn"
-                      (click)="resendOtp()"
+                    <button type="button" class="resend-btn" (click)="resendOtp()"
                       [disabled]="otpCountdown > 0 || forgotPasswordLoading">
                       <span *ngIf="otpCountdown > 0">
                         {{ 'auth.resendIn' | translate | async }} {{ otpCountdown }}s
@@ -323,10 +281,7 @@
                   </div>
 
                   <!-- Submit Button -->
-                  <button
-                    type="submit"
-                    class="login-button"
-                    [disabled]="otpForm.invalid || forgotPasswordLoading">
+                  <button type="submit" class="login-button" [disabled]="otpForm.invalid || forgotPasswordLoading">
                     <span class="button-content">
                       <span class="button-text">{{ 'auth.verifyOtp' | translate | async }}</span>
                     </span>
@@ -381,21 +336,12 @@
                       {{ 'auth.newPassword' | translate | async }}
                     </label>
                     <div class="input-wrapper password-wrapper">
-                      <input
-                        cFormControl
-                        [type]="showNewPassword ? 'text' : 'password'"
-                        formControlName="newPassword"
+                      <input cFormControl [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword"
                         class="modern-input password-input"
-                        [placeholder]="'auth.newPasswordPlaceholder' | translate | async"
-                        autocomplete="new-password"
-                        [ngClass]="{'error': getResetPasswordFieldError('newPassword')}"
-                      />
-                      <button
-                        type="button"
-                        class="password-toggle-btn"
-                        (click)="toggleNewPasswordVisibility()"
-                        [attr.aria-label]="showNewPassword ? 'Hide password' : 'Show password'"
-                        tabindex="-1">
+                        [placeholder]="'auth.newPasswordPlaceholder' | translate | async" autocomplete="new-password"
+                        [ngClass]="{'error': getResetPasswordFieldError('newPassword')}" />
+                      <button type="button" class="password-toggle-btn" (click)="toggleNewPasswordVisibility()"
+                        [attr.aria-label]="showNewPassword ? 'Hide password' : 'Show password'" tabindex="-1">
                         <i [class]="showNewPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                       </button>
                       <div class="input-focus-border"></div>
@@ -413,21 +359,13 @@
                       {{ 'auth.confirmPassword' | translate | async }}
                     </label>
                     <div class="input-wrapper password-wrapper">
-                      <input
-                        cFormControl
-                        [type]="showConfirmPassword ? 'text' : 'password'"
-                        formControlName="confirmPassword"
-                        class="modern-input password-input"
+                      <input cFormControl [type]="showConfirmPassword ? 'text' : 'password'"
+                        formControlName="confirmPassword" class="modern-input password-input"
                         [placeholder]="'auth.confirmPasswordPlaceholder' | translate | async"
                         autocomplete="new-password"
-                        [ngClass]="{'error': getResetPasswordFieldError('confirmPassword')}"
-                      />
-                      <button
-                        type="button"
-                        class="password-toggle-btn"
-                        (click)="toggleConfirmPasswordVisibility()"
-                        [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
-                        tabindex="-1">
+                        [ngClass]="{'error': getResetPasswordFieldError('confirmPassword')}" />
+                      <button type="button" class="password-toggle-btn" (click)="toggleConfirmPasswordVisibility()"
+                        [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'" tabindex="-1">
                         <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                       </button>
                       <div class="input-focus-border"></div>
@@ -439,9 +377,7 @@
                   </div>
 
                   <!-- Submit Button -->
-                  <button
-                    type="submit"
-                    class="login-button"
+                  <button type="submit" class="login-button"
                     [disabled]="resetPasswordForm.invalid || forgotPasswordLoading">
                     <span class="button-content">
                       <span class="button-text">{{ 'auth.resetPassword' | translate | async }}</span>

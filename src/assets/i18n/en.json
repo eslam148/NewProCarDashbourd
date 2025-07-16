@@ -252,7 +252,7 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "phoneNumber": "Phone Number",
-    "phoneNumberPlaceholder": "Enter your phone number",
+    "EmailPlaceholder": "Enter your Email",
     "password": "Password",
     "passwordPlaceholder": "Enter your password",
     "forgotPassword": "Forgot Password?",
