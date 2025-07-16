@@ -177,7 +177,9 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit, O
             this.#store.dispatch(loadProfile({ userId: userId.toString() }));
           }
           // Load notifications after auth is confirmed
-          this.loadNotifications(true);
+          if(this.#authService.isAuthenticated()){
+            this.loadNotifications(true);
+          }
         }
       });
 
