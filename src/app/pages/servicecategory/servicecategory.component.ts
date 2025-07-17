@@ -435,7 +435,7 @@ export class ServicecategoryComponent implements OnInit {
       };
 
       if (this.isEditSubMode && this.editingSubCategoryId !== null) {
-        if (this.subCategoryIconFile) {
+
           const formData = new FormData();
           formData.append('nameAr', this.subCategoryForm.value.nameAr);
           formData.append('nameEn', this.subCategoryForm.value.nameEn);
@@ -443,7 +443,9 @@ export class ServicecategoryComponent implements OnInit {
           formData.append('descriptionEn', this.subCategoryForm.value.descriptionEn);
           formData.append('fromCallCenter', String(this.subCategoryForm.value.fromCallCenter));
           formData.append('serviceCategoryId', this.selectedCategoryId.toString());
-          formData.append('icon', this.subCategoryIconFile);
+          if (this.subCategoryIconFile) {
+            formData.append('icon', this.subCategoryIconFile);
+          }
 
           this.subCategoryService.updateSubCategoryWithIcon(this.editingSubCategoryId, formData).subscribe({
             next: (response) => {
@@ -456,20 +458,7 @@ export class ServicecategoryComponent implements OnInit {
               this.showError('Failed to update subcategory');
             }
           });
-        } else {
-          subCategoryData.id = this.editingSubCategoryId;
-          this.subCategoryService.updateSubCategory(subCategoryData).subscribe({
-            next: (response) => {
-              this.loadSubCategories();
-              this.cancelSubCategoryForm();
-              this.showSuccess('Subcategory updated successfully');
-            },
-            error: (error) => {
-              console.error('Error updating subcategory:', error);
-              this.showError('Failed to update subcategory');
-            }
-          });
-        }
+
       } else {
         if (this.subCategoryIconFile) {
           const formData = new FormData();

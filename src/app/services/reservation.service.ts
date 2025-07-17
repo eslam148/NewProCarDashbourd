@@ -7,12 +7,13 @@ import {
   ReservationResponseModel,
   ApiResponse
 } from '../Models/DTOs/Reservation';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationService {
-  private baseUrl = 'http://procare.runasp.net/api/Reservation';
+  private baseUrl = environment.apiUrl + '/api/Reservation';
 
   constructor(private http: HttpClient) {}
 
