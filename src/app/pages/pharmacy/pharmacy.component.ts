@@ -100,7 +100,7 @@ export class PharmacyComponent implements OnInit {
     this.pharmacyForm = this.fb.group({
       id: [null],
       name: ['', Validators.required],
-      address: ['', Validators.required],
+      //address: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9+\-\s()]+$/)]],
       email: ['', [Validators.email]],
       governorateId: ['', Validators.required],
@@ -108,7 +108,7 @@ export class PharmacyComponent implements OnInit {
       latitude: ['', [Validators.min(-90), Validators.max(90)]],
       longitude: ['', [Validators.min(-180), Validators.max(180)]],
       notes: [''],
-      addressNotes: ['']
+    //  addressNotes: ['']
     });
   }
 
@@ -359,7 +359,7 @@ export class PharmacyComponent implements OnInit {
                 // Fallback: reload if not found
                 this.loadPharmacies();
               }
-
+              this.loadPharmacies();
               this.closeForm();
             } else {
               this.translate.get('PHARMACY.MESSAGES.ERROR.UPDATE').subscribe((msg: string) => {

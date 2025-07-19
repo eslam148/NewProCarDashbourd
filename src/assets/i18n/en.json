@@ -1,5 +1,7 @@
 {
   "common": {
+    "noResults": "No Results",
+    "tryDifferentSearch": "Try Different Search",
     "AddToLandingPage": "Add to Landing Page",
     "dashboard": "Dashboard",
     "settings": "Settings",

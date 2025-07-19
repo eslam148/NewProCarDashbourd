@@ -139,9 +139,8 @@
             <div class="mb-4">
               <label for="governorate" class="form-label fw-semibold">{{ 'location.selectGovernorate' | translate | async }}</label>
               <select class="form-select rounded-pill" id="governorate" formControlName="governorateId">
-                <option value="">{{ 'location.selectGovernorate' | translate | async }}</option>
-                <option value="all">{{ 'location.allGovernorates' | translate | async }}</option>
-                <ng-container *ngFor="let gov of (governorates$ | async)">
+                <option selected value="">{{ 'location.selectGovernorate' | translate | async }}</option>
+                 <ng-container *ngFor="let gov of (governorates$ | async)">
                   <option [value]="gov.id">{{ currentLang === 'ar' ? gov.nameAr : gov.nameEn }}</option>
                 </ng-container>
               </select>
@@ -262,8 +261,8 @@
       <svg cIcon name="cilWarning" class="me-2"></svg>
       <span>
         {{ deleteType === 'governorate'
-          ? ('deleteGovernorateConfirm' | translate | async)
-          : ('deleteCityConfirm' | translate | async) }}
+          ? ('location.deleteGovernorateConfirm' | translate | async)
+          : ('location.deleteCityConfirm' | translate | async) }}
       </span>
     </div>
   </c-modal-body>

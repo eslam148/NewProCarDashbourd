@@ -11,16 +11,19 @@
         <!-- Default Search Form -->
         <ng-container *ngIf="showSearch && searchForm && !searchTemplate">
           <form [formGroup]="searchForm" class="d-flex" (ngSubmit)="onSearch()">
-            <div class="input-group">
-              <span class="input-group-text">
-                <i class="bi bi-search"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="SearchKey"
-                [placeholder]="searchPlaceholder | translate | async"
-              >
+            <div class="input-group d-flex align-items-center " style="gap: 1%;">
+              <div class="d-flex align-items-center input-group " style="width: 65%;">
+                <span class="input-group-text">
+                  <i class="bi bi-search"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="SearchKey"
+                  [placeholder]="searchPlaceholder | translate | async"
+                >
+              </div>
+
               <app-action-button
                 color="primary"
                 type="submit"

@@ -1,5 +1,7 @@
 {
   "common": {
+    "noResults": "لا يوجد نتائج",
+    "tryDifferentSearch": "حاول بحثًا مختلفًا",
     "AddToLandingPage": "إضافة إلى الصفحة الرئيسية",
     "dashboard": "لوحة التحكم",
     "settings": "الإعدادات",

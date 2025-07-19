@@ -29,7 +29,6 @@
         <thead>
           <tr>
             <th>{{ 'PHARMACY.TABLE.NAME' | translate | async }}</th>
-            <th>{{ 'PHARMACY.TABLE.ADDRESS' | translate | async }}</th>
             <th>{{ 'PHARMACY.TABLE.PHONE' | translate | async }}</th>
             <th>{{ 'PHARMACY.TABLE.GOVERNORATE' | translate | async }}</th>
             <th>{{ 'PHARMACY.TABLE.CITY' | translate  | async}}</th>
@@ -39,7 +38,7 @@
         <tbody>
           <tr *ngFor="let pharmacy of pharmacies">
             <td>{{ pharmacy.name }}</td>
-            <td>{{ pharmacy.addressNotes }}</td>
+
             <td>{{ pharmacy.phoneNumber }}</td>
             <td>{{ pharmacy.governorateName }}</td>
             <td>{{ pharmacy.cityName }}</td>
@@ -147,7 +146,7 @@
               {{ 'PHARMACY.FORM.EMAIL_INVALID' | translate | async }}
             </div>
           </div>
-
+<!--
           <div class="col-md-6 mb-3">
             <label cLabel for="address">{{ 'PHARMACY.FORM.ADDRESS' | translate | async }}</label>
             <input
@@ -161,6 +160,8 @@
               {{ 'PHARMACY.FORM.ADDRESS_REQUIRED' | translate | async }}
             </div>
           </div>
+-->
+
         </div>
 
         <div class="mb-3">
@@ -299,7 +300,7 @@
             [placeholder]="'PHARMACY.FORM.NOTES_PLACEHOLDER' | translate | async"
           ></textarea>
         </div>
-
+<!--
         <div class="mb-3">
           <label cLabel for="addressNotes">{{ 'PHARMACY.FORM.ADDRESS_NOTES' | translate | async }}</label>
           <textarea
@@ -310,6 +311,7 @@
             [placeholder]="'PHARMACY.FORM.ADDRESS_NOTES_PLACEHOLDER' | translate | async"
           ></textarea>
         </div>
+-->
         <!-- Form Buttons -->
         <div class="d-flex gap-2 justify-content-end mt-4">
           <button
