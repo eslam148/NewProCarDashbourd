@@ -3,9 +3,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { delay, filter, map, tap } from 'rxjs/operators';
+import { delay, filter, map, tap, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { checkAuth } from './store/auth/auth.actions';
+import { selectAuthResponse } from './store/auth/auth.selectors';
 import { ThemeService } from './services/theme.service';
 import { RTLSelectFix } from './utils/rtl-select-fix';
 
@@ -141,8 +142,17 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Check authentication state on app initialization
-    this.#store.dispatch(checkAuth());
+    // Only check authentication state on app initialization if we're not on the login page
+    // This prevents interference with the logout flow when 401 errors occur
+    if (this.#router.url !== '/login') {
+      // Also check if there's any auth data in localStorage before dispatching checkAuth
+      const hasToken = localStorage.getItem('token') || localStorage.getItem('authToken');
+      const hasUserData = localStorage.getItem('user');
+
+      if (hasToken && hasUserData) {
+        this.#store.dispatch(checkAuth());
+      }
+    }
 
     // Fix Leaflet icon paths and initialize RTL select fixes
     if (isPlatformBrowser(this.#platformId)) {

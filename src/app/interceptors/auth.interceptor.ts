@@ -5,11 +5,12 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap, take } from 'rxjs/operators';
+import { catchError, tap, take, switchMap } from 'rxjs/operators';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectCurrentLanguage } from '../store/translation/translation.selectors';
+import { clearAuthStore } from '../store/auth/auth.actions';
 
 export function authInterceptor(
   request: HttpRequest<unknown>,
@@ -47,11 +48,20 @@ export function authInterceptor(
 
       // Handle unauthorized error (401)
       if (error.status === 401) {
-        // Clear all items from localStorage
-        localStorage.clear();
+        console.log('401 error: Clearing auth store and redirecting to login');
 
-        // Redirect to login page
-        router.navigate(['/login']);
+        // Dispatch clear auth store action - this will clear both store state and localStorage
+        store.dispatch(clearAuthStore());
+
+        // Use setTimeout to allow store state to update before redirecting
+        // This prevents the race condition that causes infinite redirect loops
+        setTimeout(() => {
+          // Only redirect if we're not already on the login page
+          if (router.url !== '/login') {
+            console.log('401 error: Redirecting to login page');
+            router.navigate(['/login'], { replaceUrl: true });
+          }
+        }, 0);
       }
 
       // Handle forbidden error (403)
@@ -65,6 +75,8 @@ export function authInterceptor(
     })
   );
 }
+
+
 
 /**
  * Get current language synchronously from localStorage
@@ -88,7 +100,7 @@ function getCurrentLanguageSync(): string {
 function mapLanguageToLocale(language: string): string {
   const languageLocaleMap: { [key: string]: string } = {
     'ar': 'ar-EG',
-    'en': 'en-Us'
+    'en': 'en-US'
   };
 
   // Return mapped locale or default to 'en-US' for unsupported languages

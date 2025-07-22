@@ -16,7 +16,8 @@ import {
   checkAuthSuccess,
   checkAuthFailure,
   saveFcmToken,
-  clearFcmToken
+  clearFcmToken,
+  clearAuthStore
 } from './auth.actions';
 
 @Injectable()
@@ -172,14 +173,12 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(logoutSuccess),
         tap(() => {
-          localStorage.removeItem('token');
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('user');
+          console.log('Logout success, clearing auth store and navigating to login');
 
-          // Clear FCM token on logout
-          this.authService.clearFcmToken();
+          // Dispatch clear auth store to ensure complete cleanup
+          this.store.dispatch(clearAuthStore());
 
-          console.log('Logout success, navigating to login');
+          // Navigate to login
           this.router.navigate(['/login']);
         })
       ),
@@ -201,10 +200,8 @@ export class AuthEffects {
             }));
           } catch (error) {
             console.error('Error parsing user data:', error);
-            // Clear corrupted data
-            localStorage.removeItem('token');
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
+            // Clear corrupted auth data
+            this.clearAuthData();
             return of(checkAuthFailure());
           }
         }
@@ -261,5 +258,41 @@ export class AuthEffects {
       }
     }
     return null;
+  }
+
+  clearAuthStore$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(clearAuthStore),
+        tap(() => {
+          console.log('Clearing auth store and localStorage');
+          // Clear only auth-related data from localStorage
+          this.clearAuthData();
+
+          // Clear FCM token
+          this.authService.clearFcmToken();
+        })
+      ),
+    { dispatch: false }
+  );
+
+  /**
+   * Clear only authentication-related data from localStorage
+   * Preserves non-auth data like theme and language preferences
+   */
+  private clearAuthData(): void {
+    const authKeys = [
+      'token',
+      'authToken',
+      'user',
+      'fcmToken',
+      'fcmTokenData'
+    ];
+
+    authKeys.forEach(key => {
+      localStorage.removeItem(key);
+    });
+
+    console.log('Auth data cleared from effects');
   }
 }

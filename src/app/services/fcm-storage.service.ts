@@ -3,12 +3,13 @@ import { Store } from '@ngrx/store';
 import { selectFcmToken } from '../store/auth/auth.selectors';
 import { saveFcmToken, clearFcmToken } from '../store/auth/auth.actions';
 import { Observable } from 'rxjs';
+import { clearAuthData } from '../utils/auth-utils';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FcmStorageService {
-  
+
   constructor(private store: Store) {}
 
   /**
@@ -17,17 +18,17 @@ export class FcmStorageService {
   saveFcmToken(token: string): void {
     // Save to store
     this.store.dispatch(saveFcmToken({ fcmToken: token }));
-    
+
     // Save to localStorage with metadata
     const tokenData = {
       token: token,
       timestamp: new Date().toISOString(),
       userId: this.getCurrentUserId()
     };
-    
+
     localStorage.setItem('fcmToken', token);
     localStorage.setItem('fcmTokenData', JSON.stringify(tokenData));
-    
+
     console.log('FCM token saved to store and localStorage:', token);
   }
 
@@ -66,12 +67,25 @@ export class FcmStorageService {
   clearFcmToken(): void {
     // Clear from store
     this.store.dispatch(clearFcmToken());
-    
-    // Clear from localStorage
+
+    // Clear only FCM-related items from localStorage
     localStorage.removeItem('fcmToken');
     localStorage.removeItem('fcmTokenData');
-    
+
     console.log('FCM token cleared from store and localStorage');
+  }
+
+  /**
+   * Clear all auth data including FCM tokens
+   */
+  clearAllAuthData(): void {
+    // Clear from store
+    this.store.dispatch(clearFcmToken());
+
+    // Clear all auth data
+    clearAuthData();
+
+    console.log('All auth data cleared');
   }
 
   /**
@@ -80,7 +94,7 @@ export class FcmStorageService {
   hasValidFcmToken(): boolean {
     const token = this.getFcmTokenFromStorage();
     const tokenData = this.getFcmTokenData();
-    
+
     if (!token || !tokenData) {
       return false;
     }
@@ -88,7 +102,7 @@ export class FcmStorageService {
     try {
       const tokenAge = Date.now() - new Date(tokenData.timestamp).getTime();
       const maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
-      
+
       return tokenAge < maxAge;
     } catch {
       return false;
@@ -100,12 +114,12 @@ export class FcmStorageService {
    */
   updateFcmTokenIfChanged(newToken: string): boolean {
     const currentToken = this.getFcmTokenFromStorage();
-    
+
     if (currentToken !== newToken) {
       this.saveFcmToken(newToken);
       return true;
     }
-    
+
     return false;
   }
 
@@ -130,7 +144,7 @@ export class FcmStorageService {
    */
   syncFcmToken(): void {
     const storageToken = this.getFcmTokenFromStorage();
-    
+
     if (storageToken) {
       // If token exists in localStorage but not in store, save to store
       this.store.dispatch(saveFcmToken({ fcmToken: storageToken }));
@@ -143,15 +157,15 @@ export class FcmStorageService {
   getFcmTokenInfo(): any {
     const token = this.getFcmTokenFromStorage();
     const tokenData = this.getFcmTokenData();
-    
+
     return {
       hasToken: !!token,
       token: token ? token.substring(0, 20) + '...' : null,
       isValid: this.hasValidFcmToken(),
       timestamp: tokenData?.timestamp,
       userId: tokenData?.userId,
-      age: tokenData?.timestamp ? 
-        Math.floor((Date.now() - new Date(tokenData.timestamp).getTime()) / (1000 * 60 * 60 * 24)) + ' days' : 
+      age: tokenData?.timestamp ?
+        Math.floor((Date.now() - new Date(tokenData.timestamp).getTime()) / (1000 * 60 * 60 * 24)) + ' days' :
         null
     };
   }

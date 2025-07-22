@@ -9,7 +9,8 @@ import {
   checkAuthSuccess,
   checkAuthFailure,
   saveFcmToken,
-  clearFcmToken
+  clearFcmToken,
+  clearAuthStore
 } from './auth.actions';
 import { LoginResponse } from '../../Models/Responses/LoginResponse';
 
@@ -74,5 +75,8 @@ export const authReducer = createReducer(
   on(clearFcmToken, (state) => ({
     ...state,
     fcmToken: null
+  })),
+  on(clearAuthStore, () => ({
+    ...initialState
   }))
 );

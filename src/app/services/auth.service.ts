@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment.prod';
 import { Observable } from 'rxjs';
 import { GenericResponse } from '../Models/Responses/GenericResponse';
 import { FcmService } from './fcm.service';
+import { clearAuthData } from '../utils/auth-utils';
 
 interface JWTPayload {
   UserId: number;
@@ -154,8 +155,7 @@ export class AuthService {
    */
   clearAuth(): void {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      clearAuthData();
     }
   }
 

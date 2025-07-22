@@ -199,5 +199,5 @@ export const routes: Routes = [
       title: 'Register Page'
     }
   },
-  { path: '**', redirectTo: 'profile' }
+  { path: '**', redirectTo: '404' }
 ];

@@ -46,3 +46,5 @@ export const checkAuthSuccess = createAction(
 );
 
 export const checkAuthFailure = createAction('[Auth] Check Auth Failure');
+
+export const clearAuthStore = createAction('[Auth] Clear Auth Store');
