@@ -19,6 +19,7 @@ import {
   clearFcmToken,
   clearAuthStore
 } from './auth.actions';
+import { Roles } from '../../Enums/Roles.enum';
 
 @Injectable()
 export class AuthEffects {
@@ -87,10 +88,21 @@ export class AuthEffects {
                 data: response.data
               };
             }
+            if(response.data.role = Roles.Admin){
+                return loginSuccess({
+                  response: response.data
+                });
+            }
+            else{
+              throw {
+                status: 1,
+                message: response.message || 'You are not authorized to access this page.',
+                data: response.data
+              };
+            }
+            // if()
 
-            return loginSuccess({
-              response: response.data
-            });
+
           }),
           catchError(error => {
             console.error('Login error:', error);
