@@ -142,17 +142,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Only check authentication state on app initialization if we're not on the login page
-    // This prevents interference with the logout flow when 401 errors occur
-    if (this.#router.url !== '/login') {
-      // Also check if there's any auth data in localStorage before dispatching checkAuth
-      const hasToken = localStorage.getItem('token') || localStorage.getItem('authToken');
-      const hasUserData = localStorage.getItem('user');
-
-      if (hasToken && hasUserData) {
-        this.#store.dispatch(checkAuth());
-      }
-    }
+    // Check authentication state on app initialization
+    // This will populate the store with auth data if available
+    console.log('App component: Dispatching checkAuth');
+    this.#store.dispatch(checkAuth());
 
     // Fix Leaflet icon paths and initialize RTL select fixes
     if (isPlatformBrowser(this.#platformId)) {

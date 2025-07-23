@@ -173,13 +173,11 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(logoutSuccess),
         tap(() => {
-          console.log('Logout success, clearing auth store and navigating to login');
+          console.log('Logout success, clearing auth store - redirect will be handled by clearAuthStore effect');
 
           // Dispatch clear auth store to ensure complete cleanup
+          // The clearAuthStore effect will handle the redirect to login
           this.store.dispatch(clearAuthStore());
-
-          // Navigate to login
-          this.router.navigate(['/login']);
         })
       ),
     { dispatch: false }
@@ -271,6 +269,8 @@ export class AuthEffects {
 
           // Clear FCM token
           this.authService.clearFcmToken();
+
+          console.log('Auth data cleared - no redirect from effect, let auth guard handle it');
         })
       ),
     { dispatch: false }

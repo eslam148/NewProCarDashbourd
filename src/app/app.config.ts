@@ -92,5 +92,5 @@ export const appConfig: ApplicationConfig = {
     TranslationService,
     ThemeService
   ]
-  
+
 };

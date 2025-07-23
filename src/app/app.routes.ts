@@ -22,18 +22,17 @@ export const routes: Routes = [
   },*/
   {
     path: '',
-    redirectTo: 'profile',
-    pathMatch: 'full'
-  },
-
-  {
-    path: '',
     component: DefaultLayoutComponent,
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     data: {
       title: 'Home'
     },
     children: [
+      {
+        path: '',
+        redirectTo: 'profile',
+        pathMatch: 'full'
+      },
       /*
       {
         path: 'dashboard',

@@ -21,7 +21,10 @@ export function authInterceptor(
 
   // Get token from localStorage
   const token = localStorage.getItem('token');
+  if(!token){
+              router.navigate(['/login'], { replaceUrl: true });
 
+  }
   // Get current language and map to locale
   const currentLanguage = getCurrentLanguageSync();
   const acceptLanguage = mapLanguageToLocale(currentLanguage);
