@@ -4,6 +4,15 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { NurseDto } from '../Models/DTOs/NurseDto';
 
+export interface NurseSearchParams {
+  pageNumber: number;
+  pageSize: number;
+  searchKey: string;
+  cityId: number;
+  latitude: number;
+  longitude: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class NurseService {
   private apiUrl = environment.apiUrl + '/api/Nurse';
@@ -18,7 +27,8 @@ export class NurseService {
     return this.http.put(`${this.apiUrl}/UpdateNurse`, formData);
   }
 
-  getAllNurses(search: any): Observable<{ data: { items: NurseDto[]; totalCount: number; pageNumber: number; pageSize: number; totalPages: number; count: number; hasNextPage: boolean; hasPreviousPage: boolean } }> {
+  getAllNurses(search: NurseSearchParams): Observable<{ data: { items: NurseDto[]; totalCount: number; pageNumber: number; pageSize: number; totalPages: number; count: number; hasNextPage: boolean; hasPreviousPage: boolean } }> {
+    console.log('Sending nurse search request with params:', search);
     return this.http.post<{ data: { items: NurseDto[]; totalCount: number; pageNumber: number; pageSize: number; totalPages: number; count: number; hasNextPage: boolean; hasPreviousPage: boolean } }>(`${this.apiUrl}/GetAllNurses`, search);
   }
 

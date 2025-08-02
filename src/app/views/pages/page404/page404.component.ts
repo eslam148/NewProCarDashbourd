@@ -12,10 +12,6 @@ import { ContainerComponent, RowComponent, ColComponent, InputGroupComponent, In
       ContainerComponent,
       RowComponent,
       ColComponent,
-      InputGroupComponent,
-      InputGroupTextDirective,
-      IconDirective,
-      FormControlDirective,
       ButtonDirective,
       RouterModule
     ]

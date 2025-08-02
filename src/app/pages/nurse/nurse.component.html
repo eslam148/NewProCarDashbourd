@@ -1,6 +1,55 @@
 <div class="container mt-4">
   <h2>{{ 'nurse.title' | translate | async }}</h2>
 
+  <!-- Search and Filter Section -->
+  <div class="mb-4" *ngIf="!showForm">
+    <div class="card p-3 shadow-sm">
+      <h5 class="mb-3">{{ 'nurse.searchFilters' | translate | async }}</h5>
+      <div class="row g-3">
+        <div class="col-12 col-md-4">
+          <label class="form-label">{{ 'nurse.searchKey' | translate | async }}</label>
+          <input
+            type="text"
+            class="form-control rounded-pill"
+            [(ngModel)]="searchKey"
+            placeholder="{{ 'nurse.searchPlaceholder' | translate | async }}"
+          />
+        </div>
+        <div class="col-12 col-md-8">
+          <label class="form-label">{{ 'nurse.city' | translate | async }}</label>
+          <select
+            class="form-select rounded-pill"
+            [(ngModel)]="selectedCityId"
+          >
+            <option value="0">{{ 'nurse.allCities' | translate | async }}</option>
+            <option *ngFor="let city of cities" [value]="city.id">
+              {{ city.nameEn }}
+            </option>
+          </select>
+        </div>
+        <div class="col-12">
+          <div class="d-flex gap-2">
+            <app-action-button
+              color="primary"
+              icon="cilMagnifyingGlass"
+              text="nurse.search"
+              shape="rounded-pill"
+              (clicked)="searchNurses()"
+            ></app-action-button>
+            <app-action-button
+              color="secondary"
+              icon="cilReload"
+              text="nurse.reset"
+              shape="rounded-pill"
+              (clicked)="resetSearch()"
+            ></app-action-button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Add Nurse Button -->
   <div class="mb-3" *ngIf="!showForm">
     <app-action-button

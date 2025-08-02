@@ -475,6 +475,11 @@
     "nameEnRequired": "Specialty name in English is required"
   },
   "nurse": {
+     "search":"Search",
+    "reset": "Reset",
+    "searchPlaceholder":"Search by name",
+    "city":"City",
+    "allCities": "All cities",
     "title": "Nurses Management",
     "add": "Add Nurse",
     "edit": "Edit Nurse",

@@ -1,11 +1,12 @@
 import { LandingPageService } from './../../services/landing-page.service';
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { NurseService } from '../../services/nurse.service';
+import { NurseService, NurseSearchParams } from '../../services/nurse.service';
 import { NurseDto, ReviewDto } from '../../Models/DTOs/NurseDto';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { TranslationService } from '../../services/translation.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { PaginationModule } from '@coreui/angular';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
@@ -27,6 +28,7 @@ import { CityDto } from '../../Models/DTOs/CityDto';
   imports: [
     TranslatePipe,
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     PaginationModule,
     PaginationComponent,
@@ -58,6 +60,12 @@ export class NurseComponent implements OnInit, AfterViewInit {
   imagePreview: string | ArrayBuffer | null = null;
   showPassword = false;
   showConfirmPassword = false;
+
+  // Search filters
+  searchKey = '';
+  selectedCityId = 0;
+  searchLatitude = 0;
+  searchLongitude = 0;
 
   // Map-related properties
   showMap = false;
@@ -183,6 +191,7 @@ export class NurseComponent implements OnInit, AfterViewInit {
     this.loadNurses();
     this.loadSpecialties();
     this.loadGovernorates();
+    this.loadAllCities(); // Load all cities for search filter
   }
 
   ngAfterViewInit() {
@@ -192,10 +201,20 @@ export class NurseComponent implements OnInit, AfterViewInit {
   }
 
   loadNurses() {
-    this.nurseService.getAllNurses({ pageNumber: this.pageNumber, pageSize: this.pageSize, searchKey: '', cityId: 0 }).subscribe({
+    const searchParams: NurseSearchParams = {
+      pageNumber: this.pageNumber,
+      pageSize: this.pageSize,
+      searchKey: this.searchKey,
+      cityId: this.selectedCityId,
+      latitude: this.searchLatitude,
+      longitude: this.searchLongitude
+    };
+
+    this.nurseService.getAllNurses(searchParams).subscribe({
       next: (res) => {
         this.nurses = res.data.items;
-        console.log('Nurses loaded:',  this.nurses);
+        console.log('Nurses loaded:', this.nurses);
+        console.log('Search params used:', searchParams);
 
         this.totalCount = res.data.totalCount;
       },
@@ -210,6 +229,48 @@ export class NurseComponent implements OnInit, AfterViewInit {
     if (page < 1 || (page - 1) * this.pageSize >= this.totalCount) return;
     this.pageNumber = page;
     this.loadNurses();
+  }
+
+  searchNurses() {
+    this.pageNumber = 1; // Reset to first page when searching
+    console.log('Searching nurses with filters:', {
+      searchKey: this.searchKey,
+      cityId: this.selectedCityId,
+      latitude: this.searchLatitude,
+      longitude: this.searchLongitude
+    });
+    this.loadNurses();
+  }
+
+  resetSearch() {
+    this.searchKey = '';
+    this.selectedCityId = 0;
+    this.searchLatitude = 0;
+    this.searchLongitude = 0;
+    this.pageNumber = 1;
+    this.loadNurses();
+  }
+
+  // Test method to verify API call with exact curl parameters
+  testApiCall() {
+    const testParams: NurseSearchParams = {
+      pageNumber: 0,
+      pageSize: 0,
+      searchKey: "string",
+      cityId: 0,
+      latitude: 0,
+      longitude: 0
+    };
+
+    console.log('Testing API call with exact curl parameters:', testParams);
+    this.nurseService.getAllNurses(testParams).subscribe({
+      next: (response) => {
+        console.log('API Response:', response);
+      },
+      error: (error) => {
+        console.error('API Error:', error);
+      }
+    });
   }
 
   getPagesCount(): number {
@@ -583,6 +644,17 @@ export class NurseComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {
         console.error('Error loading cities:', error);
+      }
+    });
+  }
+
+  loadAllCities() {
+    this.cityService.getAllCities().subscribe({
+      next: (response) => {
+        this.cities = response.data;
+      },
+      error: (error) => {
+        console.error('Error loading all cities:', error);
       }
     });
   }
