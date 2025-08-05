@@ -5,20 +5,20 @@
   <div class="mb-4" *ngIf="!showForm">
     <div class="card p-3 shadow-sm">
       <h5 class="mb-3">{{ 'nurse.searchFilters' | translate | async }}</h5>
-      <div class="row g-3">
-        <div class="col-12 col-md-4">
-          <label class="form-label">{{ 'nurse.searchKey' | translate | async }}</label>
+      <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small">{{ 'nurse.searchKey' | translate | async }}</label>
           <input
             type="text"
-            class="form-control rounded-pill"
+            class="form-control form-control-sm rounded-pill"
             [(ngModel)]="searchKey"
             placeholder="{{ 'nurse.searchPlaceholder' | translate | async }}"
           />
         </div>
-        <div class="col-12 col-md-4">
-          <label class="form-label">{{ 'nurse.governorate' | translate | async }}</label>
+        <div class="col-md-3">
+          <label class="form-label small">{{ 'nurse.governorate' | translate | async }}</label>
           <select
-            class="form-select rounded-pill"
+            class="form-select form-select-sm rounded-pill"
             [(ngModel)]="selectedGovernorateId"
             (ngModelChange)="onSearchGovernorateChange()"
           >
@@ -28,10 +28,10 @@
             </option>
           </select>
         </div>
-        <div class="col-12 col-md-4">
-          <label class="form-label">{{ 'nurse.city' | translate | async }}</label>
+        <div class="col-md-3">
+          <label class="form-label small">{{ 'nurse.city' | translate | async }}</label>
           <select
-            class="form-select rounded-pill"
+            class="form-select form-select-sm rounded-pill"
             [(ngModel)]="selectedCityId"
             [disabled]="!selectedGovernorateId || selectedGovernorateId === 0"
           >
@@ -41,12 +41,13 @@
             </option>
           </select>
         </div>
-        <div class="col-12">
-          <div class="d-flex gap-2">
+        <div class="col-md-3">
+          <div class="d-flex gap-1">
             <app-action-button
               color="primary"
               icon="cilMagnifyingGlass"
               text="nurse.search"
+              size="sm"
               shape="rounded-pill"
               (clicked)="searchNurses()"
             ></app-action-button>
@@ -54,10 +55,10 @@
               color="secondary"
               icon="cilReload"
               text="nurse.reset"
+              size="sm"
               shape="rounded-pill"
               (clicked)="resetSearch()"
             ></app-action-button>
-            
           </div>
         </div>
       </div>
