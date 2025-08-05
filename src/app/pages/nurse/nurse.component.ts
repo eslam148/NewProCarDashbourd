@@ -63,9 +63,13 @@ export class NurseComponent implements OnInit, AfterViewInit {
 
   // Search filters
   searchKey = '';
+  selectedGovernorateId = 0;
   selectedCityId = 0;
   searchLatitude = 0;
   searchLongitude = 0;
+
+  // Separate arrays for search filters
+  searchCities: CityDto[] = [];
 
   // Map-related properties
   showMap = false;
@@ -191,7 +195,6 @@ export class NurseComponent implements OnInit, AfterViewInit {
     this.loadNurses();
     this.loadSpecialties();
     this.loadGovernorates();
-    this.loadAllCities(); // Load all cities for search filter
   }
 
   ngAfterViewInit() {
@@ -244,11 +247,35 @@ export class NurseComponent implements OnInit, AfterViewInit {
 
   resetSearch() {
     this.searchKey = '';
+    this.selectedGovernorateId = 0;
     this.selectedCityId = 0;
     this.searchLatitude = 0;
     this.searchLongitude = 0;
+    this.searchCities = [];
     this.pageNumber = 1;
     this.loadNurses();
+  }
+
+  // Handle governorate change for search filters
+  onSearchGovernorateChange() {
+    this.selectedCityId = 0; // Reset city selection
+    this.searchCities = []; // Clear cities array
+
+    if (this.selectedGovernorateId && this.selectedGovernorateId > 0) {
+      this.loadSearchCities(this.selectedGovernorateId);
+    }
+  }
+
+  // Load cities for search filter based on selected governorate
+  loadSearchCities(governorateId: number) {
+    this.cityService.getCityByGovernorateId(governorateId).subscribe({
+      next: (response) => {
+        this.searchCities = response.data;
+      },
+      error: (error) => {
+        console.error('Error loading search cities:', error);
+      }
+    });
   }
 
   // Test method to verify API call with exact curl parameters

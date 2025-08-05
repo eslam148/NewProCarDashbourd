@@ -475,6 +475,7 @@
     "nameEnRequired": "Specialty name in English is required"
   },
   "nurse": {
+    "allGovernorates":"All Governorates",
      "search":"Search",
     "reset": "Reset",
     "searchPlaceholder":"Search by name",

@@ -457,6 +457,7 @@
     "nameEnRequired": "اسم التخصص بالإنجليزية مطلوب"
   },
   "nurse": {
+    "allGovernorates": "كل المحافظات",
     "search":"بحث",
     "reset": "إعادة تعيين",
     "searchPlaceholder":"بحث بإسم المرض",

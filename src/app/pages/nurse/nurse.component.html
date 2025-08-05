@@ -15,14 +15,28 @@
             placeholder="{{ 'nurse.searchPlaceholder' | translate | async }}"
           />
         </div>
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-4">
+          <label class="form-label">{{ 'nurse.governorate' | translate | async }}</label>
+          <select
+            class="form-select rounded-pill"
+            [(ngModel)]="selectedGovernorateId"
+            (ngModelChange)="onSearchGovernorateChange()"
+          >
+            <option value="0">{{ 'nurse.allGovernorates' | translate | async }}</option>
+            <option *ngFor="let governorate of governorates" [value]="governorate.id">
+              {{ governorate.nameEn }}
+            </option>
+          </select>
+        </div>
+        <div class="col-12 col-md-4">
           <label class="form-label">{{ 'nurse.city' | translate | async }}</label>
           <select
             class="form-select rounded-pill"
             [(ngModel)]="selectedCityId"
+            [disabled]="!selectedGovernorateId || selectedGovernorateId === 0"
           >
             <option value="0">{{ 'nurse.allCities' | translate | async }}</option>
-            <option *ngFor="let city of cities" [value]="city.id">
+            <option *ngFor="let city of searchCities" [value]="city.id">
               {{ city.nameEn }}
             </option>
           </select>
